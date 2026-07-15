@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../models/schedule.dart';
 import '../utils/formatting.dart';
+import 'favorite_button.dart';
 
 /// A single schedule row: start time, artist name and location.
 class ProgrammEntryTile extends StatelessWidget {
@@ -27,9 +28,9 @@ class ProgrammEntryTile extends StatelessWidget {
           ),
         ),
       ),
-      title: Text(item.artist.name),
+      title: Text(item.attraction.name),
       subtitle: Text(item.entry.location.name),
-      trailing: const Icon(Icons.chevron_right),
+      trailing: FavoriteButton(externalId: item.attraction.externalId),
     );
   }
 }

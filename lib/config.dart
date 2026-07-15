@@ -16,3 +16,14 @@ const String _cloudflareBaseUrl =
 /// Builds the public delivery URL for a Cloudflare image id.
 String cloudflareImageUrl(String cloudflareId) =>
     '$_cloudflareBaseUrl/$cloudflareId/public';
+
+/// Public Mapbox access token (`pk.*`) used by the map screen. Supplied at
+/// build/run time so the secret stays out of source control:
+/// `flutter run --dart-define=MAPBOX_ACCESS_TOKEN=pk...`
+/// (same token as the website's `MAPBOX_API_TOKEN`). Empty when unset — the
+/// map screen then shows a hint instead of a broken map.
+const String mapboxAccessToken = String.fromEnvironment('MAPBOX_ACCESS_TOKEN');
+
+/// Festival centre used as the map's initial camera target (Schlieren, ZH).
+const double festLatitude = 47.3967;
+const double festLongitude = 8.4475;

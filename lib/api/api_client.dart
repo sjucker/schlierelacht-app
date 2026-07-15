@@ -33,6 +33,24 @@ class ApiClient {
     return body as List<dynamic>;
   }
 
+  /// POSTs [body] as JSON to [path]. Throws [ApiException] on a non-2xx
+  /// response or transport error; returns nothing (callers ignore the body).
+  Future<void> postJson(String path, Map<String, dynamic> body) async {
+    final http.Response response;
+    try {
+      response = await _client.post(
+        _uri(path),
+        headers: const {'Content-Type': 'application/json'},
+        body: jsonEncode(body),
+      );
+    } catch (e) {
+      throw ApiException('Verbindung fehlgeschlagen: $e');
+    }
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      throw ApiException('Fehler ${response.statusCode} bei $path');
+    }
+  }
+
   Future<dynamic> _getJson(String path) async {
     final http.Response response;
     try {

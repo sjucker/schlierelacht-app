@@ -1,19 +1,16 @@
-// Smoke test: the app boots and shows the two navigation destinations.
+// Smoke test: the landing page renders its section navigation cards.
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:schlierelacht_app/screens/home_shell.dart';
+import 'package:schlierelacht_app/screens/landing_screen.dart';
 
 void main() {
-  testWidgets('HomeShell shows News and Programm navigation destinations',
+  testWidgets('LandingScreen shows the section cards',
       (WidgetTester tester) async {
-    await tester.pumpWidget(const MaterialApp(home: HomeShell()));
+    await tester.pumpWidget(const MaterialApp(home: LandingScreen()));
 
-    // Both nav destinations render their labels. ("News" also appears in the
-    // AppBar title, so it is present at least once; "Programm" is unique.)
+    // Cards near the top of the (lazily built) grid render their labels.
+    expect(find.text('News'), findsOneWidget);
     expect(find.text('Programm'), findsOneWidget);
-    expect(find.text('News'), findsWidgets);
-
-    // The News tab is selected first, so its list screen attempts to load.
-    expect(find.byType(HomeShell), findsOneWidget);
+    expect(find.text('Gastro'), findsOneWidget);
   });
 }

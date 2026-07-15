@@ -1,0 +1,49 @@
+import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+/// App-local persistence (onboarding flag + favorites) backed by
+/// [SharedPreferences]. A single instance is created in `main.dart` via
+/// [Prefs.init] and read through the [Prefs.instance] singleton, mirroring the
+/// app's lightweight, no-state-library approach.
+class Prefs {
+  Prefs._(this._prefs);
+
+  static const _kOnboardingComplete = 'onboarding_complete';
+  static const _kFavorites = 'favorites'; // attraction externalIds
+
+  static late Prefs instance;
+
+  final SharedPreferences _prefs;
+
+  /// Loads shared preferences and initializes [instance]. Call once at startup.
+  static Future<void> init() async {
+    final prefs = await SharedPreferences.getInstance();
+    instance = Prefs._(prefs);
+  }
+
+  // --- Onboarding ---------------------------------------------------------
+
+  bool get onboardingComplete => _prefs.getBool(_kOnboardingComplete) ?? false;
+
+  Future<void> setOnboardingComplete() =>
+      _prefs.setBool(_kOnboardingComplete, true);
+
+  // --- Favorites (per attraction externalId) ------------------------------
+
+  /// The set of favorited attraction externalIds. Listen to [favorites] for
+  /// reactive rebuilds when a favorite is toggled.
+  late final ValueNotifier<Set<String>> favorites =
+      ValueNotifier(_prefs.getStringList(_kFavorites)?.toSet() ?? <String>{});
+
+  bool isFavorite(String externalId) => favorites.value.contains(externalId);
+
+  /// Toggles [externalId] and persists. Returns the new favorite state.
+  Future<bool> toggleFavorite(String externalId) async {
+    final next = Set<String>.from(favorites.value);
+    final nowFavorite = !next.remove(externalId);
+    if (nowFavorite) next.add(externalId);
+    favorites.value = next;
+    await _prefs.setStringList(_kFavorites, next.toList());
+    return nowFavorite;
+  }
+}

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
-import '../api/artist_api.dart';
+import '../api/attraction_api.dart';
 import '../models/attraction.dart';
 import '../models/programm_entry.dart';
 import '../utils/formatting.dart';
 import '../widgets/async_view.dart';
 import '../widgets/cloudflare_image.dart';
+import '../widgets/favorite_button.dart';
 
 class ArtistDetailScreen extends StatefulWidget {
   const ArtistDetailScreen({super.key, required this.externalId});
@@ -18,22 +19,25 @@ class ArtistDetailScreen extends StatefulWidget {
 }
 
 class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
-  final _api = ArtistApi();
+  final _api = AttractionApi();
   late Future<Attraction> _future;
 
   @override
   void initState() {
     super.initState();
-    _future = _api.fetchArtist(widget.externalId);
+    _future = _api.fetchAttraction(widget.externalId);
   }
 
-  void _reload() => setState(() => _future = _api.fetchArtist(widget.externalId));
+  void _reload() => setState(() => _future = _api.fetchAttraction(widget.externalId));
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Programm')),
+      appBar: AppBar(
+        title: const Text('Programm'),
+        actions: [FavoriteButton(externalId: widget.externalId)],
+      ),
       body: AsyncView<Attraction>(
         future: _future,
         onRetry: _reload,
@@ -95,13 +99,38 @@ class _ProgrammRow extends StatelessWidget {
 
   final ProgrammEntry entry;
 
+  static bool _isSameDay(DateTime a, DateTime b) =>
+      a.year == b.year && a.month == b.month && a.day == b.day;
+
+  /// Builds the "when" line, e.g.
+  ///   "Mittwoch, 27.06.2026"                     (date only)
+  ///   "Mittwoch, 27.06.2026 · 18:00"             (with fromTime)
+  ///   "Mittwoch, 27.06.2026 · 18:00 – 20:00"     (with toTime, same day)
+  ///   "Mittwoch, 27.06.2026 · 18:00 – Freitag, 29.06.2026 · 20:00" (spanning days)
+  static String _formatWhen(ProgrammEntry entry) {
+    final fromTime = formatTime(entry.fromTime);
+    final toTime = formatTime(entry.toTime);
+    final showToDate =
+        entry.toDate != null && !_isSameDay(entry.toDate!, entry.fromDate);
+
+    var from = formatGermanDate(entry.fromDate);
+    if (fromTime.isNotEmpty) from = '$from · $fromTime';
+
+    var to = '';
+    if (showToDate) {
+      to = formatGermanDate(entry.toDate!);
+      if (toTime.isNotEmpty) to = '$to · $toTime';
+    } else if (toTime.isNotEmpty) {
+      to = toTime;
+    }
+
+    return to.isEmpty ? from : '$from – $to';
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final time = formatTime(entry.fromTime);
-    final when = time.isEmpty
-        ? formatGermanDate(entry.fromDate)
-        : '${formatGermanDate(entry.fromDate)} · $time';
+    final when = _formatWhen(entry);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(

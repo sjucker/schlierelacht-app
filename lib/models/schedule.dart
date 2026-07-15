@@ -1,12 +1,13 @@
-import 'attraction.dart';
+import 'attraction_ref.dart';
 import 'programm_entry.dart';
+import 'programm_point.dart';
 
-/// A single programm entry paired with the artist/attraction it belongs to.
+/// A single programm entry paired with the attraction it belongs to.
 class ScheduleItem {
   final ProgrammEntry entry;
-  final Attraction artist;
+  final AttractionRef attraction;
 
-  const ScheduleItem({required this.entry, required this.artist});
+  const ScheduleItem({required this.entry, required this.attraction});
 }
 
 /// One day of the festival schedule.
@@ -28,19 +29,18 @@ int _timeRank(String? hhmm) {
   return h * 60 + m;
 }
 
-/// Flattens every attraction's programm entries into a schedule grouped by day,
-/// sorted chronologically by date then start time. Mirrors how the website
-/// assembles the "Programm" from `/api/artist` data.
-List<ScheduleDay> buildSchedule(List<Attraction> attractions) {
+/// Groups the programm points returned by `GET /api/programm` into days, sorted
+/// chronologically by date then start time. The backend already returns them
+/// globally sorted; this regroups them per day for the sectioned list.
+List<ScheduleDay> buildSchedule(List<ProgrammPoint> points) {
   final byDay = <DateTime, List<ScheduleItem>>{};
 
-  for (final artist in attractions) {
-    for (final entry in artist.programm) {
-      final key = _dayKey(entry.fromDate);
-      byDay
-          .putIfAbsent(key, () => [])
-          .add(ScheduleItem(entry: entry, artist: artist));
-    }
+  for (final point in points) {
+    final entry = point.entry;
+    final key = _dayKey(entry.fromDate);
+    byDay
+        .putIfAbsent(key, () => [])
+        .add(ScheduleItem(entry: entry, attraction: point.attraction));
   }
 
   final days = byDay.keys.toList()..sort();
@@ -49,7 +49,7 @@ List<ScheduleDay> buildSchedule(List<Attraction> attractions) {
       ..sort((a, b) {
         final t = _timeRank(a.entry.fromTime).compareTo(_timeRank(b.entry.fromTime));
         if (t != 0) return t;
-        return a.artist.name.toLowerCase().compareTo(b.artist.name.toLowerCase());
+        return a.attraction.name.toLowerCase().compareTo(b.attraction.name.toLowerCase());
       });
     return ScheduleDay(date: day, items: items);
   }).toList();
