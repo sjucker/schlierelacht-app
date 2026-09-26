@@ -110,14 +110,8 @@ The backend sends pushes with the **Firebase Admin SDK**, authenticated by a
 ## 4. Send a test notification
 
 **From the admin UI:** log into the Vaadin admin → **Push senden** → enter a
-title + message, choose *Alle (Topic "general")* or *Registrierte Geräte einzeln*,
-and send.
-
-- *Topic "general"* → `PushService.sendToGeneralTopic(...)`. Reaches every device
-  subscribed to the topic, no token storage needed.
-- *Registrierte Geräte* → `PushService.sendToAllDevices(...)`. Multicasts to the
-  tokens stored in the `push_device_token` table (populated by
-  `POST /api/push/register`).
+title + message and send. This goes through `PushService.sendToGeneralTopic(...)`
+and reaches every device subscribed to the `general` topic.
 
 **From the Firebase console** (no backend needed): *Messaging* → *New campaign* →
 *Notifications* → target the topic **`general`**.
