@@ -12,6 +12,7 @@ import '../api/ok_api.dart';
 import '../api/programm_api.dart';
 import '../api/sponsoring_api.dart';
 import '../models/attraction_type.dart';
+import 'notifications.dart';
 
 /// Pre-loads the whole public API into [ApiCache] in the background, so every
 /// screen — including act, Gastro, location and news details never opened —
@@ -41,6 +42,8 @@ abstract final class OfflineWarmup {
       // offline — stop instead of walking every detail into a timeout.
       final programm = await ProgrammApi().fetchProgramm();
       if (ApiCache.offlineSince.value != null) return;
+      // A moved slot moves its favorite reminder.
+      NotificationService.instance.syncReminders(programm);
       final attractions = AttractionApi();
       final gastro = await attractions.fetchAttractions(types: {AttractionType.food});
       final locations = await LocationApi().fetchLocations();

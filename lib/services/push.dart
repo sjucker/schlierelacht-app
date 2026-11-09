@@ -17,12 +17,10 @@ final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = GlobalKey<Scaffol
 /// `Firebase.initializeApp` succeeds in `main.dart`), so the app runs normally
 /// before `flutterfire configure` has been run — FCM simply stays dormant.
 ///
-/// Broadcast pushes use the `general` topic; per-act pushes use `act-<id>`
-/// topics toggled alongside favorites. The device token is also registered with
-/// the backend for targeted sends.
-///
-/// The admin's "Push senden" adds an optional `route` (a website path such as
-/// `news`); tapping the notification opens that screen via [openDeepLink].
+/// The admin's "Push senden" broadcasts to the `general` topic with an
+/// optional `route` (a website path such as `news`); tapping the notification
+/// opens that screen via [openDeepLink]. Reminders for favorited acts are
+/// local notifications instead (see `NotificationService`).
 class PushService {
   PushService._();
 
@@ -107,21 +105,6 @@ class PushService {
       await _api.register(token: token, platform: Platform.isIOS ? 'ios' : 'android', locale: 'de');
     } catch (_) {
       // Backend registration is best-effort; topic subscription still works.
-    }
-  }
-
-  /// Subscribes/unsubscribes an act-specific topic alongside a favorite toggle.
-  Future<void> setFavoriteTopic(String externalId, bool on) async {
-    if (!_available) return;
-    final topic = 'act-$externalId';
-    try {
-      if (on) {
-        await _messaging.subscribeToTopic(topic);
-      } else {
-        await _messaging.unsubscribeFromTopic(topic);
-      }
-    } catch (_) {
-      // Ignore — favorite persistence already succeeded locally.
     }
   }
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../services/geolocation.dart';
+import '../services/notifications.dart';
 import '../services/prefs.dart';
 import '../services/push.dart';
 import 'landing_screen.dart';
@@ -38,6 +39,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     _next();
   }
 
+  /// One OS prompt covers push and the favorite reminders. The FCM request
+  /// also registers the device; the local one still asks when Firebase isn't
+  /// configured (and returns at once when the prompt was already answered).
+  Future<void> _allowNotifications() async {
+    await PushService.instance.requestAndRegister();
+    await NotificationService.instance.requestPermission();
+  }
+
   Future<void> _finish() async {
     await Prefs.instance.setOnboardingComplete();
     if (!mounted) return;
@@ -66,12 +75,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               icon: Icons.notifications_active_outlined,
               title: 'Bleib auf dem Laufenden',
               body:
-                  'Erlaube Push-Nachrichten, damit wir dich über Neuigkeiten und '
-                  'deine favorisierten Acts informieren können.',
+                  'Erlaube Mitteilungen für Neuigkeiten und eine Erinnerung, '
+                  'kurz bevor deine favorisierten Acts beginnen.',
               buttonLabel: 'Benachrichtigungen erlauben',
               secondaryLabel: 'Später',
               busy: _busy,
-              onPressed: () => _run(PushService.instance.requestAndRegister),
+              onPressed: () => _run(_allowNotifications),
               onSecondary: _next,
             ),
             _OnboardingPage(

@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 
 import '../services/prefs.dart';
-import '../services/push.dart';
 import '../theme.dart';
 
 /// A star toggle bound to [Prefs] favorites for a given attraction
-/// (`externalId`). Rebuilds reactively via the favorites [ValueNotifier] and
-/// keeps the per-act push topic in sync.
+/// (`externalId`). Rebuilds reactively via the favorites [ValueNotifier];
+/// `NotificationService` re-plans the act reminders from the same notifier.
 class FavoriteButton extends StatelessWidget {
   const FavoriteButton({super.key, required this.externalId, this.tooltip});
 
@@ -28,10 +27,7 @@ class FavoriteButton extends StatelessWidget {
           tooltip: tooltip ?? (isFav ? 'Aus Favoriten entfernen' : 'Zu Favoriten hinzufügen'),
           icon: Icon(isFav ? Icons.favorite : Icons.favorite_border),
           color: isFav ? (onDark ? FestColors.yellow : Theme.of(context).colorScheme.primary) : null,
-          onPressed: () async {
-            final nowFavorite = await Prefs.instance.toggleFavorite(externalId);
-            await PushService.instance.setFavoriteTopic(externalId, nowFavorite);
-          },
+          onPressed: () => Prefs.instance.toggleFavorite(externalId),
         );
       },
     );

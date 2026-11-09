@@ -10,6 +10,7 @@ import 'config.dart';
 import 'firebase_options.dart';
 import 'screens/landing_screen.dart';
 import 'screens/onboarding_screen.dart';
+import 'services/notifications.dart';
 import 'services/offline_warmup.dart';
 import 'services/prefs.dart';
 import 'services/push.dart';
@@ -39,9 +40,10 @@ Future<void> main() async {
 
   runApp(const SchlierelachtApp());
 
-  // A tapped push opens its screen (via navigatorKey), and the device token
-  // is re-registered.
+  // Notification taps open their screen (via navigatorKey), the device token
+  // is re-registered, and favorite reminders are (re)scheduled.
   unawaited(PushService.instance.start());
+  unawaited(NotificationService.instance.init());
 
   // Fill the offline cache in the background (and again on resume).
   OfflineWarmup.start();

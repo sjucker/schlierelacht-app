@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-/// App-local persistence (onboarding flag + favorites) backed by
+/// App-local persistence (onboarding flag, favorites, reminder switch) backed by
 /// [SharedPreferences]. A single instance is created in `main.dart` via
 /// [Prefs.init] and read through the [Prefs.instance] singleton, mirroring the
 /// app's lightweight, no-state-library approach.
@@ -10,6 +10,7 @@ class Prefs {
 
   static const _kOnboardingComplete = 'onboarding_complete';
   static const _kFavorites = 'favorites'; // attraction externalIds
+  static const _kRemindersEnabled = 'reminders_enabled';
 
   static late Prefs instance;
 
@@ -43,5 +44,16 @@ class Prefs {
     favorites.value = next;
     await _prefs.setStringList(_kFavorites, next.toList());
     return nowFavorite;
+  }
+
+  // --- Reminders ----------------------------------------------------------
+
+  /// Whether favorited acts get a local reminder before they start (on by
+  /// default). Listened to by `NotificationService`.
+  late final ValueNotifier<bool> remindersEnabled = ValueNotifier(_prefs.getBool(_kRemindersEnabled) ?? true);
+
+  Future<void> setRemindersEnabled(bool on) async {
+    remindersEnabled.value = on;
+    await _prefs.setBool(_kRemindersEnabled, on);
   }
 }
