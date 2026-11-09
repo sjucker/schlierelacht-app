@@ -11,15 +11,11 @@ class SponsoringApi {
 
   Future<List<Sponsoring>> fetchSponsorings() async {
     final list = await _client.getList(ApiPaths.sponsoring);
-    return list
-        .map((e) => Sponsoring.fromJson(e as Map<String, dynamic>))
-        .toList();
+    return list.map((e) => Sponsoring.fromJson(e as Map<String, dynamic>)).toList();
   }
 
   Future<List<SponsoringTypeInfo>> fetchTypes() async {
     final list = await _client.getList('${ApiPaths.sponsoring}/type');
-    return list
-        .map((e) => SponsoringTypeInfo.fromJson(e as Map<String, dynamic>))
-        .toList();
+    return list.map((e) => SponsoringTypeInfo.fromJson(e as Map<String, dynamic>)).toList();
   }
 }

@@ -27,9 +27,7 @@ Future<void> main() async {
   // Firebase is optional at runtime: until `flutterfire configure` has added
   // the platform config, initialization throws and push stays dormant.
   try {
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
+    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
     PushService.instance.markAvailable();
     PushService.instance.setupHandlers();
   } catch (_) {
@@ -48,20 +46,11 @@ class SchlierelachtApp extends StatelessWidget {
       title: 'Schliere lacht',
       debugShowCheckedModeBanner: false,
       scaffoldMessengerKey: scaffoldMessengerKey,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: _festBlue),
-        useMaterial3: true,
-      ),
-      localizationsDelegates: const [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
+      theme: ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: _festBlue), useMaterial3: true),
+      localizationsDelegates: const [GlobalMaterialLocalizations.delegate, GlobalWidgetsLocalizations.delegate, GlobalCupertinoLocalizations.delegate],
       supportedLocales: const [Locale('de', 'CH')],
       locale: const Locale('de', 'CH'),
-      home: Prefs.instance.onboardingComplete
-          ? const LandingScreen()
-          : const OnboardingScreen(),
+      home: Prefs.instance.onboardingComplete ? const LandingScreen() : const OnboardingScreen(),
     );
   }
 }

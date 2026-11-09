@@ -31,26 +31,14 @@ class NewsCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    formatGermanDate(news.date),
-                    style: theme.textTheme.labelSmall
-                        ?.copyWith(color: theme.colorScheme.outline),
-                  ),
+                  Text(formatGermanDate(news.date), style: theme.textTheme.labelSmall?.copyWith(color: theme.colorScheme.outline)),
                   const SizedBox(height: 4),
                   Text(
                     news.title,
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: theme.colorScheme.primary,
-                    ),
+                    style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold, color: theme.colorScheme.primary),
                   ),
                   const SizedBox(height: 8),
-                  Text(
-                    news.introText,
-                    maxLines: 4,
-                    overflow: TextOverflow.ellipsis,
-                    style: theme.textTheme.bodyMedium,
-                  ),
+                  Text(news.introText, maxLines: 4, overflow: TextOverflow.ellipsis, style: theme.textTheme.bodyMedium),
                 ],
               ),
             ),

@@ -29,9 +29,7 @@ class _ProgrammScreenState extends State<ProgrammScreen> {
   DateTime? _date;
   String? _stageId;
 
-  late final _sponsorLink = TapGestureRecognizer()
-    ..onTap = () => Navigator.of(context).push(
-        MaterialPageRoute(builder: (_) => const SponsoringScreen()));
+  late final _sponsorLink = TapGestureRecognizer()..onTap = () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const SponsoringScreen()));
 
   @override
   void initState() {
@@ -49,14 +47,13 @@ class _ProgrammScreenState extends State<ProgrammScreen> {
 
   void _reload() => setState(() => _future = _api.fetchProgramm());
 
-  bool get _hasFilter =>
-      _search.text.isNotEmpty || _date != null || _stageId != null;
+  bool get _hasFilter => _search.text.isNotEmpty || _date != null || _stageId != null;
 
   void _resetFilters() => setState(() {
-        _search.clear();
-        _date = null;
-        _stageId = null;
-      });
+    _search.clear();
+    _date = null;
+    _stageId = null;
+  });
 
   List<ProgrammPoint> _filter(List<ProgrammPoint> points) {
     final term = _search.text.trim().toLowerCase();
@@ -80,12 +77,8 @@ class _ProgrammScreenState extends State<ProgrammScreen> {
         future: _future,
         onRetry: _reload,
         onData: (context, points) {
-          final dates = points.map((p) => p.entry.fromDate).toSet().toList()
-            ..sort();
-          final stages = <String, String>{
-            for (final p in points)
-              p.entry.location.externalId: p.entry.location.name,
-          }.entries.toList()
+          final dates = points.map((p) => p.entry.fromDate).toSet().toList()..sort();
+          final stages = <String, String>{for (final p in points) p.entry.location.externalId: p.entry.location.name}.entries.toList()
             ..sort((a, b) => a.value.compareTo(b.value));
           final filtered = _filter(points);
 
@@ -99,20 +92,14 @@ class _ProgrammScreenState extends State<ProgrammScreen> {
                   SliverToBoxAdapter(
                     child: Padding(
                       padding: const EdgeInsets.all(24),
-                      child: Text(points.isEmpty
-                          ? 'Das Programm folgt in Kürze.'
-                          : 'Keine Einträge gefunden.'),
+                      child: Text(points.isEmpty ? 'Das Programm folgt in Kürze.' : 'Keine Einträge gefunden.'),
                     ),
                   )
                 else
                   ...scheduleSlivers(
                     points: filtered,
-                    onTapItem: (item) => Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) => AttractionDetailScreen(
-                            externalId: item.attraction.externalId),
-                      ),
-                    ),
+                    onTapItem: (item) =>
+                        Navigator.of(context).push(MaterialPageRoute(builder: (_) => AttractionDetailScreen(externalId: item.attraction.externalId))),
                   ),
                 const SliverPadding(padding: EdgeInsets.only(bottom: 24)),
               ],
@@ -124,31 +111,32 @@ class _ProgrammScreenState extends State<ProgrammScreen> {
   }
 
   Widget _intro() {
-    final linkStyle = TextStyle(
-      color: Theme.of(context).colorScheme.primary,
-      decoration: TextDecoration.underline,
-    );
+    final linkStyle = TextStyle(color: Theme.of(context).colorScheme.primary, decoration: TextDecoration.underline);
     return IntroText([
-      TextSpan(children: [
-        const TextSpan(
-          text: 'Das Programm Schlierefäscht 2027 entsteht Schritt um Schritt. '
-              'Alle definitiv gebuchten Konzerte und Events werden fortlaufend '
-              'aufgeschaltet. Sehr gerne weisen wir auch an dieser Stelle darauf '
-              'hin, dass der ',
-        ),
-        const TextSpan(
-          text: 'Zutritt zu sämtlichen Konzerten kostenlos ist und keine '
-              'Tickets für den Eintritt benötigt werden',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        const TextSpan(
-          text: '. Das wird ermöglicht durch die grosszügige Unterstützung der '
-              'Stadt Schlieren und unserer grossen ',
-        ),
-        TextSpan(
-            text: 'Sponsorenfamily', style: linkStyle, recognizer: _sponsorLink),
-        const TextSpan(text: '. Ihnen allen gilt unser grosser Dank.'),
-      ]),
+      TextSpan(
+        children: [
+          const TextSpan(
+            text:
+                'Das Programm Schlierefäscht 2027 entsteht Schritt um Schritt. '
+                'Alle definitiv gebuchten Konzerte und Events werden fortlaufend '
+                'aufgeschaltet. Sehr gerne weisen wir auch an dieser Stelle darauf '
+                'hin, dass der ',
+          ),
+          const TextSpan(
+            text:
+                'Zutritt zu sämtlichen Konzerten kostenlos ist und keine '
+                'Tickets für den Eintritt benötigt werden',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          const TextSpan(
+            text:
+                '. Das wird ermöglicht durch die grosszügige Unterstützung der '
+                'Stadt Schlieren und unserer grossen ',
+          ),
+          TextSpan(text: 'Sponsorenfamily', style: linkStyle, recognizer: _sponsorLink),
+          const TextSpan(text: '. Ihnen allen gilt unser grosser Dank.'),
+        ],
+      ),
     ]);
   }
 
@@ -161,14 +149,7 @@ class _ProgrammScreenState extends State<ProgrammScreen> {
             controller: _search,
             hintText: 'Act suchen…',
             leading: const Icon(Icons.search),
-            trailing: [
-              if (_hasFilter)
-                IconButton(
-                  tooltip: 'Filter zurücksetzen',
-                  icon: const Icon(Icons.close),
-                  onPressed: _resetFilters,
-                ),
-            ],
+            trailing: [if (_hasFilter) IconButton(tooltip: 'Filter zurücksetzen', icon: const Icon(Icons.close), onPressed: _resetFilters)],
           ),
           const SizedBox(height: 8),
           Row(
@@ -200,12 +181,7 @@ class _ProgrammScreenState extends State<ProgrammScreen> {
 
 /// A compact outlined dropdown with an "all" entry (null) on top.
 class _Select<T> extends StatelessWidget {
-  const _Select({
-    required this.hint,
-    required this.value,
-    required this.items,
-    required this.onChanged,
-  });
+  const _Select({required this.hint, required this.value, required this.items, required this.onChanged});
 
   final String hint;
   final T? value;
@@ -215,11 +191,7 @@ class _Select<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InputDecorator(
-      decoration: const InputDecoration(
-        border: OutlineInputBorder(),
-        isDense: true,
-        contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-      ),
+      decoration: const InputDecoration(border: OutlineInputBorder(), isDense: true, contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 4)),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<T?>(
           isExpanded: true,

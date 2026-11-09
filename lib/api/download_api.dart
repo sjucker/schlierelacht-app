@@ -12,9 +12,7 @@ class DownloadApi {
 
   Future<List<Download>> fetchDownloads() async {
     final list = await _client.getList(ApiPaths.downloads);
-    return list
-        .map((e) => Download.fromJson(e as Map<String, dynamic>))
-        .toList();
+    return list.map((e) => Download.fromJson(e as Map<String, dynamic>)).toList();
   }
 
   /// Absolute URL of a download, opened in the browser to fetch the file.

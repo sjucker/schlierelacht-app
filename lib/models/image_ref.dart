@@ -18,15 +18,11 @@ class ImageRef {
   final String description;
   final ImageType type;
 
-  const ImageRef({
-    required this.cloudflareId,
-    required this.description,
-    required this.type,
-  });
+  const ImageRef({required this.cloudflareId, required this.description, required this.type});
 
   factory ImageRef.fromJson(Map<String, dynamic> json) => ImageRef(
-        cloudflareId: json['cloudflareId'] as String,
-        description: (json['description'] as String?) ?? '',
-        type: _imageTypeFromJson(json['type'] as String?),
-      );
+    cloudflareId: json['cloudflareId'] as String,
+    description: (json['description'] as String?) ?? '',
+    type: _imageTypeFromJson(json['type'] as String?),
+  );
 }

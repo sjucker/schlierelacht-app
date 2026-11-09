@@ -44,26 +44,19 @@ class Attraction {
   }
 
   /// All ADDITIONAL (gallery) images, in order. May be empty.
-  List<ImageRef> get additionalImages =>
-      images.where((img) => img.type == ImageType.additional).toList();
+  List<ImageRef> get additionalImages => images.where((img) => img.type == ImageType.additional).toList();
 
   factory Attraction.fromJson(Map<String, dynamic> json) => Attraction(
-        externalId: json['externalId'] as String,
-        name: json['name'] as String,
-        description: json['description'] as String,
-        website: json['website'] as String?,
-        instagram: json['instagram'] as String?,
-        facebook: json['facebook'] as String?,
-        youtube: json['youtube'] as String?,
-        operator: json['operator'] as String?,
-        images: (json['images'] as List<dynamic>? ?? [])
-            .map((e) => ImageRef.fromJson(e as Map<String, dynamic>))
-            .toList(),
-        programm: (json['programm'] as List<dynamic>? ?? [])
-            .map((e) => ProgrammEntry.fromJson(e as Map<String, dynamic>))
-            .toList(),
-        files: (json['files'] as List<dynamic>? ?? [])
-            .map((e) => AttractionFile.fromJson(e as Map<String, dynamic>))
-            .toList(),
-      );
+    externalId: json['externalId'] as String,
+    name: json['name'] as String,
+    description: json['description'] as String,
+    website: json['website'] as String?,
+    instagram: json['instagram'] as String?,
+    facebook: json['facebook'] as String?,
+    youtube: json['youtube'] as String?,
+    operator: json['operator'] as String?,
+    images: (json['images'] as List<dynamic>? ?? []).map((e) => ImageRef.fromJson(e as Map<String, dynamic>)).toList(),
+    programm: (json['programm'] as List<dynamic>? ?? []).map((e) => ProgrammEntry.fromJson(e as Map<String, dynamic>)).toList(),
+    files: (json['files'] as List<dynamic>? ?? []).map((e) => AttractionFile.fromJson(e as Map<String, dynamic>)).toList(),
+  );
 }

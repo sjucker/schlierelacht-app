@@ -51,10 +51,7 @@ class LandingScreen extends StatelessWidget {
         child: CustomScrollView(
           slivers: [
             SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(24, 32, 24, 16),
-                child: Image.asset('assets/logo.png', height: 260),
-              ),
+              child: Padding(padding: const EdgeInsets.fromLTRB(24, 32, 24, 16), child: Image.asset('assets/logo.png', height: 260)),
             ),
             const SliverToBoxAdapter(child: _FestBanner()),
             SliverPadding(
@@ -159,10 +156,7 @@ class _FestBannerState extends State<_FestBanner> {
               Text(
                 'Freier Eintritt zu allen Konzerten',
                 textAlign: TextAlign.center,
-                style: theme.textTheme.titleMedium?.copyWith(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: theme.textTheme.titleMedium?.copyWith(color: Colors.black, fontWeight: FontWeight.bold),
               ),
             ],
           ),
@@ -187,16 +181,9 @@ class _CountdownUnit extends StatelessWidget {
       children: [
         Text(
           value,
-          style: theme.textTheme.headlineMedium?.copyWith(
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-            fontFeatures: const [FontFeature.tabularFigures()],
-          ),
+          style: theme.textTheme.headlineMedium?.copyWith(color: Colors.black, fontWeight: FontWeight.bold, fontFeatures: const [FontFeature.tabularFigures()]),
         ),
-        Text(
-          label.toUpperCase(),
-          style: theme.textTheme.labelSmall?.copyWith(color: Colors.black),
-        ),
+        Text(label.toUpperCase(), style: theme.textTheme.labelSmall?.copyWith(color: Colors.black)),
       ],
     );
   }
@@ -210,10 +197,7 @@ class _Colon extends StatelessWidget {
     padding: const EdgeInsets.fromLTRB(10, 0, 10, 18),
     child: Text(
       ':',
-      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-        color: Colors.black,
-        fontWeight: FontWeight.bold,
-      ),
+      style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: Colors.black, fontWeight: FontWeight.bold),
     ),
   );
 }
@@ -226,38 +210,21 @@ class _Footer extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final small = theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.outline);
-    void push(Widget page) =>
-        Navigator.of(context).push(MaterialPageRoute(builder: (_) => page));
+    void push(Widget page) => Navigator.of(context).push(MaterialPageRoute(builder: (_) => page));
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
       child: Column(
         children: [
           Text(
             'SOCIAL MEDIA',
-            style: theme.textTheme.labelSmall?.copyWith(
-              fontWeight: FontWeight.w600,
-              letterSpacing: 1.5,
-              color: theme.colorScheme.primary,
-            ),
+            style: theme.textTheme.labelSmall?.copyWith(fontWeight: FontWeight.w600, letterSpacing: 1.5, color: theme.colorScheme.primary),
           ),
           Wrap(
             alignment: WrapAlignment.center,
             children: [
-              TextButton.icon(
-                onPressed: () => openUrl(facebookUrl),
-                icon: const Icon(Icons.facebook),
-                label: const Text('Facebook'),
-              ),
-              TextButton.icon(
-                onPressed: () => openUrl(instagramUrl),
-                icon: const Icon(Icons.camera_alt_outlined),
-                label: const Text('Instagram'),
-              ),
-              TextButton.icon(
-                onPressed: () => openUrl(linkedinUrl),
-                icon: const Icon(Icons.work_outline),
-                label: const Text('LinkedIn'),
-              ),
+              TextButton.icon(onPressed: () => openUrl(facebookUrl), icon: const Icon(Icons.facebook), label: const Text('Facebook')),
+              TextButton.icon(onPressed: () => openUrl(instagramUrl), icon: const Icon(Icons.camera_alt_outlined), label: const Text('Instagram')),
+              TextButton.icon(onPressed: () => openUrl(linkedinUrl), icon: const Icon(Icons.work_outline), label: const Text('LinkedIn')),
             ],
           ),
           const SizedBox(height: 4),
@@ -267,14 +234,8 @@ class _Footer extends StatelessWidget {
             spacing: 4,
             children: [
               Text('© schlierelacht ${DateTime.now().year}', style: small),
-              TextButton(
-                onPressed: () => push(const LegalScreen.impressum()),
-                child: const Text('Impressum'),
-              ),
-              TextButton(
-                onPressed: () => push(const LegalScreen.datenschutz()),
-                child: const Text('Datenschutz'),
-              ),
+              TextButton(onPressed: () => push(const LegalScreen.impressum()), child: const Text('Impressum')),
+              TextButton(onPressed: () => push(const LegalScreen.datenschutz()), child: const Text('Datenschutz')),
             ],
           ),
         ],

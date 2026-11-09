@@ -41,11 +41,7 @@ class _NewsListScreenState extends State<NewsListScreen> {
             itemCount: news.length,
             itemBuilder: (context, i) => NewsCard(
               news: news[i],
-              onTap: () => Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (_) => NewsDetailScreen(newsId: news[i].id),
-                ),
-              ),
+              onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => NewsDetailScreen(newsId: news[i].id))),
             ),
           ),
         );

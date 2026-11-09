@@ -8,8 +8,7 @@ import 'package:schlierelacht_app/screens/landing_screen.dart';
 void main() {
   setUpAll(() => initializeDateFormatting('de_CH'));
 
-  testWidgets('LandingScreen shows the banner and the section cards',
-      (WidgetTester tester) async {
+  testWidgets('LandingScreen shows the banner and the section cards', (WidgetTester tester) async {
     await tester.pumpWidget(const MaterialApp(home: LandingScreen()));
 
     expect(find.text('Freier Eintritt zu allen Konzerten'), findsOneWidget);

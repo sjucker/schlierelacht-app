@@ -11,11 +11,8 @@ class MeetupApi {
 
   Future<List<MeetupEntry>> fetchEntries() async {
     final list = await _client.getList(ApiPaths.meetup);
-    return list
-        .map((e) => MeetupEntry.fromJson(e as Map<String, dynamic>))
-        .toList();
+    return list.map((e) => MeetupEntry.fromJson(e as Map<String, dynamic>)).toList();
   }
 
-  Future<void> register(MeetupRegistration registration) =>
-      _client.postJson(ApiPaths.meetup, registration.toJson());
+  Future<void> register(MeetupRegistration registration) => _client.postJson(ApiPaths.meetup, registration.toJson());
 }

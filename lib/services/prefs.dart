@@ -25,15 +25,13 @@ class Prefs {
 
   bool get onboardingComplete => _prefs.getBool(_kOnboardingComplete) ?? false;
 
-  Future<void> setOnboardingComplete() =>
-      _prefs.setBool(_kOnboardingComplete, true);
+  Future<void> setOnboardingComplete() => _prefs.setBool(_kOnboardingComplete, true);
 
   // --- Favorites (per attraction externalId) ------------------------------
 
   /// The set of favorited attraction externalIds. Listen to [favorites] for
   /// reactive rebuilds when a favorite is toggled.
-  late final ValueNotifier<Set<String>> favorites =
-      ValueNotifier(_prefs.getStringList(_kFavorites)?.toSet() ?? <String>{});
+  late final ValueNotifier<Set<String>> favorites = ValueNotifier(_prefs.getStringList(_kFavorites)?.toSet() ?? <String>{});
 
   bool isFavorite(String externalId) => favorites.value.contains(externalId);
 

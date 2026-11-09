@@ -39,8 +39,7 @@ class _LocationsScreenState extends State<LocationsScreen> {
   String? _distanceLabel(Location loc) {
     final pos = _position;
     if (pos == null) return null;
-    final meters = GeolocationService.instance.distanceMeters(
-        pos.latitude, pos.longitude, loc.latitude, loc.longitude);
+    final meters = GeolocationService.instance.distanceMeters(pos.latitude, pos.longitude, loc.latitude, loc.longitude);
     return formatDistance(meters);
   }
 
@@ -53,18 +52,12 @@ class _LocationsScreenState extends State<LocationsScreen> {
         onRetry: _reload,
         onData: (context, all) {
           final q = _query.trim().toLowerCase();
-          final locations = q.isEmpty
-              ? all
-              : all.where((l) => l.name.toLowerCase().contains(q)).toList();
+          final locations = q.isEmpty ? all : all.where((l) => l.name.toLowerCase().contains(q)).toList();
           return Column(
             children: [
               Padding(
                 padding: const EdgeInsets.all(12),
-                child: SearchBar(
-                  hintText: 'Ort suchen…',
-                  leading: const Icon(Icons.search),
-                  onChanged: (v) => setState(() => _query = v),
-                ),
+                child: SearchBar(hintText: 'Ort suchen…', leading: const Icon(Icons.search), onChanged: (v) => setState(() => _query = v)),
               ),
               Expanded(
                 child: locations.isEmpty
@@ -78,25 +71,15 @@ class _LocationsScreenState extends State<LocationsScreen> {
                             final loc = locations[i];
                             final distance = _distanceLabel(loc);
                             return ListTile(
-                              leading: Icon(locationTypeIcon(loc.type),
-                                  color: Theme.of(context).colorScheme.primary),
+                              leading: Icon(locationTypeIcon(loc.type), color: Theme.of(context).colorScheme.primary),
                               title: Text(loc.name),
-                              subtitle: Text(
-                                distance == null
-                                    ? locationTypeLabel(loc.type)
-                                    : '${locationTypeLabel(loc.type)} · $distance',
-                              ),
+                              subtitle: Text(distance == null ? locationTypeLabel(loc.type) : '${locationTypeLabel(loc.type)} · $distance'),
                               trailing: IconButton(
                                 tooltip: 'In Karten öffnen',
                                 icon: const Icon(Icons.directions_outlined),
                                 onPressed: () => openUrl(loc.googleMapsUrl),
                               ),
-                              onTap: () => Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (_) => LocationDetailScreen(
-                                      externalId: loc.externalId),
-                                ),
-                              ),
+                              onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => LocationDetailScreen(externalId: loc.externalId))),
                             );
                           },
                         ),

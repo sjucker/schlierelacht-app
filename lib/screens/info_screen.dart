@@ -29,10 +29,7 @@ class _InfoScreenState extends State<InfoScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final heading = theme.textTheme.titleLarge?.copyWith(
-      fontWeight: FontWeight.bold,
-      color: theme.colorScheme.primary,
-    );
+    final heading = theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: theme.colorScheme.primary);
     return Scaffold(
       appBar: AppBar(title: const Text('Über uns')),
       body: ListView(
@@ -59,10 +56,7 @@ class _InfoScreenState extends State<InfoScreen> {
                   children: [
                     const Text('Inhalt konnte nicht geladen werden.'),
                     const SizedBox(height: 8),
-                    FilledButton.tonal(
-                      onPressed: _reload,
-                      child: const Text('Erneut versuchen'),
-                    ),
+                    FilledButton.tonal(onPressed: _reload, child: const Text('Erneut versuchen')),
                   ],
                 );
               }
@@ -83,21 +77,9 @@ class _ContactCard extends StatelessWidget {
     return Card(
       child: Column(
         children: [
-          const ListTile(
-            leading: Icon(Icons.person_outline),
-            title: Text('Erika und Charly Mettier'),
-            subtitle: Text('Kampstrasse 6, 8952 Schlieren'),
-          ),
-          ListTile(
-            leading: const Icon(Icons.phone_outlined),
-            title: const Text('079 456 79 69'),
-            onTap: () => openUrl('tel:+41794567969'),
-          ),
-          ListTile(
-            leading: const Icon(Icons.mail_outline),
-            title: const Text('info@schlierelacht.ch'),
-            onTap: () => openUrl('mailto:info@schlierelacht.ch'),
-          ),
+          const ListTile(leading: Icon(Icons.person_outline), title: Text('Erika und Charly Mettier'), subtitle: Text('Kampstrasse 6, 8952 Schlieren')),
+          ListTile(leading: const Icon(Icons.phone_outlined), title: const Text('079 456 79 69'), onTap: () => openUrl('tel:+41794567969')),
+          ListTile(leading: const Icon(Icons.mail_outline), title: const Text('info@schlierelacht.ch'), onTap: () => openUrl('mailto:info@schlierelacht.ch')),
           ListTile(
             leading: const Icon(Icons.mail_outline),
             title: const Text('erika.mettier@schlierelacht.ch'),
@@ -137,10 +119,7 @@ class _OkContent extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 16, bottom: 4),
                 child: Text(
                   team.label,
-                  style: theme.textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: theme.colorScheme.primary,
-                  ),
+                  style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600, color: theme.colorScheme.primary),
                 ),
               ),
               for (final m in members)
@@ -152,10 +131,7 @@ class _OkContent extends StatelessWidget {
                       if (m.email != null && m.email!.isNotEmpty)
                         InkWell(
                           onTap: () => openUrl('mailto:${m.email}'),
-                          child: Text(
-                            ', ${m.email}',
-                            style: TextStyle(color: theme.colorScheme.outline),
-                          ),
+                          child: Text(', ${m.email}', style: TextStyle(color: theme.colorScheme.outline)),
                         ),
                     ],
                   ),
@@ -181,20 +157,14 @@ class _PersonCard extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       child: Row(
         children: [
-          SizedBox(
-            width: 96,
-            height: 112,
-            child: CloudflareImage(cloudflareId: member.cloudflareId),
-          ),
+          SizedBox(width: 96, height: 112, child: CloudflareImage(cloudflareId: member.cloudflareId)),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(12),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(member.name,
-                      style: theme.textTheme.titleMedium
-                          ?.copyWith(fontWeight: FontWeight.bold)),
+                  Text(member.name, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
                   Text(member.role, style: theme.textTheme.bodyMedium),
                   if (email != null && email.isNotEmpty) ...[
                     const SizedBox(height: 8),
@@ -203,10 +173,7 @@ class _PersonCard extends StatelessWidget {
                       child: Text(
                         email,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: theme.colorScheme.primary,
-                          decoration: TextDecoration.underline,
-                        ),
+                        style: TextStyle(color: theme.colorScheme.primary, decoration: TextDecoration.underline),
                       ),
                     ),
                   ],

@@ -10,12 +10,7 @@ import '../config.dart';
 /// takes the full available width at its own aspect ratio, never cropped —
 /// how the website shows detail images.
 class CloudflareImage extends StatelessWidget {
-  const CloudflareImage({
-    super.key,
-    required this.cloudflareId,
-    this.fit = BoxFit.cover,
-    this.natural = false,
-  });
+  const CloudflareImage({super.key, required this.cloudflareId, this.fit = BoxFit.cover, this.natural = false});
 
   final String? cloudflareId;
   final BoxFit fit;
@@ -25,27 +20,18 @@ class CloudflareImage extends StatelessWidget {
   Widget build(BuildContext context) {
     final id = cloudflareId;
     if (id == null || id.isEmpty) {
-      return _Placeholder(child: Icon(
-        Icons.image_outlined,
-        size: 48,
-        color: Theme.of(context).colorScheme.outlineVariant,
-      ));
+      return _Placeholder(child: Icon(Icons.image_outlined, size: 48, color: Theme.of(context).colorScheme.outlineVariant));
     }
     Widget fallback(double? height) => SizedBox(
-          height: height,
-          child: _Placeholder(child: Icon(
-            Icons.broken_image_outlined,
-            size: 48,
-            color: Theme.of(context).colorScheme.outlineVariant,
-          )),
-        );
+      height: height,
+      child: _Placeholder(child: Icon(Icons.broken_image_outlined, size: 48, color: Theme.of(context).colorScheme.outlineVariant)),
+    );
     if (natural) {
       return CachedNetworkImage(
         imageUrl: cloudflareImageUrl(id),
         fit: BoxFit.fitWidth,
         width: double.infinity,
-        placeholder: (context, url) =>
-            const SizedBox(height: 200, child: _Placeholder()),
+        placeholder: (context, url) => const SizedBox(height: 200, child: _Placeholder()),
         errorWidget: (context, url, error) => fallback(200),
       );
     }
@@ -67,10 +53,6 @@ class _Placeholder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Theme.of(context).colorScheme.surfaceContainerHighest,
-      alignment: Alignment.center,
-      child: child,
-    );
+    return Container(color: Theme.of(context).colorScheme.surfaceContainerHighest, alignment: Alignment.center, child: child);
   }
 }

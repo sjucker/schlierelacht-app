@@ -12,8 +12,6 @@ class EventApi {
 
   Future<List<ProgrammPoint>> fetchEvents() async {
     final list = await _client.getList(ApiPaths.event);
-    return list
-        .map((e) => ProgrammPoint.fromJson(e as Map<String, dynamic>))
-        .toList();
+    return list.map((e) => ProgrammPoint.fromJson(e as Map<String, dynamic>)).toList();
   }
 }

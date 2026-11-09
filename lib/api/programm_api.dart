@@ -11,8 +11,6 @@ class ProgrammApi {
 
   Future<List<ProgrammPoint>> fetchProgramm() async {
     final list = await _client.getList(ApiPaths.programm);
-    return list
-        .map((e) => ProgrammPoint.fromJson(e as Map<String, dynamic>))
-        .toList();
+    return list.map((e) => ProgrammPoint.fromJson(e as Map<String, dynamic>)).toList();
   }
 }

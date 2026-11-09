@@ -21,8 +21,7 @@ class GeolocationService {
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
     }
-    return permission == LocationPermission.whileInUse ||
-        permission == LocationPermission.always;
+    return permission == LocationPermission.whileInUse || permission == LocationPermission.always;
   }
 
   /// Returns the current device position, or null if location is unavailable
@@ -51,13 +50,7 @@ class GeolocationService {
   }
 
   /// Great-circle distance in metres between two points.
-  double distanceMeters(
-    double lat1,
-    double lon1,
-    double lat2,
-    double lon2,
-  ) =>
-      Geolocator.distanceBetween(lat1, lon1, lat2, lon2);
+  double distanceMeters(double lat1, double lon1, double lat2, double lon2) => Geolocator.distanceBetween(lat1, lon1, lat2, lon2);
 }
 
 /// Formats a metre distance the way the reference app does: "<100 m",

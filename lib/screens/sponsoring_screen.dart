@@ -8,10 +8,7 @@ import '../widgets/async_view.dart';
 import '../widgets/cloudflare_image.dart';
 import '../widgets/intro_text.dart';
 
-typedef _SponsorData = ({
-  List<Sponsoring> sponsors,
-  List<SponsoringTypeInfo> types,
-});
+typedef _SponsorData = ({List<Sponsoring> sponsors, List<SponsoringTypeInfo> types});
 
 /// Sponsors grouped by tier (website: `sponsoren.vue`). Tiers come in the
 /// website's order with their titles from `/api/v1/sponsoring/type`; each is a
@@ -28,8 +25,7 @@ class _SponsoringScreenState extends State<SponsoringScreen> {
   final _api = SponsoringApi();
   late Future<_SponsorData> _future;
 
-  late final _mailLink = TapGestureRecognizer()
-    ..onTap = () => openUrl('mailto:albert.schweizer@schlieren.ch');
+  late final _mailLink = TapGestureRecognizer()..onTap = () => openUrl('mailto:albert.schweizer@schlieren.ch');
 
   @override
   void initState() {
@@ -45,8 +41,7 @@ class _SponsoringScreenState extends State<SponsoringScreen> {
 
   // Both endpoints feed the grouped layout, so wait for both.
   Future<_SponsorData> _fetch() async {
-    final (sponsors, types) =
-        await (_api.fetchSponsorings(), _api.fetchTypes()).wait;
+    final (sponsors, types) = await (_api.fetchSponsorings(), _api.fetchTypes()).wait;
     return (sponsors: sponsors, types: types);
   }
 
@@ -67,8 +62,7 @@ class _SponsoringScreenState extends State<SponsoringScreen> {
           }
           final titles = {for (final t in data.types) t.type: t.description};
           // Enum declaration order == the website's TYPE_ORDER.
-          final orderedTypes =
-              SponsoringType.values.where(byType.containsKey).toList();
+          final orderedTypes = SponsoringType.values.where(byType.containsKey).toList();
           return RefreshIndicator(
             onRefresh: () async => _reload(),
             child: ListView(
@@ -77,40 +71,33 @@ class _SponsoringScreenState extends State<SponsoringScreen> {
                 IntroText([
                   TextSpan(
                     text: 'Herzlichen Dank',
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: theme.colorScheme.primary,
-                    ),
+                    style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600, color: theme.colorScheme.primary),
                   ),
                   const TextSpan(
-                    text: 'Allen unseren Sponsoren danken wir herzlich für '
+                    text:
+                        'Allen unseren Sponsoren danken wir herzlich für '
                         'ihr grosszügiges Engagement.',
                   ),
-                  TextSpan(children: [
-                    const TextSpan(
-                      text: 'Auch beim Schlierefäscht 2027 soll wieder fast '
-                          'die Hälfte der Einnahmen durch Sponsoren erbracht '
-                          'werden. Unser Sponsoring-Verantwortlicher Albert '
-                          'Schweizer hat attraktive Sponsoring-Pakete '
-                          'geschnürt und steht Interessenten gerne für ein '
-                          'Gespräch zur Verfügung: ',
-                    ),
-                    TextSpan(
-                      text: 'E-Mail',
-                      recognizer: _mailLink,
-                      style: TextStyle(
-                        color: theme.colorScheme.primary,
-                        decoration: TextDecoration.underline,
+                  TextSpan(
+                    children: [
+                      const TextSpan(
+                        text:
+                            'Auch beim Schlierefäscht 2027 soll wieder fast '
+                            'die Hälfte der Einnahmen durch Sponsoren erbracht '
+                            'werden. Unser Sponsoring-Verantwortlicher Albert '
+                            'Schweizer hat attraktive Sponsoring-Pakete '
+                            'geschnürt und steht Interessenten gerne für ein '
+                            'Gespräch zur Verfügung: ',
                       ),
-                    ),
-                  ]),
-                ]),
-                for (final type in orderedTypes)
-                  _SponsorSection(
-                    title: titles[type] ?? type.label,
-                    type: type,
-                    sponsors: byType[type]!,
+                      TextSpan(
+                        text: 'E-Mail',
+                        recognizer: _mailLink,
+                        style: TextStyle(color: theme.colorScheme.primary, decoration: TextDecoration.underline),
+                      ),
+                    ],
                   ),
+                ]),
+                for (final type in orderedTypes) _SponsorSection(title: titles[type] ?? type.label, type: type, sponsors: byType[type]!),
               ],
             ),
           );
@@ -121,11 +108,7 @@ class _SponsoringScreenState extends State<SponsoringScreen> {
 }
 
 class _SponsorSection extends StatelessWidget {
-  const _SponsorSection({
-    required this.title,
-    required this.type,
-    required this.sponsors,
-  });
+  const _SponsorSection({required this.title, required this.type, required this.sponsors});
 
   final String title;
   final SponsoringType type;
@@ -141,11 +124,7 @@ class _SponsorSection extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(16, 20, 16, 8),
           child: Text(
             title.toUpperCase(),
-            style: theme.textTheme.titleSmall?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: theme.colorScheme.primary,
-              letterSpacing: 1.5,
-            ),
+            style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold, color: theme.colorScheme.primary, letterSpacing: 1.5),
           ),
         ),
         if (type == SponsoringType.goenner)
@@ -155,12 +134,7 @@ class _SponsorSection extends StatelessWidget {
               dense: true,
               title: Text(
                 sponsor.name,
-                style: sponsor.url == null
-                    ? null
-                    : TextStyle(
-                        color: theme.colorScheme.primary,
-                        decoration: TextDecoration.underline,
-                      ),
+                style: sponsor.url == null ? null : TextStyle(color: theme.colorScheme.primary, decoration: TextDecoration.underline),
               ),
               onTap: sponsor.url == null ? null : () => openUrl(sponsor.url),
             )
@@ -174,9 +148,7 @@ class _SponsorSection extends StatelessWidget {
               mainAxisSpacing: 12,
               crossAxisSpacing: 12,
               childAspectRatio: 1.6,
-              children: [
-                for (final sponsor in sponsors) _SponsorTile(sponsor: sponsor),
-              ],
+              children: [for (final sponsor in sponsors) _SponsorTile(sponsor: sponsor)],
             ),
           ),
       ],
@@ -198,16 +170,9 @@ class _SponsorTile extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(12),
           child: sponsor.cloudflareId != null
-              ? CloudflareImage(
-                  cloudflareId: sponsor.cloudflareId,
-                  fit: BoxFit.contain,
-                )
+              ? CloudflareImage(cloudflareId: sponsor.cloudflareId, fit: BoxFit.contain)
               : Center(
-                  child: Text(
-                    sponsor.name,
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
+                  child: Text(sponsor.name, textAlign: TextAlign.center, style: Theme.of(context).textTheme.titleMedium),
                 ),
         ),
       ),

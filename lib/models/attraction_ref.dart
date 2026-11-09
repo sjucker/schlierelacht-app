@@ -6,8 +6,5 @@ class AttractionRef {
 
   const AttractionRef({required this.externalId, required this.name});
 
-  factory AttractionRef.fromJson(Map<String, dynamic> json) => AttractionRef(
-        externalId: json['externalId'] as String,
-        name: json['name'] as String,
-      );
+  factory AttractionRef.fromJson(Map<String, dynamic> json) => AttractionRef(externalId: json['externalId'] as String, name: json['name'] as String);
 }

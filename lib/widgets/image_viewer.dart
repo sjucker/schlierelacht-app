@@ -5,16 +5,13 @@ import '../config.dart';
 
 /// Opens a fullscreen, swipeable, pinch-zoomable viewer over the given
 /// Cloudflare image ids — the app's take on the website's gallery lightbox.
-void showImageViewer(
-  BuildContext context,
-  List<String> cloudflareIds, {
-  int initialIndex = 0,
-}) {
-  Navigator.of(context).push(MaterialPageRoute<void>(
-    fullscreenDialog: true,
-    builder: (_) =>
-        _ImageViewer(ids: cloudflareIds, initialIndex: initialIndex),
-  ));
+void showImageViewer(BuildContext context, List<String> cloudflareIds, {int initialIndex = 0}) {
+  Navigator.of(context).push(
+    MaterialPageRoute<void>(
+      fullscreenDialog: true,
+      builder: (_) => _ImageViewer(ids: cloudflareIds, initialIndex: initialIndex),
+    ),
+  );
 }
 
 class _ImageViewer extends StatefulWidget {
@@ -28,8 +25,7 @@ class _ImageViewer extends StatefulWidget {
 }
 
 class _ImageViewerState extends State<_ImageViewer> {
-  late final PageController _controller =
-      PageController(initialPage: widget.initialIndex);
+  late final PageController _controller = PageController(initialPage: widget.initialIndex);
   late int _index = widget.initialIndex;
 
   @override
@@ -45,14 +41,8 @@ class _ImageViewerState extends State<_ImageViewer> {
       appBar: AppBar(
         backgroundColor: Colors.black,
         foregroundColor: Colors.white,
-        title: widget.ids.length > 1
-            ? Text('${_index + 1} / ${widget.ids.length}')
-            : null,
-        leading: IconButton(
-          icon: const Icon(Icons.close),
-          tooltip: 'Schliessen',
-          onPressed: () => Navigator.of(context).pop(),
-        ),
+        title: widget.ids.length > 1 ? Text('${_index + 1} / ${widget.ids.length}') : null,
+        leading: IconButton(icon: const Icon(Icons.close), tooltip: 'Schliessen', onPressed: () => Navigator.of(context).pop()),
       ),
       body: PageView.builder(
         controller: _controller,
@@ -64,12 +54,8 @@ class _ImageViewerState extends State<_ImageViewer> {
             child: CachedNetworkImage(
               imageUrl: cloudflareImageUrl(widget.ids[i]),
               fit: BoxFit.contain,
-              placeholder: (context, url) =>
-                  const CircularProgressIndicator(color: Colors.white),
-              errorWidget: (context, url, error) => const Icon(
-                  Icons.broken_image_outlined,
-                  color: Colors.white54,
-                  size: 64),
+              placeholder: (context, url) => const CircularProgressIndicator(color: Colors.white),
+              errorWidget: (context, url, error) => const Icon(Icons.broken_image_outlined, color: Colors.white54, size: 64),
             ),
           ),
         ),

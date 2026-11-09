@@ -45,7 +45,8 @@ class _WirtschaftScreenState extends State<WirtschaftScreen> {
               const SliverToBoxAdapter(
                 child: IntroText([
                   TextSpan(
-                    text: 'Vor und am Schlierefäscht 2027 finden diverse '
+                    text:
+                        'Vor und am Schlierefäscht 2027 finden diverse '
                         'interessante Sponsoren-Events und Wirtschafts-Anlässe '
                         'statt. Wir wünschen viele spannende Networking '
                         'Gelegenheiten und Begegnungen.',
@@ -58,10 +59,7 @@ class _WirtschaftScreenState extends State<WirtschaftScreen> {
               ),
               if (points.isEmpty)
                 const SliverToBoxAdapter(
-                  child: Padding(
-                    padding: EdgeInsets.all(24),
-                    child: Text('Zurzeit sind keine Anlässe aufgeschaltet.'),
-                  ),
+                  child: Padding(padding: EdgeInsets.all(24), child: Text('Zurzeit sind keine Anlässe aufgeschaltet.')),
                 )
               else
                 ...scheduleSlivers(
@@ -69,10 +67,7 @@ class _WirtschaftScreenState extends State<WirtschaftScreen> {
                   showFavorite: false,
                   onTapItem: (item) => Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (_) => AttractionDetailScreen(
-                        externalId: item.attraction.externalId,
-                        title: WirtschaftScreen.title,
-                      ),
+                      builder: (_) => AttractionDetailScreen(externalId: item.attraction.externalId, title: WirtschaftScreen.title),
                     ),
                   ),
                 ),

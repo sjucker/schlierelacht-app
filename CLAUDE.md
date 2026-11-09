@@ -4,6 +4,27 @@ Guidance for Claude Code in the Schliere lacht Flutter app. Architecture, the AP
 contract with the backend, and common commands are documented in the workspace's
 `CLAUDE.md` (one level up, when cloned as part of `schlierelacht-workspace`).
 
+## Code formatting
+
+Always format with **Android Studio's formatter settings**, never `dart format`'s
+80-column default. For Dart, Android Studio's "Reformat Code" just delegates to
+`dart format` with its Dart right margin (160). That width is pinned in
+`analysis_options.yaml` (`formatter: page_width: 160`), so these all produce the
+same output as the IDE:
+
+- `dart format lib test` (no `--line-length` flag: it reads `page_width`),
+- the Dart MCP server's format tool.
+
+After editing any `.dart` file, format it. Before committing, check that the
+whole project is clean: `dart format -o none --set-exit-if-changed lib test`
+must report `0 changed`.
+
+For non-Dart files (Kotlin/Gradle `*.kts`, XML), use the IDE formatter: the
+JetBrains `idea` MCP server's reformat tool when it is connected, or Android
+Studio's command-line formatter (`<Android Studio>\bin\format.bat`, which only
+runs while Android Studio is closed). If neither is available, match the
+surrounding style by hand and say so.
+
 ## Flutter agentic development
 
 Set up per <https://docs.flutter.dev/ai/get-started>. `.claude/settings.json`

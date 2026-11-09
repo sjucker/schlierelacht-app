@@ -8,8 +8,7 @@ import '../widgets/cloudflare_image.dart';
 import '../widgets/image_viewer.dart';
 
 /// The festival video the website embeds at the top of its gallery page.
-const _festVideoUrl =
-    'https://www.facebook.com/schlierelacht/videos/3538727499751138/';
+const _festVideoUrl = 'https://www.facebook.com/schlierelacht/videos/3538727499751138/';
 
 /// Photo galleries by category (website: `galerien.vue`). Tapping an image
 /// opens a fullscreen viewer that swipes through its category.
@@ -48,8 +47,7 @@ class _GalerieScreenState extends State<GalerieScreen> {
                 child: Card(
                   margin: const EdgeInsets.all(12),
                   child: ListTile(
-                    leading: Icon(Icons.play_circle_outline,
-                        size: 36, color: theme.colorScheme.primary),
+                    leading: Icon(Icons.play_circle_outline, size: 36, color: theme.colorScheme.primary),
                     title: const Text('Video ansehen'),
                     subtitle: const Text('Schlierefäscht auf Facebook'),
                     trailing: const Icon(Icons.open_in_new),
@@ -59,10 +57,7 @@ class _GalerieScreenState extends State<GalerieScreen> {
               ),
               if (categories.isEmpty)
                 const SliverToBoxAdapter(
-                  child: Padding(
-                    padding: EdgeInsets.all(24),
-                    child: Text('Noch keine Bilder vorhanden.'),
-                  ),
+                  child: Padding(padding: EdgeInsets.all(24), child: Text('Noch keine Bilder vorhanden.')),
                 ),
               for (final category in categories) ...[
                 SliverToBoxAdapter(
@@ -70,32 +65,20 @@ class _GalerieScreenState extends State<GalerieScreen> {
                     padding: const EdgeInsets.fromLTRB(16, 20, 16, 8),
                     child: Text(
                       category.category.toUpperCase(),
-                      style: theme.textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 1.5,
-                        color: theme.colorScheme.primary,
-                      ),
+                      style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold, letterSpacing: 1.5, color: theme.colorScheme.primary),
                     ),
                   ),
                 ),
                 SliverPadding(
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   sliver: SliverGrid.builder(
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3,
-                      mainAxisSpacing: 6,
-                      crossAxisSpacing: 6,
-                    ),
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, mainAxisSpacing: 6, crossAxisSpacing: 6),
                     itemCount: category.imageIds.length,
                     itemBuilder: (context, i) => ClipRRect(
                       borderRadius: BorderRadius.circular(6),
                       child: InkWell(
-                        onTap: () => showImageViewer(
-                            context, category.imageIds,
-                            initialIndex: i),
-                        child: CloudflareImage(
-                            cloudflareId: category.imageIds[i]),
+                        onTap: () => showImageViewer(context, category.imageIds, initialIndex: i),
+                        child: CloudflareImage(cloudflareId: category.imageIds[i]),
                       ),
                     ),
                   ),

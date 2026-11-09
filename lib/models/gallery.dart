@@ -7,11 +7,8 @@ class GalleryCategory {
 
   const GalleryCategory({required this.category, required this.imageIds});
 
-  factory GalleryCategory.fromJson(Map<String, dynamic> json) =>
-      GalleryCategory(
-        category: json['category'] as String,
-        imageIds: (json['images'] as List<dynamic>? ?? [])
-            .map((e) => (e as Map<String, dynamic>)['cloudflareId'] as String)
-            .toList(),
-      );
+  factory GalleryCategory.fromJson(Map<String, dynamic> json) => GalleryCategory(
+    category: json['category'] as String,
+    imageIds: (json['images'] as List<dynamic>? ?? []).map((e) => (e as Map<String, dynamic>)['cloudflareId'] as String).toList(),
+  );
 }

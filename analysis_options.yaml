@@ -14,6 +14,11 @@ analyzer:
     - ios/**
 include: package:flutter_lints/flutter.yaml
 
+# Matches Android Studio's Dart code style (right margin 160), so `dart format`,
+# the Dart MCP server and the IDE's "Reformat Code" all produce identical output.
+formatter:
+  page_width: 160
+
 linter:
   # The lint rules applied to this project can be customized in the
   # section below to disable rules from the `package:flutter_lints/flutter.yaml`

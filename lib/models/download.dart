@@ -12,10 +12,7 @@ enum DownloadCategory {
   final String wire;
   final String label;
 
-  static DownloadCategory fromWire(String? value) => values.firstWhere(
-        (c) => c.wire == value,
-        orElse: () => DownloadCategory.unknown,
-      );
+  static DownloadCategory fromWire(String? value) => values.firstWhere((c) => c.wire == value, orElse: () => DownloadCategory.unknown);
 }
 
 /// Mirrors the backend `DownloadDTO` — a public file, served at
@@ -28,21 +25,14 @@ class Download {
   final int filesize;
   final DownloadCategory category;
 
-  const Download({
-    required this.id,
-    required this.filename,
-    required this.filetype,
-    required this.description,
-    required this.filesize,
-    required this.category,
-  });
+  const Download({required this.id, required this.filename, required this.filetype, required this.description, required this.filesize, required this.category});
 
   factory Download.fromJson(Map<String, dynamic> json) => Download(
-        id: json['id'] as int,
-        filename: json['filename'] as String,
-        filetype: json['filetype'] as String,
-        description: json['description'] as String,
-        filesize: (json['filesize'] as num).toInt(),
-        category: DownloadCategory.fromWire(json['category'] as String?),
-      );
+    id: json['id'] as int,
+    filename: json['filename'] as String,
+    filetype: json['filetype'] as String,
+    description: json['description'] as String,
+    filesize: (json['filesize'] as num).toInt(),
+    category: DownloadCategory.fromWire(json['category'] as String?),
+  );
 }

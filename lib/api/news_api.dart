@@ -10,9 +10,7 @@ class NewsApi {
 
   Future<List<News>> fetchNews() async {
     final list = await _client.getList(ApiPaths.news);
-    return list
-        .map((e) => News.fromJson(e as Map<String, dynamic>))
-        .toList();
+    return list.map((e) => News.fromJson(e as Map<String, dynamic>)).toList();
   }
 
   Future<News> fetchNewsById(int id) async {

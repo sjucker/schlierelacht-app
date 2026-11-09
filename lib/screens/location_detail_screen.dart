@@ -37,23 +37,22 @@ class _LocationDetailScreenState extends State<LocationDetailScreen> {
     });
   }
 
-  void _reload() =>
-      setState(() => _future = _api.fetchLocation(widget.externalId));
+  void _reload() => setState(() => _future = _api.fetchLocation(widget.externalId));
 
   Future<void> _onMapCreated(MapboxMap map, model.Location loc) async {
     try {
-      await map.location.updateSettings(
-        LocationComponentSettings(enabled: true, pulsingEnabled: true),
-      );
+      await map.location.updateSettings(LocationComponentSettings(enabled: true, pulsingEnabled: true));
     } catch (_) {}
     final circles = await map.annotations.createCircleAnnotationManager();
-    await circles.create(CircleAnnotationOptions(
-      geometry: Point(coordinates: Position(loc.longitude, loc.latitude)),
-      circleRadius: 14,
-      circleColor: 0xFFFF0000,
-      circleStrokeColor: 0xFFFFFFFF,
-      circleStrokeWidth: 2,
-    ));
+    await circles.create(
+      CircleAnnotationOptions(
+        geometry: Point(coordinates: Position(loc.longitude, loc.latitude)),
+        circleRadius: 14,
+        circleColor: 0xFFFF0000,
+        circleStrokeColor: 0xFFFFFFFF,
+        circleStrokeWidth: 2,
+      ),
+    );
   }
 
   @override
@@ -66,18 +65,11 @@ class _LocationDetailScreenState extends State<LocationDetailScreen> {
         onRetry: _reload,
         onData: (context, loc) {
           final pos = _position;
-          final distance = pos == null
-              ? null
-              : GeolocationService.instance.distanceMeters(
-                  pos.latitude, pos.longitude, loc.latitude, loc.longitude);
+          final distance = pos == null ? null : GeolocationService.instance.distanceMeters(pos.latitude, pos.longitude, loc.latitude, loc.longitude);
           return ListView(
             padding: const EdgeInsets.only(bottom: 24),
             children: [
-              if (loc.cloudflareId != null)
-                SizedBox(
-                  height: 250,
-                  child: CloudflareImage(cloudflareId: loc.cloudflareId),
-                ),
+              if (loc.cloudflareId != null) SizedBox(height: 250, child: CloudflareImage(cloudflareId: loc.cloudflareId)),
               Padding(
                 padding: const EdgeInsets.all(16),
                 child: Column(
@@ -85,34 +77,23 @@ class _LocationDetailScreenState extends State<LocationDetailScreen> {
                   children: [
                     Row(
                       children: [
-                        Icon(locationTypeIcon(loc.type),
-                            color: theme.colorScheme.primary),
+                        Icon(locationTypeIcon(loc.type), color: theme.colorScheme.primary),
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(
                             loc.name,
-                            style: theme.textTheme.headlineSmall?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: theme.colorScheme.primary,
-                            ),
+                            style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold, color: theme.colorScheme.primary),
                           ),
                         ),
                       ],
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      distance == null
-                          ? locationTypeLabel(loc.type)
-                          : '${locationTypeLabel(loc.type)} · ${formatDistance(distance)} entfernt',
-                      style: theme.textTheme.bodyMedium
-                          ?.copyWith(color: theme.colorScheme.outline),
+                      distance == null ? locationTypeLabel(loc.type) : '${locationTypeLabel(loc.type)} · ${formatDistance(distance)} entfernt',
+                      style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.outline),
                     ),
                     const SizedBox(height: 16),
-                    FilledButton.icon(
-                      onPressed: () => openUrl(loc.googleMapsUrl),
-                      icon: const Icon(Icons.map_outlined),
-                      label: const Text('Google Maps'),
-                    ),
+                    FilledButton.icon(onPressed: () => openUrl(loc.googleMapsUrl), icon: const Icon(Icons.map_outlined), label: const Text('Google Maps')),
                   ],
                 ),
               ),
@@ -126,12 +107,7 @@ class _LocationDetailScreenState extends State<LocationDetailScreen> {
                       child: MapWidget(
                         key: ValueKey('location-map-${loc.externalId}'),
                         styleUri: festMapStyleUri,
-                        viewport: CameraViewportState(
-                          center: Point(
-                            coordinates: Position(loc.longitude, loc.latitude),
-                          ),
-                          zoom: 18,
-                        ),
+                        viewport: CameraViewportState(center: Point(coordinates: Position(loc.longitude, loc.latitude)), zoom: 18),
                         onMapCreated: (map) => _onMapCreated(map, loc),
                       ),
                     ),

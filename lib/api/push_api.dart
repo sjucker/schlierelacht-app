@@ -9,14 +9,6 @@ class PushApi {
 
   final ApiClient _client;
 
-  Future<void> register({
-    required String token,
-    required String platform,
-    String? locale,
-  }) =>
-      _client.postJson(ApiPaths.pushRegister, {
-        'token': token,
-        'platform': platform,
-        'locale': ?locale,
-      });
+  Future<void> register({required String token, required String platform, String? locale}) =>
+      _client.postJson(ApiPaths.pushRegister, {'token': token, 'platform': platform, 'locale': ?locale});
 }

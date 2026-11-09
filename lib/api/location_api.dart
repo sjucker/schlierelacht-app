@@ -11,9 +11,7 @@ class LocationApi {
 
   Future<List<Location>> fetchLocations() async {
     final list = await _client.getList(ApiPaths.location);
-    return list
-        .map((e) => Location.fromJson(e as Map<String, dynamic>))
-        .toList();
+    return list.map((e) => Location.fromJson(e as Map<String, dynamic>)).toList();
   }
 
   Future<Location> fetchLocation(String externalId) async {

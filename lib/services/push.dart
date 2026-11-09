@@ -7,8 +7,7 @@ import '../api/push_api.dart';
 
 /// Global messenger key so [PushService] can surface foreground notifications
 /// as SnackBars from outside the widget tree. Wired into `MaterialApp`.
-final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
-    GlobalKey<ScaffoldMessengerState>();
+final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
 
 /// Firebase Cloud Messaging integration.
 ///
@@ -68,11 +67,7 @@ class PushService {
 
   Future<void> _register(String token) async {
     try {
-      await _api.register(
-        token: token,
-        platform: Platform.isIOS ? 'ios' : 'android',
-        locale: 'de',
-      );
+      await _api.register(token: token, platform: Platform.isIOS ? 'ios' : 'android', locale: 'de');
     } catch (_) {
       // Backend registration is best-effort; topic subscription still works.
     }
@@ -106,11 +101,6 @@ class PushService {
     if (messenger == null) return;
     final title = notification.title;
     final body = notification.body ?? '';
-    messenger.showSnackBar(
-      SnackBar(
-        content: Text(title == null ? body : '$title\n$body'),
-        duration: const Duration(seconds: 5),
-      ),
-    );
+    messenger.showSnackBar(SnackBar(content: Text(title == null ? body : '$title\n$body'), duration: const Duration(seconds: 5)));
   }
 }

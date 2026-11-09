@@ -20,9 +20,7 @@ class AttractionApi {
       path += '?type=${types.map((t) => t.wire).join(',')}';
     }
     final list = await _client.getList(path);
-    return list
-        .map((e) => Attraction.fromJson(e as Map<String, dynamic>))
-        .toList();
+    return list.map((e) => Attraction.fromJson(e as Map<String, dynamic>)).toList();
   }
 
   Future<Attraction> fetchAttraction(String externalId) async {
@@ -31,6 +29,5 @@ class AttractionApi {
   }
 
   /// Absolute URL of an attraction file, opened in the browser to download.
-  static String fileUrl(String externalId, int fileId) =>
-      '$apiBaseUrl${ApiPaths.attraction}/$externalId/files/$fileId';
+  static String fileUrl(String externalId, int fileId) => '$apiBaseUrl${ApiPaths.attraction}/$externalId/files/$fileId';
 }

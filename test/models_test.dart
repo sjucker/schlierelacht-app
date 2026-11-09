@@ -11,32 +11,20 @@ import 'package:schlierelacht_app/models/programm_point.dart';
 import 'package:schlierelacht_app/models/schedule.dart';
 import 'package:schlierelacht_app/models/sponsoring.dart';
 
-Map<String, dynamic> _location({
-  String id = 'L1',
-  String type = 'STAGE',
-  bool showInFestplan = true,
-}) =>
-    {
-      'externalId': id,
-      'type': type,
-      'name': 'Hauptbühne',
-      'latitude': 47.39,
-      'longitude': 8.44,
-      'googleMapsUrl': 'https://maps.google.com/?q=1',
-      'showInFestplan': showInFestplan,
-    };
+Map<String, dynamic> _location({String id = 'L1', String type = 'STAGE', bool showInFestplan = true}) => {
+  'externalId': id,
+  'type': type,
+  'name': 'Hauptbühne',
+  'latitude': 47.39,
+  'longitude': 8.44,
+  'googleMapsUrl': 'https://maps.google.com/?q=1',
+  'showInFestplan': showInFestplan,
+};
 
-Map<String, dynamic> _point(String name, String date, String? time,
-        {bool past = false}) =>
-    {
-      'attraction': {'externalId': name, 'name': name},
-      'entry': {
-        'location': _location(),
-        'fromDate': date,
-        'fromTime': time,
-        'past': past,
-      },
-    };
+Map<String, dynamic> _point(String name, String date, String? time, {bool past = false}) => {
+  'attraction': {'externalId': name, 'name': name},
+  'entry': {'location': _location(), 'fromDate': date, 'fromTime': time, 'past': past},
+};
 
 void main() {
   test('Location parses showInFestplan and EVENT_LOCATION', () {
@@ -55,13 +43,7 @@ void main() {
         {'location': _location(), 'fromDate': '2027-09-03', 'past': true},
       ],
       'files': [
-        {
-          'id': 7,
-          'filename': 'rider.pdf',
-          'filetype': 'application/pdf',
-          'description': 'Rider',
-          'filesize': 2048,
-        },
+        {'id': 7, 'filename': 'rider.pdf', 'filetype': 'application/pdf', 'description': 'Rider', 'filesize': 2048},
       ],
     });
     expect(a.programm.single.past, isTrue);
@@ -101,22 +83,14 @@ void main() {
     expect(ok.members.single.email, isNull);
     expect(ok.teamMembers.single.team, OkTeam.sicherheit);
 
-    final entry = MeetupEntry.fromJson(
-        {'firstname': 'A', 'lastname': 'B', 'jahrgang': 'BORN_1984_1988'});
+    final entry = MeetupEntry.fromJson({'firstname': 'A', 'lastname': 'B', 'jahrgang': 'BORN_1984_1988'});
     expect(entry.jahrgang, MeetupJahrgang.born1984To1988);
     expect(
-      const MeetupRegistration(
-        firstname: 'A',
-        lastname: 'B',
-        email: 'a@b.ch',
-        jahrgang: MeetupJahrgang.after1998,
-        showOnList: false,
-      ).toJson()['jahrgang'],
+      const MeetupRegistration(firstname: 'A', lastname: 'B', email: 'a@b.ch', jahrgang: MeetupJahrgang.after1998, showOnList: false).toJson()['jahrgang'],
       'AFTER_1998',
     );
 
-    final type = SponsoringTypeInfo.fromJson(
-        {'type': 'GOENNER', 'description': 'Gönner'});
+    final type = SponsoringTypeInfo.fromJson({'type': 'GOENNER', 'description': 'Gönner'});
     expect(type.type, SponsoringType.goenner);
     // Declaration order mirrors the website's TYPE_ORDER.
     expect(SponsoringType.values.first, SponsoringType.organisation);

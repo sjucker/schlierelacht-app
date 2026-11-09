@@ -37,8 +37,7 @@ class _TeilnehmerlisteScreenState extends State<TeilnehmerlisteScreen> {
         onData: (context, all) {
           final entries = _group == null
               ? <MeetupEntry>[]
-              : (all.where((e) => e.jahrgang == _group).toList()
-                ..sort((a, b) {
+              : (all.where((e) => e.jahrgang == _group).toList()..sort((a, b) {
                   final l = a.lastname.compareTo(b.lastname);
                   return l != 0 ? l : a.firstname.compareTo(b.firstname);
                 }));
@@ -48,10 +47,7 @@ class _TeilnehmerlisteScreenState extends State<TeilnehmerlisteScreen> {
               DropdownButtonFormField<MeetupJahrgang>(
                 initialValue: _group,
                 isExpanded: true,
-                decoration: const InputDecoration(
-                  labelText: 'Jahrgang',
-                  border: OutlineInputBorder(),
-                ),
+                decoration: const InputDecoration(labelText: 'Jahrgang', border: OutlineInputBorder()),
                 hint: const Text('Jahrgang wählen…'),
                 items: [
                   for (final j in MeetupJahrgang.values)
@@ -64,24 +60,14 @@ class _TeilnehmerlisteScreenState extends State<TeilnehmerlisteScreen> {
               ),
               const SizedBox(height: 16),
               if (_group != null && entries.isEmpty)
-                Text('Noch keine Anmeldungen für diese Gruppe.',
-                    style: theme.textTheme.bodyMedium
-                        ?.copyWith(color: theme.colorScheme.outline)),
+                Text('Noch keine Anmeldungen für diese Gruppe.', style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.outline)),
               if (entries.isNotEmpty) ...[
                 Text(
-                  '${entries.length} ${entries.length == 1 ? 'Anmeldung' : 'Anmeldungen'}'
-                      .toUpperCase(),
-                  style: theme.textTheme.labelSmall?.copyWith(
-                    color: theme.colorScheme.outline,
-                    letterSpacing: 1,
-                  ),
+                  '${entries.length} ${entries.length == 1 ? 'Anmeldung' : 'Anmeldungen'}'.toUpperCase(),
+                  style: theme.textTheme.labelSmall?.copyWith(color: theme.colorScheme.outline, letterSpacing: 1),
                 ),
                 const SizedBox(height: 8),
-                for (final e in entries)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 3),
-                    child: Text('${e.lastname}, ${e.firstname}'),
-                  ),
+                for (final e in entries) Padding(padding: const EdgeInsets.symmetric(vertical: 3), child: Text('${e.lastname}, ${e.firstname}')),
               ],
             ],
           );

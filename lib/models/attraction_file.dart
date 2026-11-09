@@ -7,19 +7,13 @@ class AttractionFile {
   final String description;
   final int filesize;
 
-  const AttractionFile({
-    required this.id,
-    required this.filename,
-    required this.filetype,
-    required this.description,
-    required this.filesize,
-  });
+  const AttractionFile({required this.id, required this.filename, required this.filetype, required this.description, required this.filesize});
 
   factory AttractionFile.fromJson(Map<String, dynamic> json) => AttractionFile(
-        id: json['id'] as int,
-        filename: json['filename'] as String,
-        filetype: json['filetype'] as String,
-        description: json['description'] as String,
-        filesize: (json['filesize'] as num).toInt(),
-      );
+    id: json['id'] as int,
+    filename: json['filename'] as String,
+    filetype: json['filetype'] as String,
+    description: json['description'] as String,
+    filesize: (json['filesize'] as num).toInt(),
+  );
 }

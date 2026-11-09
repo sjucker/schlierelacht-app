@@ -30,18 +30,14 @@ class _GastroScreenState extends State<GastroScreen> {
     _future = _fetch();
   }
 
-  Future<List<Attraction>> _fetch() async =>
-      (await _api.fetchAttractions(types: {AttractionType.food}))
-        ..sort((a, b) => a.externalId.compareTo(b.externalId));
+  Future<List<Attraction>> _fetch() async => (await _api.fetchAttractions(types: {AttractionType.food}))..sort((a, b) => a.externalId.compareTo(b.externalId));
 
   void _reload() => setState(() => _future = _fetch());
 
   bool _matches(Attraction a) {
     final q = _query.trim().toLowerCase();
     if (q.isEmpty) return true;
-    return '${a.externalId} ${a.name} ${a.operator ?? ''}'
-        .toLowerCase()
-        .contains(q);
+    return '${a.externalId} ${a.name} ${a.operator ?? ''}'.toLowerCase().contains(q);
   }
 
   @override
@@ -60,7 +56,8 @@ class _GastroScreenState extends State<GastroScreen> {
                 const SliverToBoxAdapter(
                   child: IntroText([
                     TextSpan(
-                      text: 'Nachstehend finden Sie die Auflistung der '
+                      text:
+                          'Nachstehend finden Sie die Auflistung der '
                           'Festwirtschaften und Marktstände am Schlierefäscht '
                           '2027. Diese Liste wird bis zum Fest ergänzt und '
                           'komplettiert.',
@@ -79,16 +76,12 @@ class _GastroScreenState extends State<GastroScreen> {
                 ),
                 if (items.isEmpty)
                   const SliverToBoxAdapter(
-                    child: Padding(
-                      padding: EdgeInsets.all(24),
-                      child: Text('Keine Einträge gefunden.'),
-                    ),
+                    child: Padding(padding: EdgeInsets.all(24), child: Text('Keine Einträge gefunden.')),
                   )
                 else
                   SliverList.builder(
                     itemCount: items.length,
-                    itemBuilder: (context, i) =>
-                        _GastroCard(attraction: items[i]),
+                    itemBuilder: (context, i) => _GastroCard(attraction: items[i]),
                   ),
               ],
             ),
@@ -114,19 +107,12 @@ class _GastroCard extends StatelessWidget {
       child: InkWell(
         onTap: () => Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (_) => AttractionDetailScreen(
-              externalId: attraction.externalId,
-              title: 'Gastro',
-            ),
+            builder: (_) => AttractionDetailScreen(externalId: attraction.externalId, title: 'Gastro'),
           ),
         ),
         child: Row(
           children: [
-            SizedBox(
-              width: 96,
-              height: 96,
-              child: CloudflareImage(cloudflareId: image?.cloudflareId),
-            ),
+            SizedBox(width: 96, height: 96, child: CloudflareImage(cloudflareId: image?.cloudflareId)),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(12),
@@ -134,35 +120,20 @@ class _GastroCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(
-                      'Nr. ${attraction.externalId}',
-                      style: theme.textTheme.labelSmall
-                          ?.copyWith(color: theme.colorScheme.outline),
-                    ),
+                    Text('Nr. ${attraction.externalId}', style: theme.textTheme.labelSmall?.copyWith(color: theme.colorScheme.outline)),
                     Text(
                       attraction.name,
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: theme.colorScheme.primary,
-                      ),
+                      style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600, color: theme.colorScheme.primary),
                     ),
-                    if (attraction.operator != null &&
-                        attraction.operator!.isNotEmpty) ...[
+                    if (attraction.operator != null && attraction.operator!.isNotEmpty) ...[
                       const SizedBox(height: 4),
-                      Text(
-                        attraction.operator!,
-                        style: theme.textTheme.bodySmall
-                            ?.copyWith(color: theme.colorScheme.outline),
-                      ),
+                      Text(attraction.operator!, style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.outline)),
                     ],
                   ],
                 ),
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.only(right: 8),
-              child: Icon(Icons.chevron_right),
-            ),
+            const Padding(padding: EdgeInsets.only(right: 8), child: Icon(Icons.chevron_right)),
           ],
         ),
       ),

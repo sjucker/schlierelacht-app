@@ -12,8 +12,7 @@ class ProgrammPoint {
   const ProgrammPoint({required this.attraction, required this.entry});
 
   factory ProgrammPoint.fromJson(Map<String, dynamic> json) => ProgrammPoint(
-        attraction:
-            AttractionRef.fromJson(json['attraction'] as Map<String, dynamic>),
-        entry: ProgrammEntry.fromJson(json['entry'] as Map<String, dynamic>),
-      );
+    attraction: AttractionRef.fromJson(json['attraction'] as Map<String, dynamic>),
+    entry: ProgrammEntry.fromJson(json['entry'] as Map<String, dynamic>),
+  );
 }

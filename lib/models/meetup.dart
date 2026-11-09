@@ -34,17 +34,10 @@ class MeetupEntry {
   final String lastname;
   final MeetupJahrgang? jahrgang;
 
-  const MeetupEntry({
-    required this.firstname,
-    required this.lastname,
-    required this.jahrgang,
-  });
+  const MeetupEntry({required this.firstname, required this.lastname, required this.jahrgang});
 
-  factory MeetupEntry.fromJson(Map<String, dynamic> json) => MeetupEntry(
-        firstname: json['firstname'] as String,
-        lastname: json['lastname'] as String,
-        jahrgang: MeetupJahrgang.fromWire(json['jahrgang'] as String?),
-      );
+  factory MeetupEntry.fromJson(Map<String, dynamic> json) =>
+      MeetupEntry(firstname: json['firstname'] as String, lastname: json['lastname'] as String, jahrgang: MeetupJahrgang.fromWire(json['jahrgang'] as String?));
 }
 
 /// Mirrors the backend `MeetupRegistrationDTO` (POST body).
@@ -55,19 +48,7 @@ class MeetupRegistration {
   final MeetupJahrgang jahrgang;
   final bool showOnList;
 
-  const MeetupRegistration({
-    required this.firstname,
-    required this.lastname,
-    required this.email,
-    required this.jahrgang,
-    required this.showOnList,
-  });
+  const MeetupRegistration({required this.firstname, required this.lastname, required this.email, required this.jahrgang, required this.showOnList});
 
-  Map<String, dynamic> toJson() => {
-        'firstname': firstname,
-        'lastname': lastname,
-        'email': email,
-        'jahrgang': jahrgang.wire,
-        'showOnList': showOnList,
-      };
+  Map<String, dynamic> toJson() => {'firstname': firstname, 'lastname': lastname, 'email': email, 'jahrgang': jahrgang.wire, 'showOnList': showOnList};
 }

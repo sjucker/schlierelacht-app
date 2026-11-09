@@ -1,8 +1,7 @@
 /// Mirrors the backend `OkTeam` enum, in the website's display order, with
 /// German labels.
 enum OkTeam {
-  praesidiales('PRAESIDIALES_STADT_KOMMUNIKATION_FINANZEN',
-      'Präsidiales/Stadt/Kommunikation/Finanzen'),
+  praesidiales('PRAESIDIALES_STADT_KOMMUNIKATION_FINANZEN', 'Präsidiales/Stadt/Kommunikation/Finanzen'),
   bauInfrastruktur('BAU_INFRASTRUKTUR', 'Bau/Infrastruktur'),
   gastronomie('GASTRONOMIE', 'Gastronomie'),
   programmAktivitaeten('PROGRAMM_AKTIVITAETEN', 'Programm/Aktivitäten'),
@@ -30,19 +29,10 @@ class OkMember {
   final String? email;
   final String? cloudflareId;
 
-  const OkMember({
-    required this.name,
-    required this.role,
-    this.email,
-    this.cloudflareId,
-  });
+  const OkMember({required this.name, required this.role, this.email, this.cloudflareId});
 
-  factory OkMember.fromJson(Map<String, dynamic> json) => OkMember(
-        name: json['name'] as String,
-        role: json['role'] as String,
-        email: json['email'] as String?,
-        cloudflareId: json['cloudflareId'] as String?,
-      );
+  factory OkMember.fromJson(Map<String, dynamic> json) =>
+      OkMember(name: json['name'] as String, role: json['role'] as String, email: json['email'] as String?, cloudflareId: json['cloudflareId'] as String?);
 }
 
 /// Mirrors the backend `OkTeamMemberDTO`.
@@ -53,11 +43,8 @@ class OkTeamMember {
 
   const OkTeamMember({required this.name, required this.team, this.email});
 
-  factory OkTeamMember.fromJson(Map<String, dynamic> json) => OkTeamMember(
-        name: json['name'] as String,
-        team: OkTeam.fromWire(json['team'] as String?),
-        email: json['email'] as String?,
-      );
+  factory OkTeamMember.fromJson(Map<String, dynamic> json) =>
+      OkTeamMember(name: json['name'] as String, team: OkTeam.fromWire(json['team'] as String?), email: json['email'] as String?);
 }
 
 /// Mirrors the backend `OkDTO`.
@@ -68,11 +55,7 @@ class Ok {
   const Ok({required this.members, required this.teamMembers});
 
   factory Ok.fromJson(Map<String, dynamic> json) => Ok(
-        members: (json['members'] as List<dynamic>? ?? [])
-            .map((e) => OkMember.fromJson(e as Map<String, dynamic>))
-            .toList(),
-        teamMembers: (json['teamMembers'] as List<dynamic>? ?? [])
-            .map((e) => OkTeamMember.fromJson(e as Map<String, dynamic>))
-            .toList(),
-      );
+    members: (json['members'] as List<dynamic>? ?? []).map((e) => OkMember.fromJson(e as Map<String, dynamic>)).toList(),
+    teamMembers: (json['teamMembers'] as List<dynamic>? ?? []).map((e) => OkTeamMember.fromJson(e as Map<String, dynamic>)).toList(),
+  );
 }

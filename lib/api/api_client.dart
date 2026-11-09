@@ -38,11 +38,7 @@ class ApiClient {
   Future<void> postJson(String path, Map<String, dynamic> body) async {
     final http.Response response;
     try {
-      response = await _client.post(
-        _uri(path),
-        headers: const {'Content-Type': 'application/json'},
-        body: jsonEncode(body),
-      );
+      response = await _client.post(_uri(path), headers: const {'Content-Type': 'application/json'}, body: jsonEncode(body));
     } catch (e) {
       throw ApiException('Verbindung fehlgeschlagen: $e');
     }

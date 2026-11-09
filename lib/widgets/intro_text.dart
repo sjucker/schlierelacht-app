@@ -17,10 +17,7 @@ class IntroText extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          for (var i = 0; i < paragraphs.length; i++) ...[
-            if (i > 0) const SizedBox(height: 8),
-            Text.rich(paragraphs[i], style: style),
-          ],
+          for (var i = 0; i < paragraphs.length; i++) ...[if (i > 0) const SizedBox(height: 8), Text.rich(paragraphs[i], style: style)],
         ],
       ),
     );

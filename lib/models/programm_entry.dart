@@ -15,24 +15,14 @@ class ProgrammEntry {
   /// client never has to compare against the device clock.
   final bool past;
 
-  const ProgrammEntry({
-    required this.location,
-    required this.fromDate,
-    this.fromTime,
-    this.toDate,
-    this.toTime,
-    this.past = false,
-  });
+  const ProgrammEntry({required this.location, required this.fromDate, this.fromTime, this.toDate, this.toTime, this.past = false});
 
   factory ProgrammEntry.fromJson(Map<String, dynamic> json) => ProgrammEntry(
-        location:
-            Location.fromJson(json['location'] as Map<String, dynamic>),
-        fromDate: DateTime.parse(json['fromDate'] as String),
-        fromTime: json['fromTime'] as String?,
-        toDate: json['toDate'] == null
-            ? null
-            : DateTime.parse(json['toDate'] as String),
-        toTime: json['toTime'] as String?,
-        past: json['past'] as bool? ?? false,
-      );
+    location: Location.fromJson(json['location'] as Map<String, dynamic>),
+    fromDate: DateTime.parse(json['fromDate'] as String),
+    fromTime: json['fromTime'] as String?,
+    toDate: json['toDate'] == null ? null : DateTime.parse(json['toDate'] as String),
+    toTime: json['toTime'] as String?,
+    past: json['past'] as bool? ?? false,
+  );
 }

@@ -49,18 +49,11 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      formatGermanDate(news.date),
-                      style: theme.textTheme.labelMedium
-                          ?.copyWith(color: theme.colorScheme.outline),
-                    ),
+                    Text(formatGermanDate(news.date), style: theme.textTheme.labelMedium?.copyWith(color: theme.colorScheme.outline)),
                     const SizedBox(height: 4),
                     Text(
                       news.title,
-                      style: theme.textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: theme.colorScheme.primary,
-                      ),
+                      style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold, color: theme.colorScheme.primary),
                     ),
                     const Divider(height: 32),
                     MarkdownBody(data: news.fullText),

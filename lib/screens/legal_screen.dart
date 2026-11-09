@@ -8,11 +8,9 @@ import '../utils/external_links.dart';
 class LegalScreen extends StatelessWidget {
   const LegalScreen._(this.title, this.markdown, {super.key});
 
-  const LegalScreen.impressum({Key? key})
-      : this._('Impressum', _impressum, key: key);
+  const LegalScreen.impressum({Key? key}) : this._('Impressum', _impressum, key: key);
 
-  const LegalScreen.datenschutz({Key? key})
-      : this._('Datenschutz', _datenschutz, key: key);
+  const LegalScreen.datenschutz({Key? key}) : this._('Datenschutz', _datenschutz, key: key);
 
   final String title;
   final String markdown;
@@ -21,11 +19,7 @@ class LegalScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(title)),
-      body: Markdown(
-        data: markdown,
-        padding: const EdgeInsets.all(16),
-        onTapLink: (_, href, _) => openUrl(href),
-      ),
+      body: Markdown(data: markdown, padding: const EdgeInsets.all(16), onTapLink: (_, href, _) => openUrl(href)),
     );
   }
 }

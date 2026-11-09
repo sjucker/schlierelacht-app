@@ -34,18 +34,13 @@ int _timeRank(String? hhmm) {
 ///
 /// With [mostRecentFirst] the whole order is reversed — days and the items
 /// within each day — which is how the website lists its "Vergangene" group.
-List<ScheduleDay> buildSchedule(
-  List<ProgrammPoint> points, {
-  bool mostRecentFirst = false,
-}) {
+List<ScheduleDay> buildSchedule(List<ProgrammPoint> points, {bool mostRecentFirst = false}) {
   final byDay = <DateTime, List<ScheduleItem>>{};
 
   for (final point in points) {
     final entry = point.entry;
     final key = _dayKey(entry.fromDate);
-    byDay
-        .putIfAbsent(key, () => [])
-        .add(ScheduleItem(entry: entry, attraction: point.attraction));
+    byDay.putIfAbsent(key, () => []).add(ScheduleItem(entry: entry, attraction: point.attraction));
   }
 
   final days = byDay.keys.toList()..sort();
@@ -56,10 +51,7 @@ List<ScheduleDay> buildSchedule(
         if (t != 0) return t;
         return a.attraction.name.toLowerCase().compareTo(b.attraction.name.toLowerCase());
       });
-    return ScheduleDay(
-      date: day,
-      items: mostRecentFirst ? items.reversed.toList() : items,
-    );
+    return ScheduleDay(date: day, items: mostRecentFirst ? items.reversed.toList() : items);
   }).toList();
   return mostRecentFirst ? schedule.reversed.toList() : schedule;
 }

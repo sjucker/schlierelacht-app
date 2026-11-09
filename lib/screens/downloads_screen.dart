@@ -55,19 +55,14 @@ class _DownloadsScreenState extends State<DownloadsScreen> {
                       padding: const EdgeInsets.fromLTRB(16, 20, 16, 4),
                       child: Text(
                         category.label,
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: theme.colorScheme.primary,
-                        ),
+                        style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold, color: theme.colorScheme.primary),
                       ),
                     ),
                     for (final item in items)
                       ListTile(
-                        leading: Icon(Icons.insert_drive_file_outlined,
-                            color: theme.colorScheme.primary),
+                        leading: Icon(Icons.insert_drive_file_outlined, color: theme.colorScheme.primary),
                         title: Text(item.description),
-                        subtitle: Text(
-                            '${fileExtension(item.filename)} · ${formatFileSize(item.filesize)}'),
+                        subtitle: Text('${fileExtension(item.filename)} · ${formatFileSize(item.filesize)}'),
                         trailing: const Icon(Icons.download_outlined),
                         onTap: () => openUrl(DownloadApi.fileUrl(item.id)),
                       ),

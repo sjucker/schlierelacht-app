@@ -41,9 +41,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
           return ValueListenableBuilder<Set<String>>(
             valueListenable: Prefs.instance.favorites,
             builder: (context, favorites, _) {
-              final days = buildSchedule(points
-                  .where((p) => favorites.contains(p.attraction.externalId))
-                  .toList());
+              final days = buildSchedule(points.where((p) => favorites.contains(p.attraction.externalId)).toList());
               if (days.isEmpty) return const _EmptyFavorites();
               return RefreshIndicator(
                 onRefresh: () async => _reload(),
@@ -51,12 +49,8 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                   itemCount: days.length,
                   itemBuilder: (context, i) => ScheduleDaySection(
                     day: days[i],
-                    onTapItem: (item) => Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) => AttractionDetailScreen(
-                            externalId: item.attraction.externalId),
-                      ),
-                    ),
+                    onTapItem: (item) =>
+                        Navigator.of(context).push(MaterialPageRoute(builder: (_) => AttractionDetailScreen(externalId: item.attraction.externalId))),
                   ),
                 ),
               );
@@ -80,13 +74,9 @@ class _EmptyFavorites extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.favorite_border,
-                size: 48, color: theme.colorScheme.outline),
+            Icon(Icons.favorite_border, size: 48, color: theme.colorScheme.outline),
             const SizedBox(height: 12),
-            const Text(
-              'Noch keine Favoriten.\nTippe im Programm auf das Herz, um Acts zu speichern.',
-              textAlign: TextAlign.center,
-            ),
+            const Text('Noch keine Favoriten.\nTippe im Programm auf das Herz, um Acts zu speichern.', textAlign: TextAlign.center),
           ],
         ),
       ),
