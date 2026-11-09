@@ -1,4 +1,3 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import '../api/sponsoring_api.dart';
@@ -6,7 +5,6 @@ import '../models/sponsoring.dart';
 import '../utils/external_links.dart';
 import '../widgets/async_view.dart';
 import '../widgets/cloudflare_image.dart';
-import '../widgets/intro_text.dart';
 
 typedef _SponsorData = ({List<Sponsoring> sponsors, List<SponsoringTypeInfo> types});
 
@@ -25,18 +23,10 @@ class _SponsoringScreenState extends State<SponsoringScreen> {
   final _api = SponsoringApi();
   late Future<_SponsorData> _future;
 
-  late final _mailLink = TapGestureRecognizer()..onTap = () => openUrl('mailto:albert.schweizer@schlieren.ch');
-
   @override
   void initState() {
     super.initState();
     _future = _fetch();
-  }
-
-  @override
-  void dispose() {
-    _mailLink.dispose();
-    super.dispose();
   }
 
   // Both endpoints feed the grouped layout, so wait for both.
@@ -49,7 +39,6 @@ class _SponsoringScreenState extends State<SponsoringScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(title: const Text('Sponsoren')),
       body: AsyncView<_SponsorData>(
@@ -67,38 +56,7 @@ class _SponsoringScreenState extends State<SponsoringScreen> {
             onRefresh: () async => _reload(),
             child: ListView(
               padding: const EdgeInsets.only(bottom: 24),
-              children: [
-                IntroText([
-                  TextSpan(
-                    text: 'Herzlichen Dank',
-                    style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600, color: theme.colorScheme.primary),
-                  ),
-                  const TextSpan(
-                    text:
-                        'Allen unseren Sponsoren danken wir herzlich für '
-                        'ihr grosszügiges Engagement.',
-                  ),
-                  TextSpan(
-                    children: [
-                      const TextSpan(
-                        text:
-                            'Auch beim Schlierefäscht 2027 soll wieder fast '
-                            'die Hälfte der Einnahmen durch Sponsoren erbracht '
-                            'werden. Unser Sponsoring-Verantwortlicher Albert '
-                            'Schweizer hat attraktive Sponsoring-Pakete '
-                            'geschnürt und steht Interessenten gerne für ein '
-                            'Gespräch zur Verfügung: ',
-                      ),
-                      TextSpan(
-                        text: 'E-Mail',
-                        recognizer: _mailLink,
-                        style: TextStyle(color: theme.colorScheme.primary, decoration: TextDecoration.underline),
-                      ),
-                    ],
-                  ),
-                ]),
-                for (final type in orderedTypes) _SponsorSection(title: titles[type] ?? type.label, type: type, sponsors: byType[type]!),
-              ],
+              children: [for (final type in orderedTypes) _SponsorSection(title: titles[type] ?? type.label, type: type, sponsors: byType[type]!)],
             ),
           );
         },
@@ -163,7 +121,11 @@ class _SponsorTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Sponsor logos come on a white background (not transparent), so the card
+    // is white too — in dark mode as well — and blends with the logo.
     return Card(
+      color: Colors.white,
+      surfaceTintColor: Colors.transparent,
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: sponsor.url == null ? null : () => openUrl(sponsor.url),
@@ -172,7 +134,11 @@ class _SponsorTile extends StatelessWidget {
           child: sponsor.cloudflareId != null
               ? CloudflareImage(cloudflareId: sponsor.cloudflareId, fit: BoxFit.contain)
               : Center(
-                  child: Text(sponsor.name, textAlign: TextAlign.center, style: Theme.of(context).textTheme.titleMedium),
+                  child: Text(
+                    sponsor.name,
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.black87),
+                  ),
                 ),
         ),
       ),
