@@ -5,7 +5,6 @@ import '../models/attraction.dart';
 import '../models/attraction_type.dart';
 import '../widgets/async_view.dart';
 import '../widgets/cloudflare_image.dart';
-import '../widgets/intro_text.dart';
 import 'attraction_detail_screen.dart';
 
 /// Food & drink stands (website: `gastro/index.vue`): the `FOOD` attractions
@@ -53,17 +52,6 @@ class _GastroScreenState extends State<GastroScreen> {
             onRefresh: () async => _reload(),
             child: CustomScrollView(
               slivers: [
-                const SliverToBoxAdapter(
-                  child: IntroText([
-                    TextSpan(
-                      text:
-                          'Nachstehend finden Sie die Auflistung der '
-                          'Festwirtschaften und Marktstände am Schlierefäscht '
-                          '2027. Diese Liste wird bis zum Fest ergänzt und '
-                          'komplettiert.',
-                    ),
-                  ]),
-                ),
                 SliverToBoxAdapter(
                   child: Padding(
                     padding: const EdgeInsets.all(12),
