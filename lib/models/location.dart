@@ -1,5 +1,15 @@
 /// Mirrors the backend `LocationType` enum.
-enum LocationType { stage, foodStand, bar, tent, attraction, sanitary, info, unknown }
+enum LocationType {
+  stage,
+  foodStand,
+  bar,
+  tent,
+  attraction,
+  sanitary,
+  info,
+  eventLocation,
+  unknown,
+}
 
 LocationType _locationTypeFromJson(String? value) {
   switch (value) {
@@ -17,6 +27,8 @@ LocationType _locationTypeFromJson(String? value) {
       return LocationType.sanitary;
     case 'INFO':
       return LocationType.info;
+    case 'EVENT_LOCATION':
+      return LocationType.eventLocation;
     default:
       return LocationType.unknown;
   }
@@ -33,6 +45,10 @@ class Location {
   final String? cloudflareId;
   final String? mapId;
 
+  /// Whether the location is placed on the Festplan map. The location list
+  /// still shows every location.
+  final bool showInFestplan;
+
   const Location({
     required this.externalId,
     required this.type,
@@ -42,6 +58,7 @@ class Location {
     required this.googleMapsUrl,
     this.cloudflareId,
     this.mapId,
+    this.showInFestplan = false,
   });
 
   factory Location.fromJson(Map<String, dynamic> json) => Location(
@@ -53,5 +70,6 @@ class Location {
         googleMapsUrl: json['googleMapsUrl'] as String,
         cloudflareId: json['cloudflareId'] as String?,
         mapId: json['mapId'] as String?,
+        showInFestplan: json['showInFestplan'] as bool? ?? false,
       );
 }

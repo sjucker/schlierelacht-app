@@ -6,7 +6,7 @@ import '../models/schedule.dart';
 import '../services/prefs.dart';
 import '../widgets/async_view.dart';
 import '../widgets/schedule_day_section.dart';
-import 'artist_detail_screen.dart';
+import 'attraction_detail_screen.dart';
 
 /// The user's favorited acts as a schedule: the full programm filtered down to
 /// favorited attractions (by `externalId`), grouped per day. Updates live when
@@ -53,7 +53,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                     day: days[i],
                     onTapItem: (item) => Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (_) => ArtistDetailScreen(
+                        builder: (_) => AttractionDetailScreen(
                             externalId: item.attraction.externalId),
                       ),
                     ),

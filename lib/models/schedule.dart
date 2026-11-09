@@ -29,10 +29,15 @@ int _timeRank(String? hhmm) {
   return h * 60 + m;
 }
 
-/// Groups the programm points returned by `GET /api/programm` into days, sorted
-/// chronologically by date then start time. The backend already returns them
-/// globally sorted; this regroups them per day for the sectioned list.
-List<ScheduleDay> buildSchedule(List<ProgrammPoint> points) {
+/// Groups programm points (from `GET /api/v1/programm` or `/api/v1/event`)
+/// into days, sorted chronologically by date then start time.
+///
+/// With [mostRecentFirst] the whole order is reversed — days and the items
+/// within each day — which is how the website lists its "Vergangene" group.
+List<ScheduleDay> buildSchedule(
+  List<ProgrammPoint> points, {
+  bool mostRecentFirst = false,
+}) {
   final byDay = <DateTime, List<ScheduleItem>>{};
 
   for (final point in points) {
@@ -44,13 +49,17 @@ List<ScheduleDay> buildSchedule(List<ProgrammPoint> points) {
   }
 
   final days = byDay.keys.toList()..sort();
-  return days.map((day) {
+  final schedule = days.map((day) {
     final items = byDay[day]!
       ..sort((a, b) {
         final t = _timeRank(a.entry.fromTime).compareTo(_timeRank(b.entry.fromTime));
         if (t != 0) return t;
         return a.attraction.name.toLowerCase().compareTo(b.attraction.name.toLowerCase());
       });
-    return ScheduleDay(date: day, items: items);
+    return ScheduleDay(
+      date: day,
+      items: mostRecentFirst ? items.reversed.toList() : items,
+    );
   }).toList();
+  return mostRecentFirst ? schedule.reversed.toList() : schedule;
 }

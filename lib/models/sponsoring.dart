@@ -1,14 +1,16 @@
-/// Mirrors the backend `SponsoringType` enum, in display order, with German
-/// section labels.
+/// Mirrors the backend `SponsoringType` enum, declared in the website's display
+/// order (`sponsoren.vue` → `TYPE_ORDER`). [label] is only a fallback — the
+/// section titles come from `GET /api/v1/sponsoring/type` (see
+/// [SponsoringTypeInfo]).
 enum SponsoringType {
-  hauptsponsoren('HAUPTSPONSOREN', 'Hauptsponsoren'),
   organisation('ORGANISATION', 'Organisation'),
+  hauptsponsoren('HAUPTSPONSOREN', 'Hauptsponsoren'),
+  partner('PARTNER', 'Partner'),
   gastregion('GASTREGION', 'Gastregion'),
   gold('GOLD', 'Gold'),
   silber('SILBER', 'Silber'),
   bronze('BRONZE', 'Bronze'),
   goenner('GOENNER', 'Gönner'),
-  partner('PARTNER', 'Partner'),
   unknown('', 'Weitere');
 
   const SponsoringType(this.wire, this.label);
@@ -19,6 +21,20 @@ enum SponsoringType {
   static SponsoringType fromWire(String? value) => values.firstWhere(
         (t) => t.wire == value,
         orElse: () => SponsoringType.unknown,
+      );
+}
+
+/// Mirrors the backend `SponsoringTypeDTO` — a tier with its display title.
+class SponsoringTypeInfo {
+  final SponsoringType type;
+  final String description;
+
+  const SponsoringTypeInfo({required this.type, required this.description});
+
+  factory SponsoringTypeInfo.fromJson(Map<String, dynamic> json) =>
+      SponsoringTypeInfo(
+        type: SponsoringType.fromWire(json['type'] as String?),
+        description: json['description'] as String,
       );
 }
 

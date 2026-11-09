@@ -27,3 +27,17 @@ const String mapboxAccessToken = String.fromEnvironment('MAPBOX_ACCESS_TOKEN');
 /// Festival centre used as the map's initial camera target (Schlieren, ZH).
 const double festLatitude = 47.3967;
 const double festLongitude = 8.4475;
+
+/// The custom Schlierelacht Mapbox style the website's maps use. Needs a
+/// token from the same Mapbox account (the website's `MAPBOX_API_TOKEN`).
+const String festMapStyleUri =
+    'mapbox://styles/schlierelacht/cmr9dkfx0003701r07otc18ui';
+
+/// Festival start — the landing-page countdown runs until this moment
+/// (same target as the website's home page).
+final DateTime festStart = DateTime(2027, 9, 3, 17);
+
+/// Official social-media profiles (website footer).
+const String facebookUrl = 'https://www.facebook.com/schlierelacht/';
+const String instagramUrl = 'https://www.instagram.com/schlierelacht/';
+const String linkedinUrl = 'https://www.linkedin.com/company/schlierelacht/';

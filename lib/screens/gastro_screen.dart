@@ -5,11 +5,13 @@ import '../models/attraction.dart';
 import '../models/attraction_type.dart';
 import '../widgets/async_view.dart';
 import '../widgets/cloudflare_image.dart';
-import 'artist_detail_screen.dart';
+import '../widgets/intro_text.dart';
+import 'attraction_detail_screen.dart';
 
-/// Food & drink stands: the `FOOD` attractions from `/api/attraction?type=FOOD`,
-/// with a client-side search over name + operator. Tapping opens the shared
-/// attraction detail screen (which already renders the FOOD `operator`).
+/// Food & drink stands (website: `gastro/index.vue`): the `FOOD` attractions
+/// from `/api/v1/attraction?type=FOOD`, sorted by their stand number (Nr. =
+/// `externalId`), with a client-side search over Nr. + name + operator.
+/// Tapping opens the shared attraction detail screen.
 class GastroScreen extends StatefulWidget {
   const GastroScreen({super.key});
 
@@ -25,17 +27,21 @@ class _GastroScreenState extends State<GastroScreen> {
   @override
   void initState() {
     super.initState();
-    _future = _api.fetchAttractions(types: {AttractionType.food});
+    _future = _fetch();
   }
 
-  void _reload() => setState(
-      () => _future = _api.fetchAttractions(types: {AttractionType.food}));
+  Future<List<Attraction>> _fetch() async =>
+      (await _api.fetchAttractions(types: {AttractionType.food}))
+        ..sort((a, b) => a.externalId.compareTo(b.externalId));
+
+  void _reload() => setState(() => _future = _fetch());
 
   bool _matches(Attraction a) {
-    if (_query.isEmpty) return true;
-    final q = _query.toLowerCase();
-    return a.name.toLowerCase().contains(q) ||
-        (a.operator?.toLowerCase().contains(q) ?? false);
+    final q = _query.trim().toLowerCase();
+    if (q.isEmpty) return true;
+    return '${a.externalId} ${a.name} ${a.operator ?? ''}'
+        .toLowerCase()
+        .contains(q);
   }
 
   @override
@@ -46,33 +52,46 @@ class _GastroScreenState extends State<GastroScreen> {
         future: _future,
         onRetry: _reload,
         onData: (context, all) {
-          if (all.isEmpty) {
-            return const Center(child: Text('Noch keine Gastro-Angebote.'));
-          }
           final items = all.where(_matches).toList();
-          return Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(12),
-                child: SearchBar(
-                  hintText: 'Suchen …',
-                  leading: const Icon(Icons.search),
-                  onChanged: (v) => setState(() => _query = v),
+          return RefreshIndicator(
+            onRefresh: () async => _reload(),
+            child: CustomScrollView(
+              slivers: [
+                const SliverToBoxAdapter(
+                  child: IntroText([
+                    TextSpan(
+                      text: 'Nachstehend finden Sie die Auflistung der '
+                          'Festwirtschaften und Marktstände am Schlierefäscht '
+                          '2027. Diese Liste wird bis zum Fest ergänzt und '
+                          'komplettiert.',
+                    ),
+                  ]),
                 ),
-              ),
-              Expanded(
-                child: items.isEmpty
-                    ? const Center(child: Text('Keine Treffer.'))
-                    : RefreshIndicator(
-                        onRefresh: () async => _reload(),
-                        child: ListView.builder(
-                          itemCount: items.length,
-                          itemBuilder: (context, i) =>
-                              _GastroCard(attraction: items[i]),
-                        ),
-                      ),
-              ),
-            ],
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: SearchBar(
+                      hintText: 'Name, Betreiber oder Nr. suchen…',
+                      leading: const Icon(Icons.search),
+                      onChanged: (v) => setState(() => _query = v),
+                    ),
+                  ),
+                ),
+                if (items.isEmpty)
+                  const SliverToBoxAdapter(
+                    child: Padding(
+                      padding: EdgeInsets.all(24),
+                      child: Text('Keine Einträge gefunden.'),
+                    ),
+                  )
+                else
+                  SliverList.builder(
+                    itemCount: items.length,
+                    itemBuilder: (context, i) =>
+                        _GastroCard(attraction: items[i]),
+                  ),
+              ],
+            ),
           );
         },
       ),
@@ -95,8 +114,10 @@ class _GastroCard extends StatelessWidget {
       child: InkWell(
         onTap: () => Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (_) =>
-                ArtistDetailScreen(externalId: attraction.externalId),
+            builder: (_) => AttractionDetailScreen(
+              externalId: attraction.externalId,
+              title: 'Gastro',
+            ),
           ),
         ),
         child: Row(
@@ -114,9 +135,16 @@ class _GastroCard extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
+                      'Nr. ${attraction.externalId}',
+                      style: theme.textTheme.labelSmall
+                          ?.copyWith(color: theme.colorScheme.outline),
+                    ),
+                    Text(
                       attraction.name,
-                      style: theme.textTheme.titleMedium
-                          ?.copyWith(fontWeight: FontWeight.w600),
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: theme.colorScheme.primary,
+                      ),
                     ),
                     if (attraction.operator != null &&
                         attraction.operator!.isNotEmpty) ...[

@@ -13,7 +13,7 @@ class ApiException implements Exception {
   String toString() => 'ApiException: $message';
 }
 
-/// Minimal REST helper against the public backend API (`/api/**`).
+/// Minimal REST helper against the public backend API (`/api/v<n>/**`).
 class ApiClient {
   ApiClient({http.Client? client}) : _client = client ?? http.Client();
 

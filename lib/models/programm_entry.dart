@@ -11,12 +11,17 @@ class ProgrammEntry {
   final DateTime? toDate;
   final String? toTime;
 
+  /// Whether the entry is already over — computed by the backend, so the
+  /// client never has to compare against the device clock.
+  final bool past;
+
   const ProgrammEntry({
     required this.location,
     required this.fromDate,
     this.fromTime,
     this.toDate,
     this.toTime,
+    this.past = false,
   });
 
   factory ProgrammEntry.fromJson(Map<String, dynamic> json) => ProgrammEntry(
@@ -28,5 +33,6 @@ class ProgrammEntry {
             ? null
             : DateTime.parse(json['toDate'] as String),
         toTime: json['toTime'] as String?,
+        past: json['past'] as bool? ?? false,
       );
 }

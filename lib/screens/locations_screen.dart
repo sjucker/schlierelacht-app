@@ -7,10 +7,11 @@ import '../services/geolocation.dart';
 import '../utils/external_links.dart';
 import '../utils/location_labels.dart';
 import '../widgets/async_view.dart';
+import 'location_detail_screen.dart';
 
-/// A flat list of all festival locations with their type and, when the user's
-/// position is known, the distance to each. Tapping opens the location in an
-/// external maps app.
+/// All festival locations with a name search (website: `locations/index.vue`).
+/// Adds each location's distance when the user's position is known and a
+/// one-tap directions button. Tapping a row opens the location detail.
 class LocationsScreen extends StatefulWidget {
   const LocationsScreen({super.key});
 
@@ -22,6 +23,7 @@ class _LocationsScreenState extends State<LocationsScreen> {
   final _api = LocationApi();
   late Future<List<Location>> _future;
   Position? _position;
+  String _query = '';
 
   @override
   void initState() {
@@ -49,32 +51,58 @@ class _LocationsScreenState extends State<LocationsScreen> {
       body: AsyncView<List<Location>>(
         future: _future,
         onRetry: _reload,
-        onData: (context, locations) {
-          if (locations.isEmpty) {
-            return const Center(child: Text('Noch keine Locations.'));
-          }
-          return RefreshIndicator(
-            onRefresh: () async => _reload(),
-            child: ListView.separated(
-              itemCount: locations.length,
-              separatorBuilder: (_, _) => const Divider(height: 1),
-              itemBuilder: (context, i) {
-                final loc = locations[i];
-                final distance = _distanceLabel(loc);
-                return ListTile(
-                  leading: Icon(locationTypeIcon(loc.type),
-                      color: Theme.of(context).colorScheme.primary),
-                  title: Text(loc.name),
-                  subtitle: Text(
-                    distance == null
-                        ? locationTypeLabel(loc.type)
-                        : '${locationTypeLabel(loc.type)} · $distance',
-                  ),
-                  trailing: const Icon(Icons.directions_outlined),
-                  onTap: () => openUrl(loc.googleMapsUrl),
-                );
-              },
-            ),
+        onData: (context, all) {
+          final q = _query.trim().toLowerCase();
+          final locations = q.isEmpty
+              ? all
+              : all.where((l) => l.name.toLowerCase().contains(q)).toList();
+          return Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(12),
+                child: SearchBar(
+                  hintText: 'Ort suchen…',
+                  leading: const Icon(Icons.search),
+                  onChanged: (v) => setState(() => _query = v),
+                ),
+              ),
+              Expanded(
+                child: locations.isEmpty
+                    ? const Center(child: Text('Keine Orte gefunden.'))
+                    : RefreshIndicator(
+                        onRefresh: () async => _reload(),
+                        child: ListView.separated(
+                          itemCount: locations.length,
+                          separatorBuilder: (_, _) => const Divider(height: 1),
+                          itemBuilder: (context, i) {
+                            final loc = locations[i];
+                            final distance = _distanceLabel(loc);
+                            return ListTile(
+                              leading: Icon(locationTypeIcon(loc.type),
+                                  color: Theme.of(context).colorScheme.primary),
+                              title: Text(loc.name),
+                              subtitle: Text(
+                                distance == null
+                                    ? locationTypeLabel(loc.type)
+                                    : '${locationTypeLabel(loc.type)} · $distance',
+                              ),
+                              trailing: IconButton(
+                                tooltip: 'In Karten öffnen',
+                                icon: const Icon(Icons.directions_outlined),
+                                onPressed: () => openUrl(loc.googleMapsUrl),
+                              ),
+                              onTap: () => Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) => LocationDetailScreen(
+                                      externalId: loc.externalId),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+              ),
+            ],
           );
         },
       ),

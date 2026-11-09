@@ -1,8 +1,9 @@
+import 'attraction_file.dart';
 import 'image_ref.dart';
 import 'programm_entry.dart';
 
-/// Mirrors the backend `AttractionDTO`. Carries its own `programm` entries —
-/// the festival schedule is assembled client-side from these (see schedule.dart).
+/// Mirrors the backend `AttractionDTO`, including its own `programm` entries
+/// and downloadable `files`.
 class Attraction {
   final String externalId;
   final String name;
@@ -16,6 +17,7 @@ class Attraction {
   final String? operator;
   final List<ImageRef> images;
   final List<ProgrammEntry> programm;
+  final List<AttractionFile> files;
 
   const Attraction({
     required this.externalId,
@@ -28,6 +30,7 @@ class Attraction {
     this.operator,
     required this.images,
     required this.programm,
+    this.files = const [],
   });
 
   /// The single MAIN image, or null when the attraction has none.
@@ -58,6 +61,9 @@ class Attraction {
             .toList(),
         programm: (json['programm'] as List<dynamic>? ?? [])
             .map((e) => ProgrammEntry.fromJson(e as Map<String, dynamic>))
+            .toList(),
+        files: (json['files'] as List<dynamic>? ?? [])
+            .map((e) => AttractionFile.fromJson(e as Map<String, dynamic>))
             .toList(),
       );
 }
