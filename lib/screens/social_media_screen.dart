@@ -28,7 +28,7 @@ class SocialMediaScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         children: [
           Card(
-            color: theme.colorScheme.primaryContainer,
+            color: theme.colorScheme.tertiaryContainer,
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
@@ -36,13 +36,13 @@ class SocialMediaScreen extends StatelessWidget {
                 children: [
                   Text(
                     'Zeig uns dein Schlierefäscht!',
-                    style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600, color: theme.colorScheme.onPrimaryContainer),
+                    style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600, color: theme.colorScheme.onTertiaryContainer),
                   ),
                   const SizedBox(height: 8),
                   Text(
                     'Teile deine Fotos und Videos auf Instagram mit $instagramHashtag '
                     'und markiere @schlierelacht.',
-                    style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onPrimaryContainer),
+                    style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onTertiaryContainer),
                   ),
                   const SizedBox(height: 12),
                   Wrap(

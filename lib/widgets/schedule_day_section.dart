@@ -25,7 +25,8 @@ class ScheduleDaySection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Container(
-          color: theme.colorScheme.surfaceContainerHighest,
+          // Upcoming days get the light-blue brand tint; past days stay muted.
+          color: past ? theme.colorScheme.surfaceContainerHighest : theme.colorScheme.secondaryContainer,
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.baseline,

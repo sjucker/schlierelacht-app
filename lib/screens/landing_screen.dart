@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../config.dart';
+import '../theme.dart';
 import '../utils/external_links.dart';
 import 'favorites_screen.dart';
 import 'festplan_screen.dart';
@@ -13,8 +14,6 @@ import 'news_list_screen.dart';
 import 'programm_screen.dart';
 import 'social_media_screen.dart';
 import 'sponsoring_screen.dart';
-
-const Color _festYellow = Color(0xFFFFF03F);
 
 /// App home (the website's home page + its navigation): the festival logo, the
 /// countdown to the festival start, the "free entry" note, a grid linking to
@@ -121,7 +120,7 @@ class _FestBannerState extends State<_FestBanner> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Card(
-        color: _festYellow,
+        color: FestColors.yellow,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           child: Column(
@@ -130,7 +129,7 @@ class _FestBannerState extends State<_FestBanner> {
                 Text(
                   '10 unvergessliche Tage in Schlieren. Es dauert nur noch:',
                   textAlign: TextAlign.center,
-                  style: theme.textTheme.bodySmall?.copyWith(color: Colors.black),
+                  style: theme.textTheme.bodySmall?.copyWith(color: FestColors.blue),
                 ),
                 const SizedBox(height: 6),
                 Row(
@@ -144,12 +143,12 @@ class _FestBannerState extends State<_FestBanner> {
                     _CountdownUnit(_two(remaining.inMinutes % 60), 'Min'),
                   ],
                 ),
-                const Divider(color: Colors.black26, height: 20),
+                Divider(color: FestColors.blue.withValues(alpha: 0.25), height: 20),
               ],
               Text(
                 'Freier Eintritt zu allen Konzerten',
                 textAlign: TextAlign.center,
-                style: theme.textTheme.titleMedium?.copyWith(color: Colors.black, fontWeight: FontWeight.bold),
+                style: theme.textTheme.titleMedium?.copyWith(color: FestColors.blue, fontWeight: FontWeight.bold),
               ),
             ],
           ),
@@ -174,9 +173,13 @@ class _CountdownUnit extends StatelessWidget {
       children: [
         Text(
           value,
-          style: theme.textTheme.headlineMedium?.copyWith(color: Colors.black, fontWeight: FontWeight.bold, fontFeatures: const [FontFeature.tabularFigures()]),
+          style: theme.textTheme.headlineMedium?.copyWith(
+            color: FestColors.blue,
+            fontWeight: FontWeight.bold,
+            fontFeatures: const [FontFeature.tabularFigures()],
+          ),
         ),
-        Text(label.toUpperCase(), style: theme.textTheme.labelSmall?.copyWith(color: Colors.black)),
+        Text(label.toUpperCase(), style: theme.textTheme.labelSmall?.copyWith(color: FestColors.blue)),
       ],
     );
   }
@@ -190,7 +193,7 @@ class _Colon extends StatelessWidget {
     padding: const EdgeInsets.fromLTRB(10, 0, 10, 18),
     child: Text(
       ':',
-      style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: Colors.black, fontWeight: FontWeight.bold),
+      style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: FestColors.blue, fontWeight: FontWeight.bold),
     ),
   );
 }
@@ -236,6 +239,7 @@ class _NavCard {
   final Widget Function() pageBuilder;
 }
 
+/// A home tile: logo blue with a white icon and label.
 class _CardTile extends StatelessWidget {
   const _CardTile({required this.card});
 
@@ -245,13 +249,14 @@ class _CardTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Card(
+      color: FestColors.blue,
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => card.pageBuilder())),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(card.icon, size: 28, color: theme.colorScheme.primary),
+            Icon(card.icon, size: 28, color: Colors.white),
             const SizedBox(height: 6),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 4),
@@ -260,7 +265,7 @@ class _CardTile extends StatelessWidget {
                 textAlign: TextAlign.center,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w600),
+                style: theme.textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w600, color: Colors.white),
               ),
             ),
           ],

@@ -10,9 +10,8 @@ import 'screens/landing_screen.dart';
 import 'screens/onboarding_screen.dart';
 import 'services/prefs.dart';
 import 'services/push.dart';
+import 'theme.dart';
 import 'utils/deep_links.dart';
-
-const Color _festBlue = Color(0xFF2B3585);
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -47,12 +46,7 @@ class SchlierelachtApp extends StatelessWidget {
       title: 'Schliere lacht',
       debugShowCheckedModeBanner: false,
       scaffoldMessengerKey: scaffoldMessengerKey,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: _festBlue),
-        useMaterial3: true,
-        // Flat search bars (Programm, Gastro, Locations): no M3 drop shadow.
-        searchBarTheme: const SearchBarThemeData(elevation: WidgetStatePropertyAll(0)),
-      ),
+      theme: buildFestTheme(),
       localizationsDelegates: const [GlobalMaterialLocalizations.delegate, GlobalWidgetsLocalizations.delegate, GlobalCupertinoLocalizations.delegate],
       supportedLocales: const [Locale('de', 'CH')],
       locale: const Locale('de', 'CH'),
