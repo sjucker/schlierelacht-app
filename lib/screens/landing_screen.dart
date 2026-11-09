@@ -9,8 +9,6 @@ import 'festplan_screen.dart';
 import 'gastro_screen.dart';
 import 'info_screen.dart';
 import 'jahrgangstreffen_screen.dart';
-import 'legal_screen.dart';
-import 'locations_screen.dart';
 import 'news_list_screen.dart';
 import 'programm_screen.dart';
 import 'sponsoring_screen.dart';
@@ -19,10 +17,10 @@ const Color _festYellow = Color(0xFFFFF03F);
 
 /// App home (the website's home page + its navigation): the festival logo, the
 /// countdown to the festival start, the "free entry" note, a grid linking to
-/// every section, and a footer with social links and the legal pages.
+/// every section, and a footer with the social links.
 ///
-/// The sections follow the website's nav order; Favoriten and Locations are
-/// app-only additions.
+/// The sections follow the website's nav order; Favoriten is an app-only
+/// addition.
 class LandingScreen extends StatelessWidget {
   const LandingScreen({super.key});
 
@@ -32,7 +30,6 @@ class LandingScreen extends StatelessWidget {
     _NavCard('Favoriten', Icons.favorite_outline, () => const FavoritesScreen()),
     _NavCard('Jahrgangs-\ntreffen', Icons.groups_outlined, () => const JahrgangstreffenScreen()),
     _NavCard('Festplan', Icons.map_outlined, () => const FestplanScreen()),
-    _NavCard('Locations', Icons.place_outlined, () => const LocationsScreen()),
     _NavCard('Gastro', Icons.restaurant_outlined, () => const GastroScreen()),
     _NavCard('Sponsoren', Icons.handshake_outlined, () => const SponsoringScreen()),
     _NavCard('Über uns', Icons.info_outline, () => const InfoScreen()),
@@ -196,15 +193,13 @@ class _Colon extends StatelessWidget {
   );
 }
 
-/// Social links and the legal pages — the website's footer.
+/// Social links (the website's footer, without copyright and legal pages).
 class _Footer extends StatelessWidget {
   const _Footer();
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final small = theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.outline);
-    void push(Widget page) => Navigator.of(context).push(MaterialPageRoute(builder: (_) => page));
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
       child: Column(
@@ -219,17 +214,6 @@ class _Footer extends StatelessWidget {
               TextButton.icon(onPressed: () => openUrl(facebookUrl), icon: const Icon(Icons.facebook), label: const Text('Facebook')),
               TextButton.icon(onPressed: () => openUrl(instagramUrl), icon: const Icon(Icons.camera_alt_outlined), label: const Text('Instagram')),
               TextButton.icon(onPressed: () => openUrl(linkedinUrl), icon: const Icon(Icons.work_outline), label: const Text('LinkedIn')),
-            ],
-          ),
-          const SizedBox(height: 4),
-          Wrap(
-            alignment: WrapAlignment.center,
-            crossAxisAlignment: WrapCrossAlignment.center,
-            spacing: 4,
-            children: [
-              Text('© schlierelacht ${DateTime.now().year}', style: small),
-              TextButton(onPressed: () => push(const LegalScreen.impressum()), child: const Text('Impressum')),
-              TextButton(onPressed: () => push(const LegalScreen.datenschutz()), child: const Text('Datenschutz')),
             ],
           ),
         ],
