@@ -1,16 +1,13 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import '../api/programm_api.dart';
 import '../models/programm_point.dart';
 import '../utils/formatting.dart';
 import '../widgets/async_view.dart';
-import '../widgets/intro_text.dart';
 import '../widgets/schedule_list.dart';
 import 'attraction_detail_screen.dart';
-import 'sponsoring_screen.dart';
 
-/// The festival programm (website: `programm/index.vue`): intro text, a
+/// The festival programm (website: `programm/index.vue`): a
 /// free-text search over the act name plus date and stage filters (all
 /// resettable), then the schedule split into upcoming and "Vergangene".
 /// Each row carries a favorite toggle.
@@ -29,8 +26,6 @@ class _ProgrammScreenState extends State<ProgrammScreen> {
   DateTime? _date;
   String? _stageId;
 
-  late final _sponsorLink = TapGestureRecognizer()..onTap = () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const SponsoringScreen()));
-
   @override
   void initState() {
     super.initState();
@@ -41,7 +36,6 @@ class _ProgrammScreenState extends State<ProgrammScreen> {
   @override
   void dispose() {
     _search.dispose();
-    _sponsorLink.dispose();
     super.dispose();
   }
 
@@ -86,7 +80,6 @@ class _ProgrammScreenState extends State<ProgrammScreen> {
             onRefresh: () async => _reload(),
             child: CustomScrollView(
               slivers: [
-                SliverToBoxAdapter(child: _intro()),
                 SliverToBoxAdapter(child: _filters(dates, stages)),
                 if (filtered.isEmpty)
                   SliverToBoxAdapter(
@@ -108,36 +101,6 @@ class _ProgrammScreenState extends State<ProgrammScreen> {
         },
       ),
     );
-  }
-
-  Widget _intro() {
-    final linkStyle = TextStyle(color: Theme.of(context).colorScheme.primary, decoration: TextDecoration.underline);
-    return IntroText([
-      TextSpan(
-        children: [
-          const TextSpan(
-            text:
-                'Das Programm Schlierefäscht 2027 entsteht Schritt um Schritt. '
-                'Alle definitiv gebuchten Konzerte und Events werden fortlaufend '
-                'aufgeschaltet. Sehr gerne weisen wir auch an dieser Stelle darauf '
-                'hin, dass der ',
-          ),
-          const TextSpan(
-            text:
-                'Zutritt zu sämtlichen Konzerten kostenlos ist und keine '
-                'Tickets für den Eintritt benötigt werden',
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-          const TextSpan(
-            text:
-                '. Das wird ermöglicht durch die grosszügige Unterstützung der '
-                'Stadt Schlieren und unserer grossen ',
-          ),
-          TextSpan(text: 'Sponsorenfamily', style: linkStyle, recognizer: _sponsorLink),
-          const TextSpan(text: '. Ihnen allen gilt unser grosser Dank.'),
-        ],
-      ),
-    ]);
   }
 
   Widget _filters(List<DateTime> dates, List<MapEntry<String, String>> stages) {
