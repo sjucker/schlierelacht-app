@@ -3,6 +3,7 @@ import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 
 import '../api/news_api.dart';
 import '../models/news.dart';
+import '../utils/external_links.dart';
 import '../utils/formatting.dart';
 import '../widgets/async_view.dart';
 import '../widgets/cloudflare_image.dart';
@@ -60,7 +61,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                       style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold, color: theme.colorScheme.primary),
                     ),
                     const Divider(height: 32),
-                    MarkdownBody(data: news.fullText),
+                    MarkdownBody(data: news.fullText, onTapLink: (_, href, _) => openUrl(href)),
                   ],
                 ),
               ),
