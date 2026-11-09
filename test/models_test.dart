@@ -68,6 +68,13 @@ void main() {
     expect(type.type, SponsoringType.goenner);
     // Declaration order mirrors the website's TYPE_ORDER.
     expect(SponsoringType.values.first, SponsoringType.organisation);
+
+    // Free-text URLs: only absolute http(s) links survive (Gönner come with "").
+    String? url(String? value) => Sponsoring.fromJson({'type': 'GOENNER', 'name': 'X', 'url': value}).url;
+    expect(url(''), isNull);
+    expect(url(null), isNull);
+    expect(url('arcanus ag'), isNull);
+    expect(url('https://abaum.ch'), 'https://abaum.ch');
   });
 
   test('buildSchedule orders chronologically, or most recent first', () {

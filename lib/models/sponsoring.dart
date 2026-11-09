@@ -45,6 +45,17 @@ class Sponsoring {
     type: SponsoringType.fromWire(json['type'] as String?),
     name: json['name'] as String,
     cloudflareId: json['cloudflareId'] as String?,
-    url: json['url'] as String?,
+    url: _webUrl(json['url'] as String?),
   );
+
+  /// The backend stores the URL as free text: Gönner come with `""` and some
+  /// entries hold a name instead of a link. Only an absolute http(s) URL counts
+  /// as a link — anything else is null, so the UI shows it as plain text
+  /// (like the website, which treats `""` as "no link").
+  static String? _webUrl(String? value) {
+    final trimmed = value?.trim() ?? '';
+    final uri = Uri.tryParse(trimmed);
+    if (uri == null || !uri.isScheme('http') && !uri.isScheme('https') || uri.host.isEmpty) return null;
+    return trimmed;
+  }
 }
