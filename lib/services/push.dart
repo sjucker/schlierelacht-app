@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io' show Platform;
 
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -31,14 +32,17 @@ class PushService {
 
   final PushApi _api = PushApi();
   bool _available = false;
+  StreamSubscription<String>? _tokenRefresh;
 
   FirebaseMessaging get _messaging => FirebaseMessaging.instance;
 
   /// Marks FCM usable. Called by `main.dart` after a successful Firebase init.
   void markAvailable() => _available = true;
 
-  /// Startup wiring, once from `main`: foreground SnackBars, and opening the
-  /// `route` of a tapped push (also when the tap launched the app).
+  /// Startup wiring, once from `main`: foreground SnackBars, opening the
+  /// `route` of a tapped push (also when the tap launched the app), and
+  /// re-registering the device when permission is already granted — so a
+  /// rotated token reaches the backend on every launch, not just the first.
   Future<void> start() async {
     if (!_available) return;
     try {
@@ -49,38 +53,53 @@ class PushService {
     } catch (_) {
       // Best-effort: the app works without push.
     }
+    await registerIfPermitted();
   }
 
-  /// Requests notification permission and, if granted, registers the device
-  /// token with the backend and subscribes to the broadcast topic. Safe to call
-  /// from onboarding; no-ops when FCM is unavailable.
+  /// Asks for notification permission and, if granted, registers the device.
+  /// Used by onboarding; no-op without FCM.
   Future<void> requestAndRegister() async {
     if (!_available) return;
     try {
-      final settings = await _messaging.requestPermission();
-      if (settings.authorizationStatus == AuthorizationStatus.denied) return;
-
-      // iOS delivers the FCM token only once the APNS token is available.
-      if (Platform.isIOS) {
-        await _messaging.getAPNSToken();
-      }
-
-      // getToken/onTokenRefresh are deprecated in firebase_messaging 17 in
-      // favour of register()/onRegistered, which yield a Firebase Installation
-      // ID instead of a registration token. The backend (PushService) sends to
-      // registration tokens, so migrating needs a coordinated backend change.
-      // ignore: deprecated_member_use
-      final token = await _messaging.getToken();
-      if (token != null) {
-        await _register(token);
-      }
-      // ignore: deprecated_member_use
-      _messaging.onTokenRefresh.listen(_register);
-
-      await _messaging.subscribeToTopic(generalTopic);
+      if (_permitted(await _messaging.requestPermission())) await _registerDevice();
     } catch (_) {
       // Best-effort: never block onboarding on push setup.
     }
+  }
+
+  /// Registers the device if notifications are already permitted (e.g. after
+  /// the user enabled them in the system settings). Never prompts.
+  Future<void> registerIfPermitted() async {
+    if (!_available) return;
+    try {
+      if (_permitted(await _messaging.getNotificationSettings())) await _registerDevice();
+    } catch (_) {}
+  }
+
+  static bool _permitted(NotificationSettings settings) =>
+      settings.authorizationStatus == AuthorizationStatus.authorized || settings.authorizationStatus == AuthorizationStatus.provisional;
+
+  /// Registers the token with the backend (an upsert, so repeating it is
+  /// harmless), follows token rotation, and subscribes to the broadcast topic.
+  Future<void> _registerDevice() async {
+    // iOS delivers the FCM token only once the APNS token is available.
+    if (Platform.isIOS) {
+      await _messaging.getAPNSToken();
+    }
+
+    // getToken/onTokenRefresh are deprecated in firebase_messaging 17 in
+    // favour of register()/onRegistered, which yield a Firebase Installation
+    // ID instead of a registration token. The backend (PushService) sends to
+    // registration tokens, so migrating needs a coordinated backend change.
+    // ignore: deprecated_member_use
+    final token = await _messaging.getToken();
+    if (token != null) {
+      await _register(token);
+    }
+    // ignore: deprecated_member_use
+    _tokenRefresh ??= _messaging.onTokenRefresh.listen(_register);
+
+    await _messaging.subscribeToTopic(generalTopic);
   }
 
   Future<void> _register(String token) async {

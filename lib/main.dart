@@ -39,7 +39,8 @@ Future<void> main() async {
 
   runApp(const SchlierelachtApp());
 
-  // A tapped push opens its screen (via navigatorKey).
+  // A tapped push opens its screen (via navigatorKey), and the device token
+  // is re-registered.
   unawaited(PushService.instance.start());
 
   // Fill the offline cache in the background (and again on resume).
