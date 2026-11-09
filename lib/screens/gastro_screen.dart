@@ -35,6 +35,13 @@ class _GastroScreenState extends State<GastroScreen> {
     _future = _fetch();
   });
 
+  /// Pull-to-refresh: the indicator spins until the new data is in, while
+  /// the current list stays on screen (see [AsyncView]).
+  Future<void> _refresh() {
+    _reload();
+    return settled(_future);
+  }
+
   bool _matches(Attraction a) {
     final q = _query.trim().toLowerCase();
     if (q.isEmpty) return true;
@@ -51,7 +58,7 @@ class _GastroScreenState extends State<GastroScreen> {
         onData: (context, all) {
           final items = all.where(_matches).toList();
           return RefreshIndicator(
-            onRefresh: () async => _reload(),
+            onRefresh: _refresh,
             child: CustomScrollView(
               slivers: [
                 SliverToBoxAdapter(

@@ -27,6 +27,13 @@ class _NewsListScreenState extends State<NewsListScreen> {
     _future = _api.fetchNews();
   });
 
+  /// Pull-to-refresh: the indicator spins until the new data is in, while
+  /// the current list stays on screen (see [AsyncView]).
+  Future<void> _refresh() {
+    _reload();
+    return settled(_future);
+  }
+
   @override
   Widget build(BuildContext context) {
     return AsyncView<List<News>>(
@@ -37,7 +44,7 @@ class _NewsListScreenState extends State<NewsListScreen> {
           return const Center(child: Text('Aktuell sind keine News vorhanden.'));
         }
         return RefreshIndicator(
-          onRefresh: () async => _reload(),
+          onRefresh: _refresh,
           child: ListView.builder(
             padding: const EdgeInsets.all(16),
             itemCount: news.length,

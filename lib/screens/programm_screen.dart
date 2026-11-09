@@ -43,6 +43,13 @@ class _ProgrammScreenState extends State<ProgrammScreen> {
     _future = _api.fetchProgramm();
   });
 
+  /// Pull-to-refresh: the indicator spins until the new data is in, while
+  /// the current list stays on screen (see [AsyncView]).
+  Future<void> _refresh() {
+    _reload();
+    return settled(_future);
+  }
+
   bool get _hasFilter => _search.text.isNotEmpty || _date != null || _stageId != null;
 
   void _resetFilters() => setState(() {
@@ -79,7 +86,7 @@ class _ProgrammScreenState extends State<ProgrammScreen> {
           final filtered = _filter(points);
 
           return RefreshIndicator(
-            onRefresh: () async => _reload(),
+            onRefresh: _refresh,
             child: CustomScrollView(
               slivers: [
                 SliverToBoxAdapter(child: _filters(dates, stages)),

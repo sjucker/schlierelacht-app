@@ -39,6 +39,13 @@ class _SponsoringScreenState extends State<SponsoringScreen> {
     _future = _fetch();
   });
 
+  /// Pull-to-refresh: the indicator spins until the new data is in, while
+  /// the current list stays on screen (see [AsyncView]).
+  Future<void> _refresh() {
+    _reload();
+    return settled(_future);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,7 +62,7 @@ class _SponsoringScreenState extends State<SponsoringScreen> {
           // Enum declaration order == the website's TYPE_ORDER.
           final orderedTypes = SponsoringType.values.where(byType.containsKey).toList();
           return RefreshIndicator(
-            onRefresh: () async => _reload(),
+            onRefresh: _refresh,
             child: ListView(
               padding: const EdgeInsets.only(bottom: 24),
               children: [for (final type in orderedTypes) _SponsorSection(title: titles[type] ?? type.label, type: type, sponsors: byType[type]!)],

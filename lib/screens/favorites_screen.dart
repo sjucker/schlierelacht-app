@@ -33,6 +33,13 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     _future = _api.fetchProgramm();
   });
 
+  /// Pull-to-refresh: the indicator spins until the new data is in, while
+  /// the current list stays on screen (see [AsyncView]).
+  Future<void> _refresh() {
+    _reload();
+    return settled(_future);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,7 +63,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
               final days = buildSchedule(points.where((p) => favorites.contains(p.attraction.externalId)).toList());
               if (days.isEmpty) return const _EmptyFavorites();
               return RefreshIndicator(
-                onRefresh: () async => _reload(),
+                onRefresh: _refresh,
                 child: ListView.builder(
                   itemCount: days.length,
                   itemBuilder: (context, i) => ScheduleDaySection(
