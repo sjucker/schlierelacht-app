@@ -17,7 +17,7 @@ const Color _festYellow = Color(0xFFFFF03F);
 
 /// App home (the website's home page + its navigation): the festival logo, the
 /// countdown to the festival start, the "free entry" note, a grid linking to
-/// every section, and a footer with the social links.
+/// every section, and a footer with the social links and a Datenschutz link to the website.
 ///
 /// The sections follow the website's nav order; Favoriten is an app-only
 /// addition.
@@ -193,7 +193,8 @@ class _Colon extends StatelessWidget {
   );
 }
 
-/// Social links (the website's footer, without copyright and legal pages).
+/// Social links and a Datenschutz link to the website (the website's footer,
+/// without copyright and Impressum).
 class _Footer extends StatelessWidget {
   const _Footer();
 
@@ -216,6 +217,9 @@ class _Footer extends StatelessWidget {
               TextButton.icon(onPressed: () => openUrl(linkedinUrl), icon: const Icon(Icons.work_outline), label: const Text('LinkedIn')),
             ],
           ),
+          const SizedBox(height: 4),
+          // Required by the app stores; opens the website's page in the browser.
+          TextButton(onPressed: () => openUrl(datenschutzUrl), child: const Text('Datenschutz')),
         ],
       ),
     );

@@ -35,3 +35,7 @@ final DateTime festStart = DateTime(2027, 9, 3, 17);
 const String facebookUrl = 'https://www.facebook.com/schlierelacht/';
 const String instagramUrl = 'https://www.instagram.com/schlierelacht/';
 const String linkedinUrl = 'https://www.linkedin.com/company/schlierelacht/';
+
+/// The website's privacy policy. The app has no in-app copy and opens this in
+/// the browser — app stores require a privacy policy reachable from the app.
+const String datenschutzUrl = 'https://schlierelacht.ch/datenschutz/';
