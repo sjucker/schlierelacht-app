@@ -1,17 +1,60 @@
-# schlierelacht_app
+# Schlierelacht Festapp
 
-A new Flutter project.
+## Release
 
-## Getting Started
+### Setup
 
-This project is a starting point for a Flutter application.
+Add the following files (all git-ignored, never commit them):
 
-A few resources to get you started if this is your first Flutter project:
+* `android/upload-keystore.p12` — the Play Console upload key
+* `android/key.properties` — its credentials (`storeFile` is relative to `android/`):
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+  ```properties
+  storeFile=upload-keystore.p12
+  storePassword=...
+  keyAlias=upload
+  keyPassword=...
+  ```
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+* `android/gradle.properties` — add `MAPBOX_DOWNLOADS_TOKEN=sk.your_token_here` (secret Mapbox token with the
+  `Downloads:Read` scope, needed to download the Mapbox Android SDK)
+
+Without `key.properties`, release builds are signed with the debug key, which Play Console rejects.
+
+### Android
+
+* `flutter build appbundle --dart-define=MAPBOX_ACCESS_TOKEN=pk.your_token_here`
+* Upload [app-release.aab](build/app/outputs/bundle/release/app-release.aab) to Play Console
+
+### iOS
+
+* `flutter build ipa --dart-define=MAPBOX_ACCESS_TOKEN=pk.your_token_here`
+* Upload [schlierelacht_app.ipa](build/ios/ipa/schlierelacht_app.ipa) using the Apple Transporter macOS app
+
+After releasing, increase the build number of the version in `pubspec.yaml`.
+
+## Development
+
+### Run Configuration
+
+* When using Android Studio or IntelliJ, copy the run configuration `main.dart (Example)`
+    * add your Mapbox access token to `--dart-define=MAPBOX_ACCESS_TOKEN=pk.your_token_here` under additional run args
+
+### Xcode build problems
+
+For cleaning and rebuilding everything regarding iOS perform the following commands:
+
+```
+flutter clean
+flutter pub get
+cd ios
+rm -rf Pods
+rm Podfile.lock
+rm -rf ~/Library/Developer/Xcode/DerivedData/*
+pod install
+```
+
+## Icons
+
+* See [flutter_launcher_icons.yaml](flutter_launcher_icons.yaml)
+* `dart run flutter_launcher_icons`
