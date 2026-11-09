@@ -48,10 +48,16 @@ class PushService {
         await _messaging.getAPNSToken();
       }
 
+      // getToken/onTokenRefresh are deprecated in firebase_messaging 17 in
+      // favour of register()/onRegistered, which yield a Firebase Installation
+      // ID instead of a registration token. The backend (PushService) sends to
+      // registration tokens, so migrating needs a coordinated backend change.
+      // ignore: deprecated_member_use
       final token = await _messaging.getToken();
       if (token != null) {
         await _register(token);
       }
+      // ignore: deprecated_member_use
       _messaging.onTokenRefresh.listen(_register);
 
       await _messaging.subscribeToTopic(generalTopic);

@@ -9,7 +9,9 @@ plugins {
 
 android {
     namespace = "ch.schlierelacht.schlierelacht_app"
-    compileSdk = flutter.compileSdkVersion
+    // permission_handler_android 14 requires compiling against API 37+ (Flutter
+    // still defaults to 36). Only the compile SDK; targetSdk stays Flutter's.
+    compileSdk = maxOf(37, flutter.compileSdkVersion)
     ndkVersion = flutter.ndkVersion
 
     compileOptions {

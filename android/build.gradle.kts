@@ -30,6 +30,18 @@ subprojects {
     project.evaluationDependsOn(":app")
 }
 
+// mapbox_maps_flutter_mobile 3.x only applies `kotlin-android` on AGP < 9,
+// assuming AGP 9's built-in Kotlin otherwise. This project runs AGP 9 with
+// `android.builtInKotlin=false` (gradle.properties), so neither applies and its
+// `kotlin { compilerOptions { ... } }` block fails. Apply the plugin for it.
+subprojects {
+    if (name == "mapbox_maps_flutter_mobile") {
+        plugins.withId("com.android.library") {
+            apply(plugin = "org.jetbrains.kotlin.android")
+        }
+    }
+}
+
 tasks.register<Delete>("clean") {
     delete(rootProject.layout.buildDirectory)
 }

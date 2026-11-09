@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 
 import '../api/attraction_api.dart';
 import '../models/attraction.dart';
@@ -17,11 +17,7 @@ import 'location_detail_screen.dart';
 /// image, social links, description, downloadable files, additional images and
 /// the upcoming programm entries (each linking to its location).
 class AttractionDetailScreen extends StatefulWidget {
-  const AttractionDetailScreen({
-    super.key,
-    required this.externalId,
-    this.title = 'Programm',
-  });
+  const AttractionDetailScreen({super.key, required this.externalId, this.title = 'Programm'});
 
   final String externalId;
 
@@ -71,8 +67,7 @@ class _AttractionDetailScreenState extends State<AttractionDetailScreen> {
               if (main != null)
                 GestureDetector(
                   onTap: () => showImageViewer(context, [main.cloudflareId]),
-                  child: CloudflareImage(
-                      cloudflareId: main.cloudflareId, natural: true),
+                  child: CloudflareImage(cloudflareId: main.cloudflareId, natural: true),
                 ),
               Padding(
                 padding: const EdgeInsets.all(16),
@@ -81,18 +76,12 @@ class _AttractionDetailScreenState extends State<AttractionDetailScreen> {
                   children: [
                     Text(
                       attraction.name,
-                      style: theme.textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: theme.colorScheme.primary,
-                      ),
+                      style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold, color: theme.colorScheme.primary),
                     ),
                     _SocialLinks(attraction: attraction),
                     if (attraction.description.isNotEmpty) ...[
                       const Divider(height: 32),
-                      MarkdownBody(
-                        data: attraction.description,
-                        onTapLink: (_, href, _) => openUrl(href),
-                      ),
+                      MarkdownBody(data: attraction.description, onTapLink: (_, href, _) => openUrl(href)),
                     ],
                     if (attraction.files.isNotEmpty) ...[
                       const Divider(height: 32),
@@ -100,14 +89,11 @@ class _AttractionDetailScreenState extends State<AttractionDetailScreen> {
                       for (final file in attraction.files)
                         ListTile(
                           contentPadding: EdgeInsets.zero,
-                          leading: Icon(Icons.insert_drive_file_outlined,
-                              color: theme.colorScheme.primary),
+                          leading: Icon(Icons.insert_drive_file_outlined, color: theme.colorScheme.primary),
                           title: Text(file.description),
-                          subtitle: Text(
-                              '${fileExtension(file.filename)} · ${formatFileSize(file.filesize)}'),
+                          subtitle: Text('${fileExtension(file.filename)} · ${formatFileSize(file.filesize)}'),
                           trailing: const Icon(Icons.download_outlined),
-                          onTap: () => openUrl(AttractionApi.fileUrl(
-                              attraction.externalId, file.id)),
+                          onTap: () => openUrl(AttractionApi.fileUrl(attraction.externalId, file.id)),
                         ),
                     ],
                   ],
@@ -119,14 +105,8 @@ class _AttractionDetailScreenState extends State<AttractionDetailScreen> {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(8),
                     child: GestureDetector(
-                      onTap: () => showImageViewer(
-                        context,
-                        additional.map((img) => img.cloudflareId).toList(),
-                        initialIndex: i,
-                      ),
-                      child: CloudflareImage(
-                          cloudflareId: additional[i].cloudflareId,
-                          natural: true),
+                      onTap: () => showImageViewer(context, additional.map((img) => img.cloudflareId).toList(), initialIndex: i),
+                      child: CloudflareImage(cloudflareId: additional[i].cloudflareId, natural: true),
                     ),
                   ),
                 ),
@@ -156,15 +136,9 @@ class _SectionTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.only(bottom: 8),
-        child: Text(
-          text,
-          style: Theme.of(context)
-              .textTheme
-              .titleMedium
-              ?.copyWith(fontWeight: FontWeight.bold),
-        ),
-      );
+    padding: const EdgeInsets.only(bottom: 8),
+    child: Text(text, style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+  );
 }
 
 /// Website / Instagram / Facebook / YouTube buttons, for those that are set.
@@ -187,14 +161,7 @@ class _SocialLinks extends StatelessWidget {
       child: Wrap(
         spacing: 8,
         runSpacing: 8,
-        children: [
-          for (final (url, icon, label) in links)
-            ActionChip(
-              avatar: Icon(icon, size: 18),
-              label: Text(label),
-              onPressed: () => openUrl(url),
-            ),
-        ],
+        children: [for (final (url, icon, label) in links) ActionChip(avatar: Icon(icon, size: 18), label: Text(label), onPressed: () => openUrl(url))],
       ),
     );
   }
@@ -206,8 +173,7 @@ class _ProgrammCard extends StatelessWidget {
 
   final ProgrammEntry entry;
 
-  static bool _isSameDay(DateTime a, DateTime b) =>
-      a.year == b.year && a.month == b.month && a.day == b.day;
+  static bool _isSameDay(DateTime a, DateTime b) => a.year == b.year && a.month == b.month && a.day == b.day;
 
   /// Builds the "when" line, e.g.
   ///   "Mittwoch, 27.06.2026"                     (date only)
@@ -217,8 +183,7 @@ class _ProgrammCard extends StatelessWidget {
   static String _formatWhen(ProgrammEntry entry) {
     final fromTime = formatTime(entry.fromTime);
     final toTime = formatTime(entry.toTime);
-    final showToDate =
-        entry.toDate != null && !_isSameDay(entry.toDate!, entry.fromDate);
+    final showToDate = entry.toDate != null && !_isSameDay(entry.toDate!, entry.fromDate);
 
     var from = formatGermanDate(entry.fromDate);
     if (fromTime.isNotEmpty) from = '$from, $fromTime';
@@ -244,16 +209,10 @@ class _ProgrammCard extends StatelessWidget {
         title: Text(_formatWhen(entry)),
         subtitle: Text(
           entry.location.name,
-          style: TextStyle(
-            color: theme.colorScheme.primary,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(color: theme.colorScheme.primary, fontWeight: FontWeight.bold),
         ),
         trailing: const Icon(Icons.chevron_right),
-        onTap: () => Navigator.of(context).push(MaterialPageRoute(
-          builder: (_) =>
-              LocationDetailScreen(externalId: entry.location.externalId),
-        )),
+        onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => LocationDetailScreen(externalId: entry.location.externalId))),
       ),
     );
   }
