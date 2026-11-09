@@ -1,0 +1,17 @@
+# App launcher icon, generated from the website favicon (the yellow "Schliere
+# lacht" smiley). Regenerate after changing the source or this file with:
+#   dart run flutter_launcher_icons
+# Options: https://pub.dev/packages/flutter_launcher_icons
+flutter_launcher_icons:
+  image_path: "assets/app_icon.png"
+
+  android: true
+  # Android adaptive icon: solid brand-yellow background + the smiley inset so
+  # the round/squircle launcher mask never clips it.
+  adaptive_icon_background: "#FFF03F"
+  adaptive_icon_foreground: "assets/app_icon.png"
+  adaptive_icon_foreground_inset: 20
+
+  ios: true
+  # The App Store rejects icons with an alpha channel.
+  remove_alpha_ios: true
