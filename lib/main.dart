@@ -8,10 +8,12 @@ import 'config.dart';
 import 'firebase_options.dart';
 import 'screens/landing_screen.dart';
 import 'screens/onboarding_screen.dart';
+import 'services/offline_warmup.dart';
 import 'services/prefs.dart';
 import 'services/push.dart';
 import 'theme.dart';
 import 'utils/deep_links.dart';
+import 'widgets/offline_banner.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,6 +37,9 @@ Future<void> main() async {
   }
 
   runApp(const SchlierelachtApp());
+
+  // Fill the offline cache in the background (and again on resume).
+  OfflineWarmup.start();
 }
 
 class SchlierelachtApp extends StatelessWidget {
@@ -56,6 +61,8 @@ class SchlierelachtApp extends StatelessWidget {
       // A claimed link the app can't map (e.g. a malformed id) shows the
       // landing page instead of failing.
       onUnknownRoute: (settings) => MaterialPageRoute(settings: settings, builder: (_) => const LandingScreen()),
+      // Below every screen: a notice while saved (offline) data is shown.
+      builder: (context, child) => OfflineBanner(child: child ?? const SizedBox.shrink()),
     );
   }
 }
