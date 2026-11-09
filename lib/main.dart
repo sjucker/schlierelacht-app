@@ -46,7 +46,12 @@ class SchlierelachtApp extends StatelessWidget {
       title: 'Schliere lacht',
       debugShowCheckedModeBanner: false,
       scaffoldMessengerKey: scaffoldMessengerKey,
-      theme: ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: _festBlue), useMaterial3: true),
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: _festBlue),
+        useMaterial3: true,
+        // Flat search bars (Programm, Gastro, Locations): no M3 drop shadow.
+        searchBarTheme: const SearchBarThemeData(elevation: WidgetStatePropertyAll(0)),
+      ),
       localizationsDelegates: const [GlobalMaterialLocalizations.delegate, GlobalWidgetsLocalizations.delegate, GlobalCupertinoLocalizations.delegate],
       supportedLocales: const [Locale('de', 'CH')],
       locale: const Locale('de', 'CH'),
