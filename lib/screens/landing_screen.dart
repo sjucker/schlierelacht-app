@@ -11,6 +11,7 @@ import 'info_screen.dart';
 import 'jahrgangstreffen_screen.dart';
 import 'news_list_screen.dart';
 import 'programm_screen.dart';
+import 'social_media_screen.dart';
 import 'sponsoring_screen.dart';
 
 const Color _festYellow = Color(0xFFFFF03F);
@@ -32,6 +33,7 @@ class LandingScreen extends StatelessWidget {
     _NavCard('Festplan', Icons.map_outlined, () => const FestplanScreen()),
     _NavCard('Gastro', Icons.restaurant_outlined, () => const GastroScreen()),
     _NavCard('Sponsoren', Icons.handshake_outlined, () => const SponsoringScreen()),
+    _NavCard('Social Media', Icons.forum_outlined, () => const SocialMediaScreen()),
     _NavCard('Über uns', Icons.info_outline, () => const InfoScreen()),
   ];
 

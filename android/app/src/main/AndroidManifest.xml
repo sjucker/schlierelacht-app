@@ -28,6 +28,27 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+            <!-- App Links: website pages the app can show open in the app. Keep the
+                 paths in sync with lib/utils/deep_links.dart and the website's
+                 public/.well-known/ files (assetlinks.json verifies this filter).
+                 Registration (/jahrgangstreffen) and Datenschutz stay in the browser. -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="https" android:host="schlierelacht.ch"/>
+                <data android:path="/news"/>
+                <data android:pathPrefix="/news/"/>
+                <data android:path="/programm"/>
+                <data android:pathPrefix="/programm/"/>
+                <data android:path="/gastro"/>
+                <data android:pathPrefix="/gastro/"/>
+                <data android:pathPrefix="/locations/"/>
+                <data android:pathPrefix="/festplan"/>
+                <data android:pathPrefix="/jahrgangstreffen/liste"/>
+                <data android:pathPrefix="/sponsoren"/>
+                <data android:pathPrefix="/info"/>
+            </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->

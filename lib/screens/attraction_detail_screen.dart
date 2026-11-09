@@ -10,19 +10,32 @@ import '../widgets/async_view.dart';
 import '../widgets/cloudflare_image.dart';
 import '../widgets/favorite_button.dart';
 import '../widgets/image_viewer.dart';
+import '../widgets/share_button.dart';
 import 'location_detail_screen.dart';
+
+/// Where an attraction is listed — on the website as `/<path>/<externalId>`.
+enum AttractionSection {
+  programm('Programm', 'programm'),
+  gastro('Gastro', 'gastro');
+
+  const AttractionSection(this.title, this.path);
+
+  final String title;
+  final String path;
+}
 
 /// Detail of one attraction — an act from the Programm or a Gastro stand
 /// (website: `AttractionDetail.vue`). Shows the main
 /// image, social links, description, downloadable files, additional images and
 /// the upcoming programm entries (each linking to its location).
 class AttractionDetailScreen extends StatefulWidget {
-  const AttractionDetailScreen({super.key, required this.externalId, this.title = 'Programm'});
+  const AttractionDetailScreen({super.key, required this.externalId, this.section = AttractionSection.programm});
 
   final String externalId;
 
-  /// App-bar title: the section the attraction was opened from.
-  final String title;
+  /// The section the attraction was opened from: app-bar title and the
+  /// website path its share link points to.
+  final AttractionSection section;
 
   @override
   State<AttractionDetailScreen> createState() => _AttractionDetailScreenState();
@@ -45,8 +58,11 @@ class _AttractionDetailScreenState extends State<AttractionDetailScreen> {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
-        actions: [FavoriteButton(externalId: widget.externalId)],
+        title: Text(widget.section.title),
+        actions: [
+          ShareButton(path: '/${widget.section.path}/${widget.externalId}', title: _future.then((a) => a.name)),
+          FavoriteButton(externalId: widget.externalId),
+        ],
       ),
       body: AsyncView<Attraction>(
         future: _future,

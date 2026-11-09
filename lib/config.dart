@@ -38,4 +38,11 @@ const String linkedinUrl = 'https://www.linkedin.com/company/schlierelacht/';
 
 /// The website's privacy policy. The app has no in-app copy and opens this in
 /// the browser — app stores require a privacy policy reachable from the app.
-const String datenschutzUrl = 'https://schlierelacht.ch/datenschutz/';
+const String datenschutzUrl = '$websiteUrl/datenschutz/';
+
+/// The public website. Shared links point here, and the app claims the paths it
+/// can show itself (see `utils/deep_links.dart`), so they open in the app.
+const String websiteUrl = 'https://schlierelacht.ch';
+
+/// Hashtag the Social Media screen asks visitors to post with.
+const String instagramHashtag = '#schlierelacht';

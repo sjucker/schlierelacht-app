@@ -6,6 +6,7 @@ import '../models/news.dart';
 import '../utils/formatting.dart';
 import '../widgets/async_view.dart';
 import '../widgets/cloudflare_image.dart';
+import '../widgets/share_button.dart';
 
 class NewsDetailScreen extends StatefulWidget {
   const NewsDetailScreen({super.key, required this.newsId});
@@ -32,7 +33,10 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('News')),
+      appBar: AppBar(
+        title: const Text('News'),
+        actions: [ShareButton(path: '/news/${widget.newsId}', title: _future.then((n) => n.title))],
+      ),
       body: AsyncView<News>(
         future: _future,
         onRetry: _reload,

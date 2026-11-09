@@ -95,7 +95,7 @@ class _GastroCard extends StatelessWidget {
       child: InkWell(
         onTap: () => Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (_) => AttractionDetailScreen(externalId: attraction.externalId, title: 'Gastro'),
+            builder: (_) => AttractionDetailScreen(externalId: attraction.externalId, section: AttractionSection.gastro),
           ),
         ),
         child: Row(

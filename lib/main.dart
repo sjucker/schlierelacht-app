@@ -10,6 +10,7 @@ import 'screens/landing_screen.dart';
 import 'screens/onboarding_screen.dart';
 import 'services/prefs.dart';
 import 'services/push.dart';
+import 'utils/deep_links.dart';
 
 const Color _festBlue = Color(0xFF2B3585);
 
@@ -56,6 +57,11 @@ class SchlierelachtApp extends StatelessWidget {
       supportedLocales: const [Locale('de', 'CH')],
       locale: const Locale('de', 'CH'),
       home: Prefs.instance.onboardingComplete ? const LandingScreen() : const OnboardingScreen(),
+      // Website links (App Links / Universal Links) open the matching screen.
+      onGenerateRoute: deepLinkRoute,
+      // A claimed link the app can't map (e.g. a malformed id) shows the
+      // landing page instead of failing.
+      onUnknownRoute: (settings) => MaterialPageRoute(settings: settings, builder: (_) => const LandingScreen()),
     );
   }
 }

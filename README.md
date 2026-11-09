@@ -33,6 +33,27 @@ Without `key.properties`, release builds are signed with the debug key, which Pl
 
 After releasing, increase the build number of the version in `pubspec.yaml`.
 
+### Website links open the app (App Links / Universal Links)
+
+Links to `https://schlierelacht.ch` pages the app can show (Programm, Gastro, News, …)
+open in the app. The claimed paths live in three places that must stay in sync:
+`lib/utils/deep_links.dart`, the App Links `<intent-filter>` in
+`android/app/src/main/AndroidManifest.xml`, and the website's
+`public/.well-known/apple-app-site-association`.
+
+Manual steps, once:
+
+* **Android** — in Play Console → *Test and release → App integrity → App signing*, copy the
+  **SHA-256** of the *App signing key* into the website's `public/.well-known/assetlinks.json`
+  (replace `REPLACE_WITH_PLAY_APP_SIGNING_KEY_SHA256`) and deploy the website. To test a locally
+  signed build, add its fingerprint too (`keytool -list -v -keystore android/upload-keystore.p12`).
+  Check with `adb shell pm get-app-links ch.schlierelacht.schlierelacht_app` (`verified`).
+* **iOS** — `ios/Runner/Runner.entitlements` declares `applinks:schlierelacht.ch`; the
+  *Associated Domains* capability must be enabled for the App ID (Xcode's automatic signing does
+  this on the next build; otherwise in the Apple Developer portal → Identifiers).
+
+Until the website serves the files, links simply keep opening in the browser.
+
 ## Development
 
 ### Run Configuration

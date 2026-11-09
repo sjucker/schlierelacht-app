@@ -48,6 +48,7 @@ dependencies:
   firebase_messaging: ^17.0.1
   mapbox_maps_flutter: ^3.34.2
   flutter_markdown_plus: ^1.0.12
+  share_plus: ^13.3.1
 
 dev_dependencies:
   flutter_test:

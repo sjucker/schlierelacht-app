@@ -10,6 +10,7 @@ import '../utils/external_links.dart';
 import '../utils/location_labels.dart';
 import '../widgets/async_view.dart';
 import '../widgets/cloudflare_image.dart';
+import '../widgets/share_button.dart';
 
 /// Detail of one festival location (website: `locations/[id].vue`): its image,
 /// a map centred on it, and a Google Maps button. Adds the distance from the
@@ -59,7 +60,10 @@ class _LocationDetailScreenState extends State<LocationDetailScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Location')),
+      appBar: AppBar(
+        title: const Text('Location'),
+        actions: [ShareButton(path: '/locations/${widget.externalId}', title: _future.then((l) => l.name))],
+      ),
       body: AsyncView<model.Location>(
         future: _future,
         onRetry: _reload,
