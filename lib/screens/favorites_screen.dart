@@ -29,7 +29,9 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     _future = _api.fetchProgramm();
   }
 
-  void _reload() => setState(() => _future = _api.fetchProgramm());
+  void _reload() => setState(() {
+    _future = _api.fetchProgramm();
+  });
 
   @override
   Widget build(BuildContext context) {

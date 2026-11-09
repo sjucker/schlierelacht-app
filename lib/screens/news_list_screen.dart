@@ -23,7 +23,9 @@ class _NewsListScreenState extends State<NewsListScreen> {
     _future = _api.fetchNews();
   }
 
-  void _reload() => setState(() => _future = _api.fetchNews());
+  void _reload() => setState(() {
+    _future = _api.fetchNews();
+  });
 
   @override
   Widget build(BuildContext context) {

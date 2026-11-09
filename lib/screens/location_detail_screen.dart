@@ -38,7 +38,9 @@ class _LocationDetailScreenState extends State<LocationDetailScreen> {
     });
   }
 
-  void _reload() => setState(() => _future = _api.fetchLocation(widget.externalId));
+  void _reload() => setState(() {
+    _future = _api.fetchLocation(widget.externalId);
+  });
 
   Future<void> _onMapCreated(MapboxMap map, model.Location loc) async {
     try {

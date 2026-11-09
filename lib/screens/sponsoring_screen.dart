@@ -35,7 +35,9 @@ class _SponsoringScreenState extends State<SponsoringScreen> {
     return (sponsors: sponsors, types: types);
   }
 
-  void _reload() => setState(() => _future = _fetch());
+  void _reload() => setState(() {
+    _future = _fetch();
+  });
 
   @override
   Widget build(BuildContext context) {

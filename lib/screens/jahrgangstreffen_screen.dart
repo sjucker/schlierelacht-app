@@ -25,7 +25,9 @@ class _JahrgangstreffenScreenState extends State<JahrgangstreffenScreen> {
     _future = _api.fetchEntries();
   }
 
-  void _reload() => setState(() => _future = _api.fetchEntries());
+  void _reload() => setState(() {
+    _future = _api.fetchEntries();
+  });
 
   @override
   Widget build(BuildContext context) {

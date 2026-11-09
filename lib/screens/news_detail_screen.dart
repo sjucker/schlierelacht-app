@@ -28,7 +28,9 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
     _future = _api.fetchNewsById(widget.newsId);
   }
 
-  void _reload() => setState(() => _future = _api.fetchNewsById(widget.newsId));
+  void _reload() => setState(() {
+    _future = _api.fetchNewsById(widget.newsId);
+  });
 
   @override
   Widget build(BuildContext context) {

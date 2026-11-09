@@ -31,7 +31,9 @@ class _GastroScreenState extends State<GastroScreen> {
 
   Future<List<Attraction>> _fetch() async => (await _api.fetchAttractions(types: {AttractionType.food}))..sort((a, b) => a.externalId.compareTo(b.externalId));
 
-  void _reload() => setState(() => _future = _fetch());
+  void _reload() => setState(() {
+    _future = _fetch();
+  });
 
   bool _matches(Attraction a) {
     final q = _query.trim().toLowerCase();

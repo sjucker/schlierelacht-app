@@ -51,7 +51,9 @@ class _AttractionDetailScreenState extends State<AttractionDetailScreen> {
     _future = _api.fetchAttraction(widget.externalId);
   }
 
-  void _reload() => setState(() => _future = _api.fetchAttraction(widget.externalId));
+  void _reload() => setState(() {
+    _future = _api.fetchAttraction(widget.externalId);
+  });
 
   @override
   Widget build(BuildContext context) {

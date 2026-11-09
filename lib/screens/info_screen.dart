@@ -24,7 +24,9 @@ class _InfoScreenState extends State<InfoScreen> {
     _future = _api.fetchOk();
   }
 
-  void _reload() => setState(() => _future = _api.fetchOk());
+  void _reload() => setState(() {
+    _future = _api.fetchOk();
+  });
 
   @override
   Widget build(BuildContext context) {

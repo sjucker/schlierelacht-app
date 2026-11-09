@@ -43,7 +43,9 @@ class _FestplanScreenState extends State<FestplanScreen> {
   // /api/v1/location endpoint still returns every location (see Locations).
   Future<List<model.Location>> _fetch() async => (await _api.fetchLocations()).where((l) => l.showInFestplan).toList();
 
-  void _reload() => setState(() => _future = _fetch());
+  void _reload() => setState(() {
+    _future = _fetch();
+  });
 
   Future<void> _onMapCreated(MapboxMap map, List<model.Location> locations) async {
     // Show the user's position dot when location permission is granted.

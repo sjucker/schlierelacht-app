@@ -39,7 +39,9 @@ class _ProgrammScreenState extends State<ProgrammScreen> {
     super.dispose();
   }
 
-  void _reload() => setState(() => _future = _api.fetchProgramm());
+  void _reload() => setState(() {
+    _future = _api.fetchProgramm();
+  });
 
   bool get _hasFilter => _search.text.isNotEmpty || _date != null || _stageId != null;
 
