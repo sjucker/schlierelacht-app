@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Android 12+ (API 31) launch theme, light mode. The system splash screen shows the launcher icon's
+         foreground inside a circle but does not draw the adaptive icon's background, so the yellow square of
+         the foreground image would show flat edges inside the circle. Filling the circle with the brand yellow
+         (same as ic_launcher_background) keeps the icon round. -->
+    <style name="LaunchTheme" parent="@android:style/Theme.Light.NoTitleBar">
+        <item name="android:windowBackground">@drawable/launch_background</item>
+        <item name="android:windowSplashScreenIconBackgroundColor">@color/ic_launcher_background</item>
+    </style>
+    <style name="NormalTheme" parent="@android:style/Theme.Light.NoTitleBar">
+        <item name="android:windowBackground">?android:colorBackground</item>
+    </style>
+</resources>
