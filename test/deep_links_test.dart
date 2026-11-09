@@ -30,6 +30,12 @@ void main() {
     expect(deepLinkPage('/jahrgangstreffen/liste'), isA<JahrgangstreffenScreen>());
   });
 
+  test('push routes may omit the slash or be a full website URL', () {
+    expect(deepLinkPage('news'), isA<Scaffold>(), reason: 'the admin hint suggests "news"');
+    expect((deepLinkPage('programm/A12') as AttractionDetailScreen).externalId, 'A12');
+    expect((deepLinkPage('https://schlierelacht.ch/news/7') as NewsDetailScreen).newsId, 7);
+  });
+
   test('unclaimed or malformed paths map to null', () {
     expect(deepLinkPage('/jahrgangstreffen'), isNull, reason: 'registration stays on the website');
     expect(deepLinkPage('/datenschutz'), isNull);

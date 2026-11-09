@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -31,12 +33,14 @@ Future<void> main() async {
   try {
     await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
     PushService.instance.markAvailable();
-    PushService.instance.setupHandlers();
   } catch (_) {
     debugPrint('Firebase not configured — push notifications disabled.');
   }
 
   runApp(const SchlierelachtApp());
+
+  // A tapped push opens its screen (via navigatorKey).
+  unawaited(PushService.instance.start());
 
   // Fill the offline cache in the background (and again on resume).
   OfflineWarmup.start();
@@ -51,6 +55,7 @@ class SchlierelachtApp extends StatelessWidget {
       title: 'Schliere lacht',
       debugShowCheckedModeBanner: false,
       scaffoldMessengerKey: scaffoldMessengerKey,
+      navigatorKey: navigatorKey,
       theme: buildFestTheme(),
       localizationsDelegates: const [GlobalMaterialLocalizations.delegate, GlobalWidgetsLocalizations.delegate, GlobalCupertinoLocalizations.delegate],
       supportedLocales: const [Locale('de', 'CH')],

@@ -4,6 +4,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
 import '../api/push_api.dart';
+import '../utils/deep_links.dart';
 
 /// Global messenger key so [PushService] can surface foreground notifications
 /// as SnackBars from outside the widget tree. Wired into `MaterialApp`.
@@ -18,6 +19,9 @@ final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = GlobalKey<Scaffol
 /// Broadcast pushes use the `general` topic; per-act pushes use `act-<id>`
 /// topics toggled alongside favorites. The device token is also registered with
 /// the backend for targeted sends.
+///
+/// The admin's "Push senden" adds an optional `route` (a website path such as
+/// `news`); tapping the notification opens that screen via [openDeepLink].
 class PushService {
   PushService._();
 
@@ -32,6 +36,20 @@ class PushService {
 
   /// Marks FCM usable. Called by `main.dart` after a successful Firebase init.
   void markAvailable() => _available = true;
+
+  /// Startup wiring, once from `main`: foreground SnackBars, and opening the
+  /// `route` of a tapped push (also when the tap launched the app).
+  Future<void> start() async {
+    if (!_available) return;
+    try {
+      FirebaseMessaging.onMessage.listen(_showForeground);
+      FirebaseMessaging.onMessageOpenedApp.listen((message) => openDeepLink(_route(message)));
+      final initial = await _messaging.getInitialMessage();
+      if (initial != null) openDeepLink(_route(initial));
+    } catch (_) {
+      // Best-effort: the app works without push.
+    }
+  }
 
   /// Requests notification permission and, if granted, registers the device
   /// token with the backend and subscribes to the broadcast topic. Safe to call
@@ -88,10 +106,9 @@ class PushService {
     }
   }
 
-  /// Wires foreground/opened message handling. Called once at startup.
-  void setupHandlers() {
-    if (!_available) return;
-    FirebaseMessaging.onMessage.listen(_showForeground);
+  static String? _route(RemoteMessage message) {
+    final route = message.data['route'];
+    return route is String && route.trim().isNotEmpty ? route.trim() : null;
   }
 
   void _showForeground(RemoteMessage message) {
@@ -101,6 +118,13 @@ class PushService {
     if (messenger == null) return;
     final title = notification.title;
     final body = notification.body ?? '';
-    messenger.showSnackBar(SnackBar(content: Text(title == null ? body : '$title\n$body'), duration: const Duration(seconds: 5)));
+    final route = _route(message);
+    messenger.showSnackBar(
+      SnackBar(
+        content: Text(title == null ? body : '$title\n$body'),
+        duration: const Duration(seconds: 6),
+        action: deepLinkPage(route) == null ? null : SnackBarAction(label: 'Öffnen', onPressed: () => openDeepLink(route)),
+      ),
+    );
   }
 }

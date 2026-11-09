@@ -30,6 +30,31 @@ Route<void>? deepLinkRoute(RouteSettings settings) {
   return page == null ? null : MaterialPageRoute(settings: settings, builder: (_) => page);
 }
 
+/// The app's navigator, so links arriving outside the widget tree (push and
+/// reminder taps) can open their screen. Wired into `MaterialApp`.
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
+/// Opens the screen for [route] on top of the current one — the target of a
+/// tapped push (`route` data, e.g. `news` or `/programm/A12`) or reminder.
+/// Accepts a path with or without leading slash, or a full website URL;
+/// anything the app can't show is ignored. Before the first frame (cold start
+/// from a notification) it waits until the navigator exists.
+void openDeepLink(String? route) {
+  final page = deepLinkPage(route);
+  if (page == null) return;
+  final navigator = navigatorKey.currentState;
+  if (navigator == null) {
+    WidgetsBinding.instance.addPostFrameCallback((_) => openDeepLink(route));
+    return;
+  }
+  navigator.push(
+    MaterialPageRoute<void>(
+      settings: RouteSettings(name: route),
+      builder: (_) => page,
+    ),
+  );
+}
+
 /// The screen for a website path, or null if the app has none for it.
 Widget? deepLinkPage(String? routeName) {
   final segments = Uri.tryParse(routeName ?? '')?.pathSegments.where((s) => s.isNotEmpty).toList();
