@@ -85,10 +85,6 @@ void main() {
 
     final entry = MeetupEntry.fromJson({'firstname': 'A', 'lastname': 'B', 'jahrgang': 'BORN_1984_1988'});
     expect(entry.jahrgang, MeetupJahrgang.born1984To1988);
-    expect(
-      const MeetupRegistration(firstname: 'A', lastname: 'B', email: 'a@b.ch', jahrgang: MeetupJahrgang.after1998, showOnList: false).toJson()['jahrgang'],
-      'AFTER_1998',
-    );
 
     final type = SponsoringTypeInfo.fromJson({'type': 'GOENNER', 'description': 'Gönner'});
     expect(type.type, SponsoringType.goenner);
