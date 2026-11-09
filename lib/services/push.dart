@@ -55,7 +55,7 @@ class PushService {
   }
 
   /// Asks for notification permission and, if granted, registers the device.
-  /// Used by onboarding; no-op without FCM.
+  /// Used by onboarding and the Mitteilungen screen; no-op without FCM.
   Future<void> requestAndRegister() async {
     if (!_available) return;
     try {

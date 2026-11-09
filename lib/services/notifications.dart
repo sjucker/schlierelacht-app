@@ -56,7 +56,7 @@ class NotificationService {
       await _plugin.initialize(
         settings: const InitializationSettings(
           android: AndroidInitializationSettings('@mipmap/ic_launcher'),
-          // Permission is asked in onboarding, not here.
+          // Permission is asked in onboarding / the Mitteilungen screen, not here.
           iOS: DarwinInitializationSettings(requestAlertPermission: false, requestBadgePermission: false, requestSoundPermission: false),
         ),
         onDidReceiveNotificationResponse: (response) => openDeepLink(response.payload),

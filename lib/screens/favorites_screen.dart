@@ -7,6 +7,7 @@ import '../services/prefs.dart';
 import '../widgets/async_view.dart';
 import '../widgets/schedule_day_section.dart';
 import 'attraction_detail_screen.dart';
+import 'notification_settings_screen.dart';
 
 /// The user's favorited acts as a schedule: the full programm filtered down to
 /// favorited attractions (by `externalId`), grouped per day. Updates live when
@@ -33,7 +34,16 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Favoriten')),
+      appBar: AppBar(
+        title: const Text('Favoriten'),
+        actions: [
+          IconButton(
+            tooltip: 'Erinnerungen',
+            icon: const Icon(Icons.notifications_outlined),
+            onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const NotificationSettingsScreen())),
+          ),
+        ],
+      ),
       body: AsyncView<List<ProgrammPoint>>(
         future: _future,
         onRetry: _reload,

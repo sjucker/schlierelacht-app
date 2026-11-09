@@ -11,6 +11,7 @@ import 'gastro_screen.dart';
 import 'info_screen.dart';
 import 'jahrgangstreffen_screen.dart';
 import 'news_list_screen.dart';
+import 'notification_settings_screen.dart';
 import 'programm_screen.dart';
 import 'social_media_screen.dart';
 import 'sponsoring_screen.dart';
@@ -198,8 +199,8 @@ class _Colon extends StatelessWidget {
   );
 }
 
-/// Social links and a Datenschutz link to the website (the website's footer,
-/// without copyright and Impressum).
+/// Social links, the Mitteilungen settings and a Datenschutz link to the
+/// website (the website's footer, without copyright and Impressum).
 class _Footer extends StatelessWidget {
   const _Footer();
 
@@ -223,8 +224,17 @@ class _Footer extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 4),
-          // Required by the app stores; opens the website's page in the browser.
-          TextButton(onPressed: () => openUrl(datenschutzUrl), child: const Text('Datenschutz')),
+          Wrap(
+            alignment: WrapAlignment.center,
+            children: [
+              TextButton(
+                onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const NotificationSettingsScreen())),
+                child: const Text('Mitteilungen'),
+              ),
+              // Required by the app stores; opens the website's page in the browser.
+              TextButton(onPressed: () => openUrl(datenschutzUrl), child: const Text('Datenschutz')),
+            ],
+          ),
         ],
       ),
     );
