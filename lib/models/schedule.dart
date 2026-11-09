@@ -29,7 +29,7 @@ int _timeRank(String? hhmm) {
   return h * 60 + m;
 }
 
-/// Groups programm points (from `GET /api/v1/programm` or `/api/v1/event`)
+/// Groups programm points (from `GET /api/v1/programm`)
 /// into days, sorted chronologically by date then start time.
 ///
 /// With [mostRecentFirst] the whole order is reversed — days and the items

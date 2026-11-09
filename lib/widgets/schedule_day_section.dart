@@ -6,7 +6,7 @@ import 'programm_entry_tile.dart';
 
 /// A sectioned day of the schedule: a day header (weekday emphasized, date
 /// secondary — like the website's day divider) followed by its rows. Shared by
-/// the Programm, Wirtschaft/Gewerbe and Favoriten screens.
+/// the Programm and Favoriten screens.
 class ScheduleDaySection extends StatelessWidget {
   const ScheduleDaySection({super.key, required this.day, required this.onTapItem, this.past = false, this.showFavorite = true});
 

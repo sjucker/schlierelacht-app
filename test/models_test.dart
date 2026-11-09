@@ -2,8 +2,6 @@
 // (see schlierelacht-website/shared/types/rest.ts), and the schedule split.
 import 'package:flutter_test/flutter_test.dart';
 import 'package:schlierelacht_app/models/attraction.dart';
-import 'package:schlierelacht_app/models/download.dart';
-import 'package:schlierelacht_app/models/gallery.dart';
 import 'package:schlierelacht_app/models/location.dart';
 import 'package:schlierelacht_app/models/meetup.dart';
 import 'package:schlierelacht_app/models/ok.dart';
@@ -51,27 +49,7 @@ void main() {
     expect(a.files.single.filesize, 2048);
   });
 
-  test('Download, gallery, OK, meetup and sponsoring types parse', () {
-    final d = Download.fromJson({
-      'id': 1,
-      'filename': 'logo.svg',
-      'filetype': 'image/svg+xml',
-      'description': 'Logo',
-      'filesize': 10,
-      'category': 'LOGOS',
-      'uploadedAt': '2026-08-01T10:00:00',
-    });
-    expect(d.category, DownloadCategory.logos);
-
-    final g = GalleryCategory.fromJson({
-      'category': '2023',
-      'images': [
-        {'cloudflareId': 'a'},
-        {'cloudflareId': 'b'},
-      ],
-    });
-    expect(g.imageIds, ['a', 'b']);
-
+  test('OK, meetup and sponsoring types parse', () {
     final ok = Ok.fromJson({
       'members': [
         {'name': 'Max', 'role': 'Präsident'},

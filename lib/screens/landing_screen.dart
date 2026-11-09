@@ -4,10 +4,8 @@ import 'package:flutter/material.dart';
 
 import '../config.dart';
 import '../utils/external_links.dart';
-import 'downloads_screen.dart';
 import 'favorites_screen.dart';
 import 'festplan_screen.dart';
-import 'galerie_screen.dart';
 import 'gastro_screen.dart';
 import 'info_screen.dart';
 import 'jahrgangstreffen_screen.dart';
@@ -16,7 +14,6 @@ import 'locations_screen.dart';
 import 'news_list_screen.dart';
 import 'programm_screen.dart';
 import 'sponsoring_screen.dart';
-import 'wirtschaft_screen.dart';
 
 const Color _festYellow = Color(0xFFFFF03F);
 
@@ -37,10 +34,7 @@ class LandingScreen extends StatelessWidget {
     _NavCard('Festplan', Icons.map_outlined, () => const FestplanScreen()),
     _NavCard('Locations', Icons.place_outlined, () => const LocationsScreen()),
     _NavCard('Gastro', Icons.restaurant_outlined, () => const GastroScreen()),
-    _NavCard('Wirtschaft & Gewerbe', Icons.business_center_outlined, () => const WirtschaftScreen()),
     _NavCard('Sponsoren', Icons.handshake_outlined, () => const SponsoringScreen()),
-    _NavCard('Downloads', Icons.download_outlined, () => const DownloadsScreen()),
-    _NavCard('Galerie', Icons.photo_library_outlined, () => const GalerieScreen()),
     _NavCard('Über uns', Icons.info_outline, () => const InfoScreen()),
   ];
 

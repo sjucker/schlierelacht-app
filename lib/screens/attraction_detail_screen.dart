@@ -12,8 +12,8 @@ import '../widgets/favorite_button.dart';
 import '../widgets/image_viewer.dart';
 import 'location_detail_screen.dart';
 
-/// Detail of one attraction — an act from the Programm, a Gastro stand or a
-/// Wirtschaft/Gewerbe event (website: `AttractionDetail.vue`). Shows the main
+/// Detail of one attraction — an act from the Programm or a Gastro stand
+/// (website: `AttractionDetail.vue`). Shows the main
 /// image, social links, description, downloadable files, additional images and
 /// the upcoming programm entries (each linking to its location).
 class AttractionDetailScreen extends StatefulWidget {

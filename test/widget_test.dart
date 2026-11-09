@@ -20,7 +20,7 @@ void main() {
 
     // Sections further down are reachable by scrolling.
     await tester.scrollUntilVisible(find.text('Über uns'), 300);
-    expect(find.text('Wirtschaft & Gewerbe'), findsOneWidget);
-    expect(find.text('Galerie'), findsOneWidget);
+    expect(find.text('Sponsoren'), findsOneWidget);
+    expect(find.text('Gastro'), findsOneWidget);
   });
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 /// The short explanatory paragraph(s) the website shows at the top of a list
-/// page (Programm, Gastro, Wirtschaft/Gewerbe, Sponsoren, …).
+/// page (Programm, Sponsoren, …).
 class IntroText extends StatelessWidget {
   const IntroText(this.paragraphs, {super.key, this.padding});
 

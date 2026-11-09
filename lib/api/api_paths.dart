@@ -10,9 +10,6 @@
 /// constant here only ever affects the *next* release.
 abstract final class ApiPaths {
   static const String attraction = '/api/v1/attraction';
-  static const String downloads = '/api/v1/downloads';
-  static const String event = '/api/v1/event';
-  static const String gallery = '/api/v1/gallery';
   static const String location = '/api/v1/location';
   static const String meetup = '/api/v1/meetup';
   static const String news = '/api/v1/news';
