@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../models/message.dart';
 import '../widgets/message_card.dart';
 
-/// One Meldung in full: priority, title, when it was created and the
+/// One Meldung in full: priority, title, when it was published and the
 /// markdown content. Opened from the
 /// landing page's message card and from [MessagesScreen]. Shows the message it
 /// was given (there is no detail endpoint; the list already holds everything).
@@ -18,7 +18,7 @@ class MessageDetailScreen extends StatelessWidget {
       appBar: AppBar(title: const Text('Meldung')),
       body: ListView(
         padding: const EdgeInsets.all(16),
-        children: [MessageBox(message: message, showCreatedAt: true)],
+        children: [MessageBox(message: message, showPublishedAt: true)],
       ),
     );
   }

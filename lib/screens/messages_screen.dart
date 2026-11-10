@@ -6,7 +6,7 @@ import '../widgets/async_view.dart';
 import '../widgets/message_card.dart';
 
 /// Meldungen: every active message, most important first (the backend's
-/// order: priority, then newest). Opened from the landing page's message card
+/// order: priority, then most recently published). Opened from the landing page's message card
 /// and from a push with route `meldungen`.
 class MessagesScreen extends StatefulWidget {
   const MessagesScreen({super.key, this.api});

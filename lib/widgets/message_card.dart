@@ -11,7 +11,7 @@ import '../utils/external_links.dart';
 import '../utils/formatting.dart';
 
 /// The most important active Meldung on the landing page, below the logo (the
-/// backend's first entry: highest priority, then newest). Shows only its
+/// backend's first entry: highest priority, then most recently published). Shows only its
 /// title; a tap opens [MessageDetailScreen], the "Alle Meldungen" link below
 /// opens [MessagesScreen]. Not dismissible: it stays as long as it is active.
 ///
@@ -137,13 +137,13 @@ class MessageTitleCard extends StatelessWidget {
 /// One Meldung in full as a colored card: icon + priority label, title,
 /// markdown content. Used by [MessagesScreen] and [MessageDetailScreen].
 class MessageBox extends StatelessWidget {
-  const MessageBox({super.key, required this.message, this.onTap, this.showCreatedAt = false});
+  const MessageBox({super.key, required this.message, this.onTap, this.showPublishedAt = false});
 
   final Message message;
   final VoidCallback? onTap;
 
-  /// "Erstellt am 03.09.2027, 18:30" below the title (the detail screen).
-  final bool showCreatedAt;
+  /// "Veröffentlicht am 03.09.2027, 18:30" below the title (the detail screen).
+  final bool showPublishedAt;
 
   @override
   Widget build(BuildContext context) {
@@ -176,9 +176,12 @@ class MessageBox extends StatelessWidget {
                 message.title,
                 style: text.titleMedium?.copyWith(color: style.foreground, fontWeight: FontWeight.bold),
               ),
-              if (showCreatedAt) ...[
+              if (showPublishedAt) ...[
                 const SizedBox(height: 2),
-                Text('Erstellt am ${formatDateTimeShort(message.createdAt)}', style: text.bodySmall?.copyWith(color: style.foreground.withValues(alpha: 0.8))),
+                Text(
+                  'Veröffentlicht am ${formatDateTimeShort(message.publishedAt)}',
+                  style: text.bodySmall?.copyWith(color: style.foreground.withValues(alpha: 0.8)),
+                ),
               ],
               const SizedBox(height: 4),
               MarkdownBody(

@@ -25,7 +25,7 @@ enum MessagePriority {
 /// generator for the Flutter app (unlike the website's generated rest.ts).
 ///
 /// The backend returns the active messages most important first (priority,
-/// then newest), so the app shows the first one on the home screen and keeps
+/// then most recently published), so the app shows the first one on the home screen and keeps
 /// that order everywhere.
 class Message {
   final int id;
@@ -34,15 +34,19 @@ class Message {
 
   /// Markdown.
   final String content;
-  final DateTime createdAt;
 
-  const Message({required this.id, required this.priority, required this.title, required this.content, required this.createdAt});
+  /// When it was last activated in the admin UI — messages can be prepared
+  /// in advance, so this, not the creation time, is what the app shows.
+  final DateTime publishedAt;
+
+  const Message({required this.id, required this.priority, required this.title, required this.content, required this.publishedAt});
 
   factory Message.fromJson(Map<String, dynamic> json) => Message(
     id: json['id'] as int,
     priority: MessagePriority.fromJson(json['priority'] as String?),
     title: json['title'] as String,
     content: json['content'] as String,
-    createdAt: DateTime.parse(json['createdAt'] as String),
+    // createdAt: fallback for a backend from before publishedAt existed.
+    publishedAt: DateTime.parse((json['publishedAt'] ?? json['createdAt']) as String),
   );
 }

@@ -20,18 +20,29 @@ class _FakeMessageApi extends MessageApi {
 }
 
 Message _message(int id, MessagePriority priority, String title) =>
-    Message(id: id, priority: priority, title: title, content: 'Inhalt von **$title**', createdAt: DateTime(2027, 9, 3, 18));
+    Message(id: id, priority: priority, title: title, content: 'Inhalt von **$title**', publishedAt: DateTime(2027, 9, 3, 18));
 
 void main() {
   setUpAll(() => initializeDateFormatting('de_CH'));
 
   test('fromJson', () {
-    final m = Message.fromJson({'id': 7, 'priority': 'HIGH', 'title': 'Unwetter', 'content': '**Bitte** Zelte verlassen', 'createdAt': '2027-09-03T18:30:00'});
+    final json = {
+      'id': 7,
+      'priority': 'HIGH',
+      'title': 'Unwetter',
+      'content': '**Bitte** Zelte verlassen',
+      'createdAt': '2027-09-01T09:00:00',
+      'publishedAt': '2027-09-03T18:30:00.123456',
+    };
+    final m = Message.fromJson(json);
     expect(m.id, 7);
     expect(m.priority, MessagePriority.high);
     expect(m.title, 'Unwetter');
     expect(m.content, '**Bitte** Zelte verlassen');
-    expect(m.createdAt, DateTime(2027, 9, 3, 18, 30));
+    expect(m.publishedAt, DateTime(2027, 9, 3, 18, 30, 0, 123, 456), reason: 'the publish time, not the creation time');
+
+    // A backend from before publishedAt: fall back to the creation time.
+    expect(Message.fromJson({...json}..remove('publishedAt')).publishedAt, DateTime(2027, 9, 1, 9));
   });
 
   test('priorities, unknown ones count as low', () {
@@ -83,7 +94,7 @@ void main() {
     expect(find.text('NOTFALL'), findsOneWidget);
     expect(find.text('Unwetter'), findsOneWidget);
     expect(find.textContaining('Inhalt von', findRichText: true), findsOneWidget);
-    expect(find.text('Erstellt am 03.09.2027, 18:00'), findsOneWidget);
+    expect(find.text('Veröffentlicht am 03.09.2027, 18:00'), findsOneWidget);
   });
 
   testWidgets('no active message: the card takes no space', (tester) async {
@@ -105,7 +116,7 @@ void main() {
 
     expect(find.text('Unwetter'), findsOneWidget);
     expect(find.text('Shuttlebus'), findsOneWidget);
-    expect(find.textContaining('Erstellt am'), findsNothing, reason: 'only the detail view shows the date');
+    expect(find.textContaining('Veröffentlicht am'), findsNothing, reason: 'only the detail view shows the date');
     expect(tester.getTopLeft(find.text('Unwetter')).dy, lessThan(tester.getTopLeft(find.text('Shuttlebus')).dy));
   });
 
@@ -117,7 +128,7 @@ void main() {
   });
 
   testWidgets('markdown headings, bold and text use the card text color', (tester) async {
-    final message = Message(id: 1, priority: MessagePriority.high, title: 'Unwetter', content: '# Kopf\n\n**Fett** und Text', createdAt: DateTime(2027));
+    final message = Message(id: 1, priority: MessagePriority.high, title: 'Unwetter', content: '# Kopf\n\n**Fett** und Text', publishedAt: DateTime(2027));
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(body: MessageBox(message: message)),
