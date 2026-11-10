@@ -1,5 +1,6 @@
 // Offline fallback: successful GETs are cached, network failures serve the
 // cached copy (with recomputed `past` flags), and the offline notifier follows.
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -44,6 +45,32 @@ void main() {
     await online('["food"]').getList('/api/v1/attraction?type=FOOD');
     expect(offline.getList('/api/v1/attraction'), throwsA(isA<ApiException>()));
     expect(await offline.getList('/api/v1/attraction?type=FOOD'), ['food']);
+  });
+
+  testWidgets('falls back when the backend does not answer in time', (tester) async {
+    // testWidgets runs in fake time, so the 10 s timeout can be skipped over.
+    await tester.runAsync(() => online('["saved"]').getList('/api/v1/news'));
+    final hanging = ApiClient(client: MockClient((_) => Completer<http.Response>().future));
+
+    List<dynamic>? result;
+    unawaited(hanging.getList('/api/v1/news').then((r) => result = r));
+    await tester.pump(ApiClient.requestTimeout - const Duration(seconds: 1));
+    expect(result, isNull, reason: 'still waiting for the backend');
+
+    await tester.pump(const Duration(seconds: 2));
+    await tester.runAsync(() => Future<void>.delayed(Duration.zero)); // let the cache read finish
+    await tester.pump();
+    expect(result, ['saved']);
+  });
+
+  test('the banner shows the oldest saved data on screen', () async {
+    SharedPreferences.setMockInitialValues({
+      'api_cache:/api/v1/news': '{"t":"2027-09-01T10:00:00.000","b":"[]"}',
+      'api_cache:/api/v1/ok': '{"t":"2027-09-02T10:00:00.000","b":"{}"}',
+    });
+    await offline.getList('/api/v1/news');
+    await offline.getObject('/api/v1/ok');
+    expect(ApiCache.offlineSince.value, DateTime(2027, 9, 1, 10));
   });
 
   test('refreshPastFlags applies the backend rule with the device clock', () {

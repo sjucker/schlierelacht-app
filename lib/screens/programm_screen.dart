@@ -58,19 +58,7 @@ class _ProgrammScreenState extends State<ProgrammScreen> {
     _stageId = null;
   });
 
-  List<ProgrammPoint> _filter(List<ProgrammPoint> points) {
-    final term = _search.text.trim().toLowerCase();
-    return points.where((p) {
-      if (_date != null && p.entry.fromDate != _date) return false;
-      if (_stageId != null && p.entry.location.externalId != _stageId) {
-        return false;
-      }
-      if (term.isNotEmpty && !p.attraction.name.toLowerCase().contains(term)) {
-        return false;
-      }
-      return true;
-    }).toList();
-  }
+  List<ProgrammPoint> _filter(List<ProgrammPoint> points) => filterProgramm(points, query: _search.text, date: _date, stageId: _stageId);
 
   @override
   Widget build(BuildContext context) {
@@ -182,4 +170,16 @@ class _Select<T> extends StatelessWidget {
       ),
     );
   }
+}
+
+/// The Programm filters (website: `programm/index.vue`): a case-insensitive
+/// [query] over the act name, plus an optional start [date] and stage
+/// ([stageId], a location `externalId`). Unset filters match everything.
+List<ProgrammPoint> filterProgramm(List<ProgrammPoint> points, {String query = '', DateTime? date, String? stageId}) {
+  final term = query.trim().toLowerCase();
+  return points.where((p) {
+    if (date != null && p.entry.fromDate != date) return false;
+    if (stageId != null && p.entry.location.externalId != stageId) return false;
+    return term.isEmpty || p.attraction.name.toLowerCase().contains(term);
+  }).toList();
 }
