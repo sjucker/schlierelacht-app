@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart' as geo;
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
@@ -29,19 +31,26 @@ class _FestplanScreenState extends State<FestplanScreen> {
 
   final Map<String, model.Location> _byAnnotationId = {};
   geo.Position? _position;
+  StreamSubscription<geo.Position>? _positionUpdates;
 
   @override
   void initState() {
     super.initState();
     _future = _fetch();
-    GeolocationService.instance.currentPosition().then((p) {
-      if (mounted) setState(() => _position = p);
-    });
+    // Kept current while the screen is open; read when a location sheet
+    // opens. No setState: rebuilding would reset the map camera.
+    _positionUpdates = GeolocationService.instance.watchPosition().listen((p) => _position = p);
   }
 
   // Only locations flagged for the festplan are placed on the map; the shared
   // /api/v1/location endpoint still returns every location (see Locations).
   Future<List<model.Location>> _fetch() async => (await _api.fetchLocations()).where((l) => l.showInFestplan).toList();
+
+  @override
+  void dispose() {
+    _positionUpdates?.cancel();
+    super.dispose();
+  }
 
   void _reload() => setState(() {
     _future = _fetch();

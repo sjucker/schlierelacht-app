@@ -40,13 +40,35 @@ class GeolocationService {
     return completer.future;
   }
 
+  /// How long a fresh fix may take before the last known position is used —
+  /// weak GPS between the stages must not leave the distances blank for long.
+  static const fixTimeout = Duration(seconds: 10);
+
+  /// Minimum movement between two [watchPosition] updates.
+  static const updateDistanceMeters = 25;
+
   Future<Position?> _resolve() async {
     try {
       if (!await ensurePermission()) return null;
-      return await Geolocator.getCurrentPosition();
+      try {
+        return await Geolocator.getCurrentPosition(locationSettings: const LocationSettings(timeLimit: fixTimeout));
+      } on TimeoutException {
+        return await Geolocator.getLastKnownPosition();
+      }
     } catch (_) {
       return null;
     }
+  }
+
+  /// The current position, then a new one whenever the user has moved
+  /// [updateDistanceMeters] — so distances stay right while walking across
+  /// the festival. Emits nothing when location is unavailable; errors in the
+  /// update stream are dropped (the last position stays shown).
+  Stream<Position> watchPosition() async* {
+    final first = await currentPosition();
+    if (first == null) return;
+    yield first;
+    yield* Geolocator.getPositionStream(locationSettings: const LocationSettings(distanceFilter: updateDistanceMeters)).handleError((Object _) {});
   }
 
   /// Great-circle distance in metres between two points.

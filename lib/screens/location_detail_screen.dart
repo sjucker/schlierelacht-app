@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart' as geo;
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
@@ -27,15 +29,25 @@ class LocationDetailScreen extends StatefulWidget {
 class _LocationDetailScreenState extends State<LocationDetailScreen> {
   final _api = LocationApi();
   late Future<model.Location> _future;
-  geo.Position? _position;
+
+  /// Updated as the user moves; only the distance label listens, so the map
+  /// is never rebuilt (which could reset its camera).
+  final _position = ValueNotifier<geo.Position?>(null);
+  StreamSubscription<geo.Position>? _positionUpdates;
 
   @override
   void initState() {
     super.initState();
     _future = _api.fetchLocation(widget.externalId);
-    GeolocationService.instance.currentPosition().then((p) {
-      if (mounted) setState(() => _position = p);
-    });
+    // Distances follow the user while the screen is open.
+    _positionUpdates = GeolocationService.instance.watchPosition().listen((p) => _position.value = p);
+  }
+
+  @override
+  void dispose() {
+    _positionUpdates?.cancel();
+    _position.dispose();
+    super.dispose();
   }
 
   void _reload() => setState(() {
@@ -70,8 +82,6 @@ class _LocationDetailScreenState extends State<LocationDetailScreen> {
         future: _future,
         onRetry: _reload,
         onData: (context, loc) {
-          final pos = _position;
-          final distance = pos == null ? null : GeolocationService.instance.distanceMeters(pos.latitude, pos.longitude, loc.latitude, loc.longitude);
           return ListView(
             padding: const EdgeInsets.only(bottom: 24),
             children: [
@@ -94,9 +104,17 @@ class _LocationDetailScreenState extends State<LocationDetailScreen> {
                       ],
                     ),
                     const SizedBox(height: 4),
-                    Text(
-                      distance == null ? locationTypeLabel(loc.type) : '${locationTypeLabel(loc.type)} · ${formatDistance(distance)} entfernt',
-                      style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.outline),
+                    ValueListenableBuilder<geo.Position?>(
+                      valueListenable: _position,
+                      builder: (context, pos, _) {
+                        final distance = pos == null
+                            ? null
+                            : GeolocationService.instance.distanceMeters(pos.latitude, pos.longitude, loc.latitude, loc.longitude);
+                        return Text(
+                          distance == null ? locationTypeLabel(loc.type) : '${locationTypeLabel(loc.type)} · ${formatDistance(distance)} entfernt',
+                          style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.outline),
+                        );
+                      },
                     ),
                     const SizedBox(height: 16),
                     FilledButton.icon(onPressed: () => openUrl(loc.googleMapsUrl), icon: const Icon(Icons.map_outlined), label: const Text('Google Maps')),
