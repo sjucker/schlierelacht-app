@@ -63,7 +63,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           children: [
             _OnboardingPage(
               icon: null,
-              title: 'Willkommen bei Schliere lacht',
+              title: 'Willkommen am Schlierefäscht',
               body:
                   'Das Festival in deiner Tasche: Programm, Essen, Karte und mehr. '
                   'Wir richten die App in zwei kurzen Schritten für dich ein.',
@@ -98,7 +98,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             _OnboardingPage(
               icon: Icons.celebration_outlined,
               title: 'Alles bereit!',
-              body: 'Viel Spass an Schliere lacht.',
+              body: 'Viel Spass am Schlierefäscht.',
               buttonLabel: 'App starten',
               busy: _busy,
               onPressed: _finish,
