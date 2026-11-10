@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import '../config.dart';
 import '../theme.dart';
@@ -238,11 +239,38 @@ class _Footer extends StatelessWidget {
               TextButton(onPressed: () => openUrl(datenschutzUrl), child: const Text('Datenschutz')),
             ],
           ),
+          const _AppVersion(),
         ],
       ),
     );
   }
 }
+
+/// "Version 1.0.0 (1)" — the installed version and build number (from
+/// `pubspec.yaml`), so a bug report can say which build it is about. Shows
+/// nothing until the platform has answered, or if it can't.
+class _AppVersion extends StatelessWidget {
+  const _AppVersion();
+
+  static final Future<PackageInfo> _info = PackageInfo.fromPlatform();
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return FutureBuilder<PackageInfo>(
+      future: _info,
+      builder: (context, snapshot) {
+        final info = snapshot.data;
+        if (info == null) return const SizedBox.shrink();
+        return Text('Version ${appVersionLabel(info)}', style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.outline));
+      },
+    );
+  }
+}
+
+/// `1.0.0 (1)`: the version name, plus the build number when there is one.
+@visibleForTesting
+String appVersionLabel(PackageInfo info) => info.buildNumber.isEmpty ? info.version : '${info.version} (${info.buildNumber})';
 
 class _NavCard {
   const _NavCard(this.label, this.icon, this.pageBuilder);

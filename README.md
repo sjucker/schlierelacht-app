@@ -21,6 +21,20 @@ Add the following files (all git-ignored, never commit them):
 
 Without `key.properties`, release builds are signed with the debug key, which Play Console rejects.
 
+Also run `flutterfire configure` (see [Firebase](#firebase)): the Firebase config files are git-ignored too, and
+without them the app does not build.
+
+### Version
+
+`version: 1.0.0+1` in `pubspec.yaml` is `<version name>+<build number>`; it becomes the Android `versionName` /
+`versionCode` and the iOS `CFBundleShortVersionString` / `CFBundleVersion`, and the app shows it at the bottom of the
+landing page ("Version 1.0.0 (1)").
+
+* **Build number** (`+1`): must be higher for **every** upload to Play Console or App Store Connect — both stores
+  reject a number they have seen. Both platforms share it, so raise it after each release.
+* **Version name** (`1.0.0`): what users see in the stores. Raise the minor version for new features (`1.1.0`), the
+  patch version for fixes only (`1.0.1`).
+
 ### Android
 
 * `flutter build appbundle --dart-define=MAPBOX_ACCESS_TOKEN=pk.your_token_here`
@@ -31,7 +45,7 @@ Without `key.properties`, release builds are signed with the debug key, which Pl
 * `flutter build ipa --dart-define=MAPBOX_ACCESS_TOKEN=pk.your_token_here`
 * Upload [schlierelacht_app.ipa](build/ios/ipa/schlierelacht_app.ipa) using the Apple Transporter macOS app
 
-After releasing, increase the build number of the version in `pubspec.yaml`.
+After releasing, increase the build number in `pubspec.yaml` (see [Version](#version)).
 
 ### Website links open the app (App Links / Universal Links)
 

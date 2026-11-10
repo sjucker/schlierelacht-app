@@ -34,10 +34,9 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
+        // Never change it once published: the Play Store, Firebase (google-services.json)
+        // and the App Links verification (website's assetlinks.json) identify the app by it.
         applicationId = "ch.schlierelacht.schlierelacht_app"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://flutter.dev/to/review-gradle-config.
         // Raised to 23: required floor for the Mapbox Maps SDK and Firebase Messaging.
         minSdk = maxOf(23, flutter.minSdkVersion)
         targetSdk = flutter.targetSdkVersion
