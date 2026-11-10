@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart' as geo;
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
@@ -64,21 +65,27 @@ class _FestplanScreenState extends State<FestplanScreen> {
 
     final circles = await map.annotations.createCircleAnnotationManager();
     final labels = await map.annotations.createPointAnnotationManager();
-    for (final loc in locations) {
-      final point = Point(coordinates: Position(loc.longitude, loc.latitude));
-      final annotation = await circles.create(
+    // One batch per layer instead of a platform round trip per marker.
+    Point point(model.Location loc) => Point(coordinates: Position(loc.longitude, loc.latitude));
+    final created = await circles.createMulti([
+      for (final loc in locations)
         CircleAnnotationOptions(
-          geometry: point,
+          geometry: point(loc),
           circleRadius: 14,
           circleColor: locationTypeColor(loc.type),
           circleStrokeColor: 0xFFFFFFFF,
           circleStrokeWidth: 2,
         ),
-      );
-      _byAnnotationId[annotation.id] = loc;
-      await labels.create(
+    ]);
+    // createMulti keeps the order of its input.
+    for (var i = 0; i < created.length; i++) {
+      final annotation = created[i];
+      if (annotation != null) _byAnnotationId[annotation.id] = locations[i];
+    }
+    await labels.createMulti([
+      for (final loc in locations)
         PointAnnotationOptions(
-          geometry: point,
+          geometry: point(loc),
           textField: loc.name,
           textOffset: [0, 1.8],
           textAnchor: TextAnchor.TOP,
@@ -87,8 +94,7 @@ class _FestplanScreenState extends State<FestplanScreen> {
           textHaloColor: 0xFFFFFFFF,
           textHaloWidth: 1.5,
         ),
-      );
-    }
+    ]);
     circles.tapEvents(
       onTap: (annotation) {
         final loc = _byAnnotationId[annotation.id];
@@ -227,13 +233,27 @@ class _MissingToken extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
+    final theme = Theme.of(context);
+    return Center(
       child: Padding(
-        padding: EdgeInsets.all(32),
-        child: Text(
-          'Festplan nicht verfügbar.\n\nDie App wurde ohne Mapbox-Token gebaut. '
-          'Starte sie mit --dart-define=MAPBOX_ACCESS_TOKEN=pk...',
-          textAlign: TextAlign.center,
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.map_outlined, size: 48, color: theme.colorScheme.outline),
+            const SizedBox(height: 12),
+            const Text('Der Festplan ist im Moment nicht verfügbar.', textAlign: TextAlign.center),
+            // Only a developer can fix a build without token; visitors get
+            // the plain message above.
+            if (kDebugMode) ...[
+              const SizedBox(height: 12),
+              Text(
+                'Ohne Mapbox-Token gebaut: --dart-define=MAPBOX_ACCESS_TOKEN=pk...',
+                textAlign: TextAlign.center,
+                style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.outline),
+              ),
+            ],
+          ],
         ),
       ),
     );
