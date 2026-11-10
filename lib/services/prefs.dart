@@ -11,6 +11,7 @@ class Prefs {
   static const _kOnboardingComplete = 'onboarding_complete';
   static const _kFavorites = 'favorites'; // attraction externalIds
   static const _kRemindersEnabled = 'reminders_enabled';
+  static const _kReminderLead = 'reminder_lead_minutes';
 
   static late Prefs instance;
 
@@ -56,4 +57,20 @@ class Prefs {
     remindersEnabled.value = on;
     await _prefs.setBool(_kRemindersEnabled, on);
   }
+
+  /// The lead times a user can pick for reminders, in minutes.
+  static const reminderLeadChoices = [5, 15, 30];
+  static const _defaultReminderLead = 15;
+
+  /// How many minutes before an act its reminder fires (one of
+  /// [reminderLeadChoices], 15 by default). Listened to by `NotificationService`.
+  late final ValueNotifier<int> reminderLeadMinutes = ValueNotifier(_validLead(_prefs.getInt(_kReminderLead)));
+
+  Future<void> setReminderLeadMinutes(int minutes) async {
+    final lead = _validLead(minutes);
+    reminderLeadMinutes.value = lead;
+    await _prefs.setInt(_kReminderLead, lead);
+  }
+
+  static int _validLead(int? minutes) => reminderLeadChoices.contains(minutes) ? minutes! : _defaultReminderLead;
 }

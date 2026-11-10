@@ -72,15 +72,42 @@ class _NotificationSettingsScreenState extends State<NotificationSettingsScreen>
               trailing: permitted ? null : FilledButton(onPressed: _allow, child: const Text('Erlauben')),
             ),
           const Divider(),
-          ValueListenableBuilder<bool>(
-            valueListenable: Prefs.instance.remindersEnabled,
-            builder: (context, enabled, _) => SwitchListTile(
-              secondary: const Icon(Icons.alarm_outlined),
-              title: const Text('Erinnerung an Favoriten'),
-              subtitle: Text('${NotificationService.reminderLead.inMinutes} Minuten bevor ein favorisierter Act beginnt'),
-              value: enabled,
-              onChanged: Prefs.instance.setRemindersEnabled,
-            ),
+          ListenableBuilder(
+            listenable: Listenable.merge([Prefs.instance.remindersEnabled, Prefs.instance.reminderLeadMinutes]),
+            builder: (context, _) {
+              final enabled = Prefs.instance.remindersEnabled.value;
+              final lead = Prefs.instance.reminderLeadMinutes.value;
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  SwitchListTile(
+                    secondary: const Icon(Icons.alarm_outlined),
+                    title: const Text('Erinnerung an Favoriten'),
+                    subtitle: Text('$lead Minuten bevor ein favorisierter Act beginnt'),
+                    value: enabled,
+                    onChanged: Prefs.instance.setRemindersEnabled,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(72, 4, 16, 8),
+                    child: SegmentedButton<int>(
+                      segments: [for (final m in Prefs.reminderLeadChoices) ButtonSegment(value: m, label: Text('$m Min.'))],
+                      selected: {lead},
+                      showSelectedIcon: false,
+                      // Greyed out while reminders are off, but keeps the choice.
+                      onSelectionChanged: enabled ? (s) => Prefs.instance.setReminderLeadMinutes(s.single) : null,
+                    ),
+                  ),
+                  if (enabled && lead < 15)
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(72, 0, 16, 8),
+                      child: Text(
+                        'Das Handy stellt Erinnerungen manchmal ein paar Minuten später zu.',
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.outline),
+                      ),
+                    ),
+                ],
+              );
+            },
           ),
         ],
       ),

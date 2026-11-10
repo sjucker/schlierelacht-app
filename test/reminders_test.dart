@@ -67,4 +67,16 @@ void main() {
     expect(planned, hasLength(NotificationService.maxReminders));
     expect(planned.first.at, tz.TZDateTime(zurich, 2027, 9, 4, 9, 45));
   });
+
+  test('the chosen lead time moves the reminder, and can drop one that is too close', () {
+    final points = [_point('A', '2027-09-03', '12:20'), _point('A', '2027-09-03', '18:00')];
+
+    expect(planReminders(points, {'A'}, now, zurich, lead: const Duration(minutes: 30)).map((r) => r.at), [
+      tz.TZDateTime(zurich, 2027, 9, 3, 17, 30),
+    ], reason: '12:20 minus 30 min is already past at 12:00');
+    expect(planReminders(points, {'A'}, now, zurich, lead: const Duration(minutes: 5)).map((r) => r.at), [
+      tz.TZDateTime(zurich, 2027, 9, 3, 12, 15),
+      tz.TZDateTime(zurich, 2027, 9, 3, 17, 55),
+    ]);
+  });
 }
