@@ -4,7 +4,6 @@ import '../services/geolocation.dart';
 import '../services/notifications.dart';
 import '../services/prefs.dart';
 import '../services/push.dart';
-import '../widgets/fest_logo.dart';
 import 'landing_screen.dart';
 
 /// First-launch setup: a short, button-driven [PageView] that welcomes the
@@ -141,7 +140,7 @@ class _OnboardingPage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           const Spacer(),
-          if (icon == null) const FestLogo(height: 160) else Icon(icon, size: 96, color: theme.colorScheme.primary),
+          if (icon == null) Image.asset('assets/logo.png', height: 160) else Icon(icon, size: 96, color: theme.colorScheme.primary),
           const SizedBox(height: 40),
           Text(
             title,

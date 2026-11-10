@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import '../config.dart';
 import '../theme.dart';
 import '../utils/external_links.dart';
-import '../widgets/fest_logo.dart';
 import '../widgets/now_playing_card.dart';
 import 'favorites_screen.dart';
 import 'festplan_screen.dart';
@@ -46,7 +45,7 @@ class LandingScreen extends StatelessWidget {
         child: CustomScrollView(
           slivers: [
             SliverToBoxAdapter(
-              child: Padding(padding: const EdgeInsets.fromLTRB(24, 32, 24, 16), child: const FestLogo(height: 260)),
+              child: Padding(padding: const EdgeInsets.fromLTRB(24, 32, 24, 16), child: Image.asset('assets/logo.png', height: 260)),
             ),
             const SliverToBoxAdapter(child: _FestBanner()),
             // What is on stage now and next; hidden outside festival days.

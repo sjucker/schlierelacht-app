@@ -60,7 +60,6 @@ class SchlierelachtApp extends StatelessWidget {
       scaffoldMessengerKey: scaffoldMessengerKey,
       navigatorKey: navigatorKey,
       theme: buildFestTheme(),
-      darkTheme: buildFestDarkTheme(),
       localizationsDelegates: const [GlobalMaterialLocalizations.delegate, GlobalWidgetsLocalizations.delegate, GlobalCupertinoLocalizations.delegate],
       supportedLocales: const [Locale('de', 'CH')],
       locale: const Locale('de', 'CH'),
