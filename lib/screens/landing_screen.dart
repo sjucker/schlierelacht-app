@@ -6,6 +6,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import '../config.dart';
 import '../theme.dart';
 import '../utils/external_links.dart';
+import '../widgets/crash_test_dialog.dart';
 import '../widgets/now_playing_card.dart';
 import 'favorites_screen.dart';
 import 'festplan_screen.dart';
@@ -248,7 +249,8 @@ class _Footer extends StatelessWidget {
 
 /// "Version 1.0.0 (1)" — the installed version and build number (from
 /// `pubspec.yaml`), so a bug report can say which build it is about. Shows
-/// nothing until the platform has answered, or if it can't.
+/// nothing until the platform has answered, or if it can't. A long press
+/// opens the hidden crash-reporting test ([showCrashTestDialog]).
 class _AppVersion extends StatelessWidget {
   const _AppVersion();
 
@@ -262,7 +264,11 @@ class _AppVersion extends StatelessWidget {
       builder: (context, snapshot) {
         final info = snapshot.data;
         if (info == null) return const SizedBox.shrink();
-        return Text('Version ${appVersionLabel(info)}', style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.outline));
+        // Long press: hidden crash-reporting test (see crash_test_dialog.dart).
+        return GestureDetector(
+          onLongPress: () => showCrashTestDialog(context),
+          child: Text('Version ${appVersionLabel(info)}', style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.outline)),
+        );
       },
     );
   }

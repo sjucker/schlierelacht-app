@@ -82,6 +82,16 @@ Until the website serves the files, links simply keep opening in the browser.
 not compile (`main.dart` imports `firebase_options.dart`) and the Android build fails (the Google Services Gradle
 plugin needs `google-services.json`). A CI build has to create them the same way, or restore them from secrets.
 
+### Test crash reporting
+
+Crash reports (Firebase Crashlytics) are only sent from **release** builds. To check that they arrive:
+
+1. Install a release build on a device: `flutter run --release --dart-define=MAPBOX_ACCESS_TOKEN=pk.your_token_here`
+2. On the landing page, scroll to the bottom and **long-press the version** ("Version 1.0.0 (1)").
+3. **Testfehler senden** records a non-fatal `CrashReportingTest` error; **Testabsturz** crashes the app — start it
+   again, the report is sent then.
+4. Look in the Firebase console → Crashlytics. The first report can take a few minutes to show up.
+
 ## Development
 
 ### Run Configuration

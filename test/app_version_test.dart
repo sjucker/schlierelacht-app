@@ -27,5 +27,13 @@ void main() {
     await tester.pumpWidget(const MaterialApp(home: LandingScreen()));
     await tester.scrollUntilVisible(find.text('Version 1.2.3 (45)'), 300);
     expect(find.text('Version 1.2.3 (45)'), findsOneWidget);
+
+    // Long press: the hidden crash-reporting test. Off here (debug, no
+    // Firebase), so it only says so and offers no way to crash.
+    await tester.longPress(find.text('Version 1.2.3 (45)'));
+    await tester.pumpAndSettle();
+    expect(find.text('Crash-Reporting testen'), findsOneWidget);
+    expect(find.textContaining('ausgeschaltet'), findsOneWidget);
+    expect(find.text('Testabsturz'), findsNothing);
   });
 }
