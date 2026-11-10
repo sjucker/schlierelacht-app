@@ -1,9 +1,11 @@
 # Firebase / Push notifications setup
 
-Push notifications use **Firebase Cloud Messaging (FCM)**. The code is already in
-place but stays **dormant until Firebase is configured** — the app runs normally
-without it (`main.dart` guards `Firebase.initializeApp` in a try/catch, and
-`lib/firebase_options.dart` ships as a throwing placeholder).
+Push notifications use **Firebase Cloud Messaging (FCM)**. `main.dart` guards
+`Firebase.initializeApp` in a try/catch, so the app still runs if initialization
+fails. The Firebase client config is **not committed** (this repository is public):
+`lib/firebase_options.dart`, `firebase.json` and `android/app/google-services.json`
+are gitignored and generated on each machine by `flutterfire configure` (step 2).
+Without them the app does not compile.
 
 There are two independent halves:
 
@@ -51,11 +53,12 @@ flutterfire configure
 - Confirm the bundle/application id **`ch.schlierelacht.schlierelacht_app`**
   (must match `android/app/build.gradle.kts` `applicationId` and the iOS bundle id).
 
-This **overwrites `lib/firebase_options.dart`** with your project's real values
-and downloads the platform config files. Because the app uses **options-based
-init** (`Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform)`),
-Android needs **no** `google-services.json` and **no** `com.google.gms.google-services`
-Gradle plugin — `firebase_options.dart` is sufficient.
+This writes **`lib/firebase_options.dart`** (the options the app initializes with:
+`Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform)`),
+**`firebase.json`** (the project and app IDs, for the next configure run) and
+**`android/app/google-services.json`**, which the `com.google.gms.google-services`
+Gradle plugin in `android/app/build.gradle.kts` requires. All three are gitignored;
+run this on every new clone and in CI.
 
 Verify:
 
@@ -123,8 +126,11 @@ Optionally include a `route` data value (e.g. `news`) — the app reads
 
 ## Troubleshooting
 
-- **`Firebase not configured` in logs** → `lib/firebase_options.dart` is still the
-  placeholder; re-run `flutterfire configure`.
+- **`Target of URI doesn't exist: 'firebase_options.dart'`** or **`File
+  google-services.json is missing`** → this clone was never configured; run
+  `flutterfire configure` (step 2).
+- **`Firebase not configured` in logs** → initialization failed; re-run
+  `flutterfire configure` and check the platforms you selected.
 - **No token registered / no `push_device_token` row** → notification permission
   was denied, or the backend base URL is wrong (`API_BASE_URL`). Registration is
   best-effort and never blocks the app.

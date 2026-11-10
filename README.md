@@ -43,16 +43,30 @@ open in the app. The claimed paths live in three places that must stay in sync:
 
 Manual steps, once:
 
-* **Android** — in Play Console → *Test and release → App integrity → App signing*, copy the
-  **SHA-256** of the *App signing key* into the website's `public/.well-known/assetlinks.json`
+* **Android** — in Play Console → *Test and release → App integrity → App signing*, copy the **SHA-256** of the *App signing key* into the website's
+  `public/.well-known/assetlinks.json`
   (replace `REPLACE_WITH_PLAY_APP_SIGNING_KEY_SHA256`) and deploy the website. To test a locally
   signed build, add its fingerprint too (`keytool -list -v -keystore android/upload-keystore.p12`).
   Check with `adb shell pm get-app-links ch.schlierelacht.schlierelacht_app` (`verified`).
-* **iOS** — `ios/Runner/Runner.entitlements` declares `applinks:schlierelacht.ch`; the
-  *Associated Domains* capability must be enabled for the App ID (Xcode's automatic signing does
+* **iOS** — `ios/Runner/Runner.entitlements` declares `applinks:schlierelacht.ch`; the *Associated Domains* capability must be enabled for the App ID (Xcode's
+  automatic signing does
   this on the next build; otherwise in the Apple Developer portal → Identifiers).
 
 Until the website serves the files, links simply keep opening in the browser.
+
+## Firebase
+
+* Install the Firebase CLI: https://firebase.google.com/docs/cli
+* `firebase login`
+* `dart pub global activate flutterfire_cli`
+* Production
+    * `$HOME/.pub-cache/bin/flutterfire configure --project=schlierelacht-app` (macOS)
+    * `& $env:userprofile\AppData\Local\Pub\Cache\bin\flutterfire.bat configure --project=schlierelacht-app` (Windows)
+
+**Run this once after cloning.** The files it generates — `lib/firebase_options.dart`, `firebase.json` and
+`android/app/google-services.json` — are gitignored, because this repository is public. Without them the app does
+not compile (`main.dart` imports `firebase_options.dart`) and the Android build fails (the Google Services Gradle
+plugin needs `google-services.json`). A CI build has to create them the same way, or restore them from secrets.
 
 ## Development
 
