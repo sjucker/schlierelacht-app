@@ -6,6 +6,7 @@ import '../screens/gastro_screen.dart';
 import '../screens/info_screen.dart';
 import '../screens/jahrgangstreffen_screen.dart';
 import '../screens/location_detail_screen.dart';
+import '../screens/messages_screen.dart';
 import '../screens/news_detail_screen.dart';
 import '../screens/news_list_screen.dart';
 import '../screens/programm_screen.dart';
@@ -77,6 +78,9 @@ Widget? deepLinkPage(String? routeName) {
     ['jahrgangstreffen', 'liste'] => const JahrgangstreffenScreen(),
     ['sponsoren'] => const SponsoringScreen(),
     ['info'] => const InfoScreen(),
+    // App-only (the website has no such page), so not claimed as an App Link:
+    // reached through a push with route `meldungen`.
+    ['meldungen'] => const MessagesScreen(),
     _ => null,
   };
 }
