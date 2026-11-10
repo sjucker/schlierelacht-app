@@ -82,11 +82,6 @@ class _ContactCard extends StatelessWidget {
           const ListTile(leading: Icon(Icons.person_outline), title: Text('Erika und Charly Mettier'), subtitle: Text('Kampstrasse 6, 8952 Schlieren')),
           ListTile(leading: const Icon(Icons.phone_outlined), title: const Text('079 456 79 69'), onTap: () => openUrl('tel:+41794567969')),
           ListTile(leading: const Icon(Icons.mail_outline), title: const Text('info@schlierelacht.ch'), onTap: () => openUrl('mailto:info@schlierelacht.ch')),
-          ListTile(
-            leading: const Icon(Icons.mail_outline),
-            title: const Text('erika.mettier@schlierelacht.ch'),
-            onTap: () => openUrl('mailto:erika.mettier@schlierelacht.ch'),
-          ),
         ],
       ),
     );
