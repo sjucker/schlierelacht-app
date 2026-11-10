@@ -29,5 +29,11 @@ class ShareButton extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) => IconButton(tooltip: 'Teilen', icon: Icon(Icons.adaptive.share), onPressed: () => _share(context));
+  Widget build(BuildContext context) {
+    // Callers pass a derived future (`_future.then((x) => x.name)`) that only
+    // _share listens to. Without this, a failed load would surface as an
+    // unhandled error; _share still sees and catches it.
+    title?.ignore();
+    return IconButton(tooltip: 'Teilen', icon: Icon(Icons.adaptive.share), onPressed: () => _share(context));
+  }
 }
