@@ -1,3 +1,4 @@
+import 'programm_entry.dart';
 import 'programm_point.dart';
 import 'schedule.dart';
 
@@ -36,7 +37,7 @@ NowAndNext nowAndNext(
     final item = ScheduleItem(entry: p.entry, attraction: p.attraction);
     if (start.isAfter(now)) {
       if (!start.isAfter(now.add(nextWindow))) upcoming.add((start, item));
-    } else if (now.isBefore(_end(p, start, assumedLength))) {
+    } else if (now.isBefore(_end(p.entry, start, assumedLength))) {
       running.add((start, item));
     }
   }
@@ -46,9 +47,16 @@ NowAndNext nowAndNext(
   return NowAndNext(now: [for (final (_, item) in running) item], next: [for (final (_, item) in upcoming.take(nextLimit)) item]);
 }
 
-DateTime _end(ProgrammPoint p, DateTime start, Duration assumedLength) {
-  final toDate = p.entry.toDate;
-  final toTime = _at(toDate ?? p.entry.fromDate, p.entry.toTime);
+/// Whether [entry] is on at [now], by the same rule as [nowAndNext]: started,
+/// and its end (see there) not yet reached. All-day entries never are.
+bool isRunningAt(ProgrammEntry entry, DateTime now, {Duration assumedLength = const Duration(hours: 1)}) {
+  final start = _at(entry.fromDate, entry.fromTime);
+  return start != null && !start.isAfter(now) && now.isBefore(_end(entry, start, assumedLength));
+}
+
+DateTime _end(ProgrammEntry entry, DateTime start, Duration assumedLength) {
+  final toDate = entry.toDate;
+  final toTime = _at(toDate ?? entry.fromDate, entry.toTime);
   if (toTime != null) {
     return toTime.isAfter(start) ? toTime : toTime.add(const Duration(days: 1));
   }
