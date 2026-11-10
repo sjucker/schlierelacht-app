@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../config.dart';
 import '../theme.dart';
 import '../utils/external_links.dart';
+import '../widgets/now_playing_card.dart';
 import 'favorites_screen.dart';
 import 'festplan_screen.dart';
 import 'gastro_screen.dart';
@@ -47,6 +48,8 @@ class LandingScreen extends StatelessWidget {
               child: Padding(padding: const EdgeInsets.fromLTRB(24, 32, 24, 16), child: Image.asset('assets/logo.png', height: 260)),
             ),
             const SliverToBoxAdapter(child: _FestBanner()),
+            // What is on stage now and next; hidden outside festival days.
+            const SliverToBoxAdapter(child: NowPlayingCard()),
             SliverPadding(
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
               sliver: SliverGrid(

@@ -7,12 +7,15 @@ import 'favorite_button.dart';
 /// A single schedule row: start time, act name and location. [past] rows are
 /// muted, like the website's "Vergangene" group.
 class ProgrammEntryTile extends StatelessWidget {
-  const ProgrammEntryTile({super.key, required this.item, required this.onTap, this.past = false, this.showFavorite = true});
+  const ProgrammEntryTile({super.key, required this.item, required this.onTap, this.past = false, this.showFavorite = true, this.subtitle});
 
   final ScheduleItem item;
   final VoidCallback onTap;
   final bool past;
   final bool showFavorite;
+
+  /// Replaces the location line, e.g. with "Hauptbühne · bis 22:00".
+  final String? subtitle;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +34,7 @@ class ProgrammEntryTile extends StatelessWidget {
           ),
         ),
         title: Text(item.attraction.name),
-        subtitle: Text(item.entry.location.name),
+        subtitle: Text(subtitle ?? item.entry.location.name),
         trailing: showFavorite ? FavoriteButton(externalId: item.attraction.externalId) : const Icon(Icons.chevron_right),
       ),
     );
