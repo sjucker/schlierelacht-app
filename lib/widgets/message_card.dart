@@ -176,11 +176,17 @@ class MessageBox extends StatelessWidget {
               MarkdownBody(
                 data: message.content,
                 onTapLink: (_, href, _) => openUrl(href),
-                styleSheet: MarkdownStyleSheet.fromTheme(theme).copyWith(
-                  p: text.bodyMedium?.copyWith(color: style.foreground),
-                  listBullet: text.bodyMedium?.copyWith(color: style.foreground),
-                  a: text.bodyMedium?.copyWith(color: style.foreground, decoration: TextDecoration.underline, decorationColor: style.foreground),
-                ),
+                // Every markdown element (headings, bold, lists, quotes, tables, …)
+                // in the priority's text color: recolor the whole text theme
+                // rather than single elements, which left headings black.
+                styleSheet:
+                    MarkdownStyleSheet.fromTheme(
+                      theme.copyWith(
+                        textTheme: text.apply(bodyColor: style.foreground, displayColor: style.foreground),
+                      ),
+                    ).copyWith(
+                      a: text.bodyMedium?.copyWith(color: style.foreground, decoration: TextDecoration.underline, decorationColor: style.foreground),
+                    ),
               ),
             ],
           ),

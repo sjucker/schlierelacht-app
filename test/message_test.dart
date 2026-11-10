@@ -111,8 +111,37 @@ void main() {
     expect(find.text('Im Moment gibt es keine Meldungen.'), findsOneWidget);
   });
 
+  testWidgets('markdown headings, bold and text use the card text color', (tester) async {
+    final message = Message(id: 1, priority: MessagePriority.high, title: 'Unwetter', content: '# Kopf\n\n**Fett** und Text', createdAt: DateTime(2027));
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(body: MessageBox(message: message)),
+      ),
+    );
+
+    final context = tester.element(find.byType(MessageBox));
+    final expected = Theme.of(context).colorScheme.onError; // HIGH: white on the error red
+    for (final word in ['Kopf', 'Fett', 'Text']) {
+      expect(_colorOf(tester, word), expected, reason: word);
+    }
+  });
+
   test('push route "meldungen" opens the screen', () {
     expect(deepLinkPage('meldungen'), isA<MessagesScreen>());
     expect(deepLinkPage('/meldungen'), isA<MessagesScreen>());
   });
+}
+
+/// The color the markdown text span containing [word] is painted in.
+Color? _colorOf(WidgetTester tester, String word) {
+  final rich = tester.widget<RichText>(find.textContaining(word, findRichText: true).first);
+  Color? color;
+  rich.text.visitChildren((span) {
+    if (span is TextSpan && (span.text ?? '').contains(word)) {
+      color = span.style?.color;
+      return false;
+    }
+    return true;
+  });
+  return color ?? rich.text.style?.color;
 }
