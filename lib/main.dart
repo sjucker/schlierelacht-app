@@ -10,6 +10,7 @@ import 'config.dart';
 import 'firebase_options.dart';
 import 'screens/landing_screen.dart';
 import 'screens/onboarding_screen.dart';
+import 'services/crash_reporting.dart';
 import 'services/notifications.dart';
 import 'services/offline_warmup.dart';
 import 'services/prefs.dart';
@@ -29,13 +30,14 @@ Future<void> main() async {
     MapboxOptions.setAccessToken(mapboxAccessToken);
   }
 
-  // Firebase is optional at runtime: until `flutterfire configure` has added
-  // the platform config, initialization throws and push stays dormant.
+  // If Firebase fails to initialize, push and crash reporting stay off and the
+  // app works without them.
   try {
     await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
     PushService.instance.markAvailable();
+    await CrashReporting.enable();
   } catch (_) {
-    debugPrint('Firebase not configured — push notifications disabled.');
+    debugPrint('Firebase not configured — push notifications and crash reporting disabled.');
   }
 
   runApp(const SchlierelachtApp());
