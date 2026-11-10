@@ -13,6 +13,11 @@ String formatWeekday(DateTime date) => _weekday.format(date);
 /// Date without its weekday, e.g. "03.09.2027" (website: `format-date-short.ts`).
 String formatDateShort(DateTime date) => _dateShort.format(date);
 
+final DateFormat _dateTimeShort = DateFormat('dd.MM.yyyy, HH:mm', 'de_CH');
+
+/// Date and time, e.g. "03.09.2027, 18:30".
+String formatDateTimeShort(DateTime dateTime) => _dateTimeShort.format(dateTime);
+
 /// Trims a raw `HH:MM[:SS]` time string to `HH:MM`. Returns '' for null/empty.
 String formatTime(String? time) {
   if (time == null || time.isEmpty) return '';

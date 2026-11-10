@@ -8,6 +8,7 @@ import '../models/message.dart';
 import '../screens/message_detail_screen.dart';
 import '../screens/messages_screen.dart';
 import '../utils/external_links.dart';
+import '../utils/formatting.dart';
 
 /// The most important active Meldung on the landing page, below the logo (the
 /// backend's first entry: highest priority, then newest). Shows only its
@@ -136,10 +137,13 @@ class MessageTitleCard extends StatelessWidget {
 /// One Meldung in full as a colored card: icon + priority label, title,
 /// markdown content. Used by [MessagesScreen] and [MessageDetailScreen].
 class MessageBox extends StatelessWidget {
-  const MessageBox({super.key, required this.message, this.onTap});
+  const MessageBox({super.key, required this.message, this.onTap, this.showCreatedAt = false});
 
   final Message message;
   final VoidCallback? onTap;
+
+  /// "Erstellt am 03.09.2027, 18:30" below the title (the detail screen).
+  final bool showCreatedAt;
 
   @override
   Widget build(BuildContext context) {
@@ -172,6 +176,10 @@ class MessageBox extends StatelessWidget {
                 message.title,
                 style: text.titleMedium?.copyWith(color: style.foreground, fontWeight: FontWeight.bold),
               ),
+              if (showCreatedAt) ...[
+                const SizedBox(height: 2),
+                Text('Erstellt am ${formatDateTimeShort(message.createdAt)}', style: text.bodySmall?.copyWith(color: style.foreground.withValues(alpha: 0.8))),
+              ],
               const SizedBox(height: 4),
               MarkdownBody(
                 data: message.content,

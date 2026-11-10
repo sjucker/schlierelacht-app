@@ -2,6 +2,7 @@
 // the list screen.
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:schlierelacht_app/api/message_api.dart';
 import 'package:schlierelacht_app/models/message.dart';
 import 'package:schlierelacht_app/screens/message_detail_screen.dart';
@@ -22,6 +23,8 @@ Message _message(int id, MessagePriority priority, String title) =>
     Message(id: id, priority: priority, title: title, content: 'Inhalt von **$title**', createdAt: DateTime(2027, 9, 3, 18));
 
 void main() {
+  setUpAll(() => initializeDateFormatting('de_CH'));
+
   test('fromJson', () {
     final m = Message.fromJson({'id': 7, 'priority': 'HIGH', 'title': 'Unwetter', 'content': '**Bitte** Zelte verlassen', 'createdAt': '2027-09-03T18:30:00'});
     expect(m.id, 7);
@@ -80,6 +83,7 @@ void main() {
     expect(find.text('NOTFALL'), findsOneWidget);
     expect(find.text('Unwetter'), findsOneWidget);
     expect(find.textContaining('Inhalt von', findRichText: true), findsOneWidget);
+    expect(find.text('Erstellt am 03.09.2027, 18:00'), findsOneWidget);
   });
 
   testWidgets('no active message: the card takes no space', (tester) async {
@@ -101,6 +105,7 @@ void main() {
 
     expect(find.text('Unwetter'), findsOneWidget);
     expect(find.text('Shuttlebus'), findsOneWidget);
+    expect(find.textContaining('Erstellt am'), findsNothing, reason: 'only the detail view shows the date');
     expect(tester.getTopLeft(find.text('Unwetter')).dy, lessThan(tester.getTopLeft(find.text('Shuttlebus')).dy));
   });
 
