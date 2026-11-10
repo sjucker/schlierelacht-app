@@ -5,13 +5,14 @@ import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 
 import '../api/message_api.dart';
 import '../models/message.dart';
+import '../screens/message_detail_screen.dart';
 import '../screens/messages_screen.dart';
 import '../utils/external_links.dart';
 
-/// The most important active Meldung at the top of the landing page (the
-/// backend's first entry: highest priority, then newest). Links to all of them
-/// on [MessagesScreen] when there are more. Not dismissible: it stays as long
-/// as it is active.
+/// The most important active Meldung on the landing page, below the logo (the
+/// backend's first entry: highest priority, then newest). Shows only its
+/// title; a tap opens [MessageDetailScreen], the "Alle Meldungen" link below
+/// opens [MessagesScreen]. Not dismissible: it stays as long as it is active.
 ///
 /// Reloaded every 2 minutes and when the app returns to the foreground, so a
 /// new alert shows up without a restart (cache fallback included, so it works
@@ -64,24 +65,81 @@ class _MessageCardState extends State<MessageCard> {
   @override
   Widget build(BuildContext context) {
     if (_messages.isEmpty) return const SizedBox.shrink();
-    final more = _messages.length > 1;
+    final count = _messages.length;
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-      child: MessageBox(message: _messages.first, onTap: _openAll, footer: more ? 'Alle Meldungen (${_messages.length})' : null),
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          MessageTitleCard(message: _messages.first, onTap: () => openMessage(context, _messages.first)),
+          Align(
+            alignment: Alignment.centerRight,
+            child: TextButton.icon(
+              onPressed: _openAll,
+              iconAlignment: IconAlignment.end,
+              icon: const Icon(Icons.chevron_right),
+              label: Text(count > 1 ? 'Alle Meldungen ($count)' : 'Alle Meldungen'),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
 
-/// One Meldung as a colored card: icon + priority label, title, markdown
-/// content. Shared by the landing page and [MessagesScreen].
+/// Opens [MessageDetailScreen] for [message].
+void openMessage(BuildContext context, Message message) =>
+    Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => MessageDetailScreen(message: message)));
+
+/// A Meldung reduced to its title: priority icon, title, chevron, in the
+/// priority's colors. Tapping opens the full message.
+class MessageTitleCard extends StatelessWidget {
+  const MessageTitleCard({super.key, required this.message, required this.onTap});
+
+  final Message message;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final style = MessageStyle.of(message.priority, theme.colorScheme);
+    return Card(
+      color: style.background,
+      clipBehavior: Clip.antiAlias,
+      margin: EdgeInsets.zero,
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 14, 8, 14),
+          child: Row(
+            children: [
+              Semantics(
+                label: style.label,
+                child: Icon(style.icon, color: style.foreground),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  message.title,
+                  style: theme.textTheme.titleMedium?.copyWith(color: style.foreground, fontWeight: FontWeight.bold),
+                ),
+              ),
+              Icon(Icons.chevron_right, color: style.foreground),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// One Meldung in full as a colored card: icon + priority label, title,
+/// markdown content. Used by [MessagesScreen] and [MessageDetailScreen].
 class MessageBox extends StatelessWidget {
-  const MessageBox({super.key, required this.message, this.onTap, this.footer});
+  const MessageBox({super.key, required this.message, this.onTap});
 
   final Message message;
   final VoidCallback? onTap;
-
-  /// A link-styled line at the bottom, e.g. "Alle Meldungen (3)".
-  final String? footer;
 
   @override
   Widget build(BuildContext context) {
@@ -124,19 +182,6 @@ class MessageBox extends StatelessWidget {
                   a: text.bodyMedium?.copyWith(color: style.foreground, decoration: TextDecoration.underline, decorationColor: style.foreground),
                 ),
               ),
-              if (footer case final footer?) ...[
-                const SizedBox(height: 8),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Text(
-                      footer,
-                      style: text.labelLarge?.copyWith(color: style.foreground, fontWeight: FontWeight.bold),
-                    ),
-                    Icon(Icons.chevron_right, color: style.foreground),
-                  ],
-                ),
-              ],
             ],
           ),
         ),

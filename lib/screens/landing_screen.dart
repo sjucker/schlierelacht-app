@@ -20,8 +20,8 @@ import 'programm_screen.dart';
 import 'social_media_screen.dart';
 import 'sponsoring_screen.dart';
 
-/// App home (the website's home page + its navigation): the most important
-/// active Meldung (app-only, see [MessageCard]), the festival logo, the
+/// App home (the website's home page + its navigation): the festival logo,
+/// the most important active Meldung (app-only, see [MessageCard]), the
 /// countdown to the festival start, the "free entry" note, a grid linking to
 /// every section, and a footer with the social links and a Datenschutz link to the website.
 ///
@@ -48,12 +48,11 @@ class LandingScreen extends StatelessWidget {
       body: SafeArea(
         child: CustomScrollView(
           slivers: [
-            // The most important active Meldung, above everything else so an
-            // emergency alert is visible without scrolling; hidden when none.
-            const SliverToBoxAdapter(child: MessageCard()),
             SliverToBoxAdapter(
               child: Padding(padding: const EdgeInsets.fromLTRB(24, 32, 24, 16), child: Image.asset('assets/logo.png', height: 260)),
             ),
+            // The most important active Meldung (title only); hidden when none.
+            const SliverToBoxAdapter(child: MessageCard()),
             const SliverToBoxAdapter(child: _FestBanner()),
             // What is on stage now and next; hidden outside festival days.
             const SliverToBoxAdapter(child: NowPlayingCard()),

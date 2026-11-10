@@ -1,9 +1,10 @@
-// Meldungen: the model, the landing-page card (most important one only) and
+// Meldungen: the model, the landing-page card (most important title only), the detail and
 // the list screen.
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:schlierelacht_app/api/message_api.dart';
 import 'package:schlierelacht_app/models/message.dart';
+import 'package:schlierelacht_app/screens/message_detail_screen.dart';
 import 'package:schlierelacht_app/screens/messages_screen.dart';
 import 'package:schlierelacht_app/utils/deep_links.dart';
 import 'package:schlierelacht_app/widgets/message_card.dart';
@@ -36,7 +37,7 @@ void main() {
     expect(MessagePriority.fromJson('CRITICAL'), MessagePriority.low);
   });
 
-  testWidgets('the card shows the first message and links to all', (tester) async {
+  testWidgets('the card shows only the first title and links to all', (tester) async {
     final api = _FakeMessageApi([_message(1, MessagePriority.high, 'Unwetter'), _message(2, MessagePriority.low, 'Shuttlebus')]);
     await tester.pumpWidget(
       MaterialApp(
@@ -46,12 +47,12 @@ void main() {
     await tester.pump();
 
     expect(find.text('Unwetter'), findsOneWidget);
-    expect(find.text('NOTFALL'), findsOneWidget);
+    expect(find.textContaining('Inhalt von', findRichText: true), findsNothing, reason: 'title only');
     expect(find.text('Shuttlebus'), findsNothing, reason: 'only the most important one');
     expect(find.text('Alle Meldungen (2)'), findsOneWidget);
   });
 
-  testWidgets('a single message has no "Alle Meldungen" link', (tester) async {
+  testWidgets('a single message still links to the overview', (tester) async {
     final api = _FakeMessageApi([_message(1, MessagePriority.medium, 'Bühne verspätet')]);
     await tester.pumpWidget(
       MaterialApp(
@@ -60,8 +61,25 @@ void main() {
     );
     await tester.pump();
 
-    expect(find.text('WARNUNG'), findsOneWidget);
-    expect(find.textContaining('Alle Meldungen'), findsNothing);
+    expect(find.text('Alle Meldungen'), findsOneWidget);
+  });
+
+  testWidgets('tapping the card opens the message with its content', (tester) async {
+    final api = _FakeMessageApi([_message(1, MessagePriority.high, 'Unwetter')]);
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(body: MessageCard(api: api)),
+      ),
+    );
+    await tester.pump();
+
+    await tester.tap(find.text('Unwetter'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(MessageDetailScreen), findsOneWidget);
+    expect(find.text('NOTFALL'), findsOneWidget);
+    expect(find.text('Unwetter'), findsOneWidget);
+    expect(find.textContaining('Inhalt von', findRichText: true), findsOneWidget);
   });
 
   testWidgets('no active message: the card takes no space', (tester) async {
@@ -72,7 +90,8 @@ void main() {
     );
     await tester.pump();
 
-    expect(find.byType(MessageBox), findsNothing);
+    expect(find.byType(MessageTitleCard), findsNothing);
+    expect(find.textContaining('Alle Meldungen'), findsNothing);
   });
 
   testWidgets('the screen lists all, in the backend order', (tester) async {
