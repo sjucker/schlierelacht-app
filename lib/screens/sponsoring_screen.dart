@@ -131,7 +131,7 @@ class _SponsorTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Sponsor logos come on a white background (not transparent), so the card
-    // is white too — in dark mode as well — and blends with the logo.
+    // is white too and blends with the logo.
     return Card(
       color: Colors.white,
       surfaceTintColor: Colors.transparent,
