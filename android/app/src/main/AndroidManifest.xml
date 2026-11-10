@@ -6,7 +6,7 @@
     <!-- Favorite reminders (flutter_local_notifications) survive a reboot. -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <application
-        android:label="schlierelacht_app"
+        android:label="Schlierefäscht"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

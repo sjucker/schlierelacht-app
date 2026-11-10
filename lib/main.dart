@@ -55,7 +55,7 @@ class SchlierelachtApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Schliere lacht',
+      title: 'Schlierefäscht',
       debugShowCheckedModeBanner: false,
       scaffoldMessengerKey: scaffoldMessengerKey,
       navigatorKey: navigatorKey,
