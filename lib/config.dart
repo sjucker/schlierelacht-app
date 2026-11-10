@@ -9,8 +9,33 @@ const String apiBaseUrl = String.fromEnvironment('API_BASE_URL', defaultValue: '
 /// Cloudflare image delivery base (same account id the website uses).
 const String _cloudflareBaseUrl = 'https://imagedelivery.net/08WjJu0y_NwzY_GFS74XCw';
 
-/// Builds the public delivery URL for a Cloudflare image id.
-String cloudflareImageUrl(String cloudflareId) => '$_cloudflareBaseUrl/$cloudflareId/public';
+/// Builds the delivery URL for a Cloudflare image id.
+///
+/// Without a size it is the `public` variant (the stored image, capped at about
+/// 1200 × 768). With [width] and/or [height] — in physical pixels — it is a
+/// flexible variant (enabled for the account) at quality 80: with [cover] the
+/// image fills both dimensions and is cropped, otherwise `scale-down` fits it
+/// inside them without ever enlarging it.
+String cloudflareImageUrl(String cloudflareId, {int? width, int? height, bool cover = false}) {
+  if (width == null && height == null) return '$_cloudflareBaseUrl/$cloudflareId/public';
+  final options = [if (width != null) 'w=$width', if (height != null) 'h=$height', 'fit=${cover ? 'cover' : 'scale-down'}', 'quality=80'];
+  return '$_cloudflareBaseUrl/$cloudflareId/${options.join(',')}';
+}
+
+/// Widest box (physical px) that gets a flexible variant. Wider ones — the
+/// full-width detail images on a phone — ask for about what `public` already
+/// is, and re-encoding them made 13 of the 56 act photos bigger (measured
+/// November 2026), so they keep `public`.
+const int cloudflareFlexibleMaxWidth = 800;
+
+/// Rounds a [logical] size up to physical pixels in steps of 100 (max 2000),
+/// so boxes of similar size request — and cache — the same image.
+int cloudflareSize(double logical, double devicePixelRatio) => (((logical * devicePixelRatio) / 100).ceil() * 100).clamp(100, 2000);
+
+/// Asks Cloudflare for WebP (about 20 % smaller than JPEG). Without it the
+/// delivery falls back to JPEG; AVIF must not be accepted, Flutter can't
+/// decode it.
+const Map<String, String> cloudflareImageHeaders = {'Accept': 'image/webp,image/*;q=0.8'};
 
 /// Public Mapbox access token (`pk.*`) used by the map screen. Supplied at
 /// build/run time so the secret stays out of source control:

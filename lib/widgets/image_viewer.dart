@@ -52,7 +52,9 @@ class _ImageViewerState extends State<_ImageViewer> {
           maxScale: 4,
           child: Center(
             child: CachedNetworkImage(
+              // Full stored size (public): the viewer zooms up to 4x.
               imageUrl: cloudflareImageUrl(widget.ids[i]),
+              httpHeaders: cloudflareImageHeaders,
               fit: BoxFit.contain,
               placeholder: (context, url) => const CircularProgressIndicator(color: Colors.white),
               errorWidget: (context, url, error) => const Icon(Icons.broken_image_outlined, color: Colors.white54, size: 64),
