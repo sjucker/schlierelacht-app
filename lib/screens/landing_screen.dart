@@ -17,6 +17,7 @@ import 'info_screen.dart';
 import 'jahrgangstreffen_screen.dart';
 import 'news_list_screen.dart';
 import 'notification_settings_screen.dart';
+import 'problem_report_screen.dart';
 import 'programm_screen.dart';
 import 'social_media_screen.dart';
 import 'sponsoring_screen.dart';
@@ -26,7 +27,7 @@ import 'sponsoring_screen.dart';
 /// countdown to the festival start, the "free entry" note, a grid linking to
 /// every section, and a footer with the social links and a Datenschutz link to the website.
 ///
-/// The sections follow the website's nav order; Favoriten and FAQ are app-only
+/// The sections follow the website's nav order; Favoriten, FAQ and Problem melden are app-only
 /// additions.
 class LandingScreen extends StatelessWidget {
   const LandingScreen({super.key});
@@ -42,6 +43,7 @@ class LandingScreen extends StatelessWidget {
     _NavCard('Social Media', Icons.forum_outlined, () => const SocialMediaScreen()),
     _NavCard('Über uns', Icons.info_outline, () => const InfoScreen()),
     _NavCard('FAQ', Icons.help_outline, () => const FaqScreen()),
+    _NavCard('Problem\nmelden', Icons.report_problem_outlined, () => const ProblemReportScreen()),
   ];
 
   @override

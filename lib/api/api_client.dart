@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 
 import '../config.dart';
 import 'api_cache.dart';
@@ -45,6 +46,30 @@ class ApiClient {
     final http.Response response;
     try {
       response = await _client.post(_uri(path), headers: const {'Content-Type': 'application/json'}, body: jsonEncode(body));
+    } catch (e) {
+      throw ApiException('Verbindung fehlgeschlagen: $e');
+    }
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      throw ApiException('Fehler ${response.statusCode} bei $path');
+    }
+  }
+
+  /// How long a multipart upload (e.g. a problem report with a photo) may
+  /// take on a weak connection before it counts as failed.
+  static const uploadTimeout = Duration(seconds: 30);
+
+  /// POSTs a `multipart/form-data` request to [path]: each entry of [json]
+  /// becomes a part with content type `application/json`, each of [files] a
+  /// file part. Throws [ApiException] like [postJson].
+  Future<void> postMultipart(String path, {Map<String, Object> json = const {}, List<http.MultipartFile> files = const []}) async {
+    final request = http.MultipartRequest('POST', _uri(path));
+    for (final MapEntry(:key, :value) in json.entries) {
+      request.files.add(http.MultipartFile.fromString(key, jsonEncode(value), contentType: MediaType('application', 'json')));
+    }
+    request.files.addAll(files);
+    final http.Response response;
+    try {
+      response = await http.Response.fromStream(await _client.send(request).timeout(uploadTimeout));
     } catch (e) {
       throw ApiException('Verbindung fehlgeschlagen: $e');
     }

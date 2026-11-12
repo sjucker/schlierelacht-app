@@ -16,6 +16,7 @@ abstract final class ApiPaths {
   static const String message = '/api/v1/message';
   static const String news = '/api/v1/news';
   static const String ok = '/api/v1/ok';
+  static const String problemReport = '/api/v1/problem-report';
   static const String programm = '/api/v1/programm';
   static const String pushRegister = '/api/v1/push/register';
   static const String sponsoring = '/api/v1/sponsoring';

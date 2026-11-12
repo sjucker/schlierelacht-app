@@ -5,7 +5,11 @@
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Dein Standort wird verwendet, um dir auf der Karte die Entfernung zu Bühnen und Ständen anzuzeigen.</string>
+	<string>Dein Standort wird verwendet, um dir auf der Karte die Entfernung zu Bühnen und Ständen anzuzeigen und – wenn du es wählst – um bei einer Problemmeldung die Stelle mitzusenden.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Damit du ein Foto zum gemeldeten Problem aufnehmen kannst.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Damit du ein Foto aus deiner Galerie zum gemeldeten Problem anhängen kannst.</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>

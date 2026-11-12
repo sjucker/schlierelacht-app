@@ -12,6 +12,9 @@ class Prefs {
   static const _kFavorites = 'favorites'; // attraction externalIds
   static const _kRemindersEnabled = 'reminders_enabled';
   static const _kReminderLead = 'reminder_lead_minutes';
+  static const _kReporterName = 'problem_reporter_name';
+  static const _kReporterPhone = 'problem_reporter_phone';
+  static const _kProblemReportDraft = 'problem_report_draft';
 
   static late Prefs instance;
 
@@ -73,4 +76,22 @@ class Prefs {
   }
 
   static int _validLead(int? minutes) => reminderLeadChoices.contains(minutes) ? minutes! : _defaultReminderLead;
+
+  // --- Problem report contact ---------------------------------------------
+
+  /// Name and phone of the last problem report, pre-filled in the next one.
+  String get reporterName => _prefs.getString(_kReporterName) ?? '';
+
+  String get reporterPhone => _prefs.getString(_kReporterPhone) ?? '';
+
+  Future<void> setReporter({required String name, required String phone}) async {
+    await _prefs.setString(_kReporterName, name);
+    await _prefs.setString(_kReporterPhone, phone);
+  }
+
+  /// The unsent problem report (JSON), saved when the visitor goes to the
+  /// system settings to allow camera access — iOS ends the app on such a change.
+  String? get problemReportDraft => _prefs.getString(_kProblemReportDraft);
+
+  Future<void> setProblemReportDraft(String? json) => json == null ? _prefs.remove(_kProblemReportDraft) : _prefs.setString(_kProblemReportDraft, json);
 }
