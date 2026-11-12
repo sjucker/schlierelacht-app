@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Status bar / notification small icon: the "Schliere lacht" smiley from
+     assets/app_icon.png as a white silhouette (Android only uses the alpha
+     channel, a full-color icon would show as a blob). Traced in the source's
+     800 px coordinates, strokes thickened so they stay visible at 24 dp.
+     Used by FCM pushes (default_notification_icon in AndroidManifest.xml) and
+     the favorite reminders (lib/services/notifications.dart). -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="720"
+    android:viewportHeight="720">
+    <group
+        android:translateX="-46"
+        android:translateY="-32">
+        <!-- Eyes -->
+        <path
+            android:fillColor="#FFFFFFFF"
+            android:pathData="M258,118 a52,58 0 1,0 0.1,0 z M496,113 a52,63 0 1,0 0.1,0 z" />
+        <!-- Nose, smile and its two dimples -->
+        <path
+            android:pathData="M387,96 L360,490 L488,487 M124,410 A284,280 0 0,0 692,410 M84,365 A41,41 0 0,0 166,365 M649,365 A41,41 0 0,0 731,365"
+            android:strokeColor="#FFFFFFFF"
+            android:strokeWidth="44"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round" />
+    </group>
+</vector>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Accent of the notification small icon / app name (FestColors.blue in
+         lib/theme.dart). Kept out of colors.xml, which flutter_launcher_icons writes. -->
+    <color name="notification_color">#2B3585</color>
+</resources>

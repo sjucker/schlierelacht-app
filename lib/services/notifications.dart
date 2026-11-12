@@ -8,6 +8,7 @@ import 'package:timezone/timezone.dart' as tz;
 
 import '../api/programm_api.dart';
 import '../models/programm_point.dart';
+import '../theme.dart';
 import '../utils/deep_links.dart';
 import 'prefs.dart';
 
@@ -41,6 +42,7 @@ class NotificationService {
       channelDescription: 'Kurz bevor ein favorisierter Act beginnt',
       importance: Importance.high,
       priority: Priority.high,
+      color: FestColors.blue,
     ),
     iOS: DarwinNotificationDetails(),
   );
@@ -53,7 +55,8 @@ class NotificationService {
       tz_data.initializeTimeZones();
       await _plugin.initialize(
         settings: const InitializationSettings(
-          android: AndroidInitializationSettings('@mipmap/ic_launcher'),
+          // White smiley silhouette (res/drawable/ic_stat_notification.xml), the same as FCM pushes.
+          android: AndroidInitializationSettings('@drawable/ic_stat_notification'),
           // Permission is asked in onboarding / the Mitteilungen screen, not here.
           iOS: DarwinInitializationSettings(requestAlertPermission: false, requestBadgePermission: false, requestSoundPermission: false),
         ),
