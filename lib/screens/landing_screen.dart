@@ -13,13 +13,13 @@ import 'faq_screen.dart';
 import 'favorites_screen.dart';
 import 'festplan_screen.dart';
 import 'gastro_screen.dart';
-import 'info_screen.dart';
+// import 'info_screen.dart'; // tile hidden for now, see _cards
 import 'jahrgangstreffen_screen.dart';
 import 'news_list_screen.dart';
 import 'notification_settings_screen.dart';
 import 'problem_report_screen.dart';
 import 'programm_screen.dart';
-import 'social_media_screen.dart';
+// import 'social_media_screen.dart'; // tile hidden for now, see _cards
 import 'sponsoring_screen.dart';
 
 /// App home (the website's home page + its navigation): the festival logo,
@@ -40,8 +40,9 @@ class LandingScreen extends StatelessWidget {
     _NavCard('Festplan', Icons.map_outlined, () => const FestplanScreen()),
     _NavCard('Gastro', Icons.restaurant_outlined, () => const GastroScreen()),
     _NavCard('Sponsoren', Icons.handshake_outlined, () => const SponsoringScreen()),
-    _NavCard('Social Media', Icons.forum_outlined, () => const SocialMediaScreen()),
-    _NavCard('Über uns', Icons.info_outline, () => const InfoScreen()),
+    // Hidden for now; the screens stay (Über uns is still reachable via the /info deep link).
+    // _NavCard('Social Media', Icons.forum_outlined, () => const SocialMediaScreen()),
+    // _NavCard('Über uns', Icons.info_outline, () => const InfoScreen()),
     _NavCard('FAQ', Icons.help_outline, () => const FaqScreen()),
     _NavCard('Problem\nmelden', Icons.report_problem_outlined, () => const ProblemReportScreen()),
   ];

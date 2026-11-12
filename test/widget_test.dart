@@ -20,8 +20,11 @@ void main() {
 
     // Sections further down are reachable by scrolling.
     await tester.scrollUntilVisible(find.text('FAQ'), 300);
-    expect(find.text('Über uns'), findsOneWidget);
     expect(find.text('Sponsoren'), findsOneWidget);
     expect(find.text('Gastro'), findsOneWidget);
+
+    // Hidden for now (the screens themselves stay).
+    expect(find.text('Social Media'), findsNothing);
+    expect(find.text('Über uns'), findsNothing);
   });
 }
