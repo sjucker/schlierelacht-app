@@ -19,7 +19,8 @@ void main() {
     expect(find.text('Favoriten'), findsOneWidget);
 
     // Sections further down are reachable by scrolling.
-    await tester.scrollUntilVisible(find.text('Über uns'), 300);
+    await tester.scrollUntilVisible(find.text('FAQ'), 300);
+    expect(find.text('Über uns'), findsOneWidget);
     expect(find.text('Sponsoren'), findsOneWidget);
     expect(find.text('Gastro'), findsOneWidget);
   });

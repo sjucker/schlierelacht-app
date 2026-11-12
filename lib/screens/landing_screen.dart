@@ -9,6 +9,7 @@ import '../utils/external_links.dart';
 import '../widgets/crash_test_dialog.dart';
 import '../widgets/message_card.dart';
 import '../widgets/now_playing_card.dart';
+import 'faq_screen.dart';
 import 'favorites_screen.dart';
 import 'festplan_screen.dart';
 import 'gastro_screen.dart';
@@ -25,8 +26,8 @@ import 'sponsoring_screen.dart';
 /// countdown to the festival start, the "free entry" note, a grid linking to
 /// every section, and a footer with the social links and a Datenschutz link to the website.
 ///
-/// The sections follow the website's nav order; Favoriten is an app-only
-/// addition.
+/// The sections follow the website's nav order; Favoriten and FAQ are app-only
+/// additions.
 class LandingScreen extends StatelessWidget {
   const LandingScreen({super.key});
 
@@ -40,6 +41,7 @@ class LandingScreen extends StatelessWidget {
     _NavCard('Sponsoren', Icons.handshake_outlined, () => const SponsoringScreen()),
     _NavCard('Social Media', Icons.forum_outlined, () => const SocialMediaScreen()),
     _NavCard('Über uns', Icons.info_outline, () => const InfoScreen()),
+    _NavCard('FAQ', Icons.help_outline, () => const FaqScreen()),
   ];
 
   @override

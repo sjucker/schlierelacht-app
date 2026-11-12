@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../screens/attraction_detail_screen.dart';
+import '../screens/faq_screen.dart';
 import '../screens/festplan_screen.dart';
 import '../screens/gastro_screen.dart';
 import '../screens/info_screen.dart';
@@ -81,6 +82,8 @@ Widget? deepLinkPage(String? routeName) {
     // App-only (the website has no such page), so not claimed as an App Link:
     // reached through a push with route `meldungen`.
     ['meldungen'] => const MessagesScreen(),
+    // App-only too: a push with route `faq`.
+    ['faq'] => const FaqScreen(),
     _ => null,
   };
 }

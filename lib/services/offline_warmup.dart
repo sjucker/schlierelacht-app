@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../api/api_cache.dart';
 import '../api/attraction_api.dart';
+import '../api/faq_api.dart';
 import '../api/location_api.dart';
 import '../api/meetup_api.dart';
 import '../api/news_api.dart';
@@ -49,7 +50,15 @@ abstract final class OfflineWarmup {
       final locations = await LocationApi().fetchLocations();
       final news = await NewsApi().fetchNews();
       final sponsoring = SponsoringApi();
-      await Future.wait([sponsoring.fetchSponsorings(), sponsoring.fetchTypes(), OkApi().fetchOk(), MeetupApi().fetchEntries()]);
+      await Future.wait([
+        sponsoring.fetchSponsorings(),
+        sponsoring.fetchTypes(),
+        OkApi().fetchOk(),
+        MeetupApi().fetchEntries(),
+        // Newer than the other endpoints: a backend without it (404) must not
+        // stop the warm-up.
+        FaqApi().fetchFaq().then<Object?>((v) => v, onError: (_) => null),
+      ]);
 
       // Then every detail page, a few at a time. Single failures are fine.
       final actIds = {for (final p in programm) p.attraction.externalId, for (final a in gastro) a.externalId};
