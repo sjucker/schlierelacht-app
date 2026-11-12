@@ -11,7 +11,7 @@ There are two independent halves:
 
 1. **App (this repo)** — receives notifications and registers its device token.
 2. **Backend (`schlierelacht-admin`)** — sends notifications via the Firebase
-   Admin SDK (the "Push senden" admin view + `POST /api/push/register`).
+   Admin SDK (the "Push senden" admin view + `POST /api/v1/push/register`).
 
 Both talk to the **same Firebase project**.
 
@@ -95,18 +95,24 @@ The backend sends pushes with the **Firebase Admin SDK**, authenticated by a
 
 1. Firebase console → *Project settings* → **Service accounts** → **Generate new
    private key** → download the JSON. Keep it secret; **do not commit it.**
-2. Point the backend at it via the `FIREBASE_CREDENTIALS` environment variable
-   (absolute path to the file). It maps to `app.firebase-credentials` in
-   `application.properties` and is read by `config/FirebaseConfig.java`.
+2. Pass the **content** of that JSON file (not its path) in the
+   `FIREBASE_CREDENTIALS` environment variable. It maps to
+   `app.firebase-credentials` in `application.properties` and is read by
+   `config/FirebaseConfig.java`.
 
    ```bash
-   # from schlierelacht-admin/
-   FIREBASE_CREDENTIALS=/absolute/path/to/service-account.json mvn spring-boot:run
+   # Heroku (PROD)
+   heroku config:set FIREBASE_CREDENTIALS="$(cat service-account.json)" --app schlierelacht-admin
+
+   # locally, from schlierelacht-admin/
+   FIREBASE_CREDENTIALS="$(cat /path/to/service-account.json)" mvn spring-boot:run
    ```
 
-   When `FIREBASE_CREDENTIALS` is unset, the `FirebaseMessaging` bean is `null`
-   and the admin "Push senden" view shows sending as disabled — the rest of the
-   backend runs normally.
+   On startup the log shows `Firebase Admin SDK initialised for project …`.
+   When `FIREBASE_CREDENTIALS` is unset or not a valid service-account JSON, the
+   `FirebaseMessaging` bean is `null` (an invalid value is logged as an error,
+   never its content) and the admin "Push senden" view shows sending as
+   disabled — the rest of the backend runs normally.
 
 ---
 
@@ -136,5 +142,5 @@ Optionally include a `route` data value (e.g. `news`) — the app reads
   best-effort and never blocks the app.
 - **iOS: no notifications** → missing APNs key in Firebase, Push Notifications
   capability not enabled, or testing on the Simulator (use a real device).
-- **Admin view says sending disabled** → `FIREBASE_CREDENTIALS` is unset or points
-  at a missing/invalid file.
+- **Admin view says sending disabled** → `FIREBASE_CREDENTIALS` is unset or is not
+  a valid service-account JSON (check the startup log).
