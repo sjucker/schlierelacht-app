@@ -78,9 +78,10 @@ class ApiClient {
     }
   }
 
-  /// Network first; on a transport error, timeout or 5xx it falls back to the
-  /// last cached response for [path] (see [ApiCache]). Only when nothing is
-  /// cached does the error reach the screen.
+  /// Network first; on a transport error, timeout, 5xx or a body that is not
+  /// JSON (a captive Wi-Fi login page answers 200) it falls back to the last
+  /// cached response for [path] (see [ApiCache]). Only when nothing is cached
+  /// does the error reach the screen.
   Future<dynamic> _getJson(String path) async {
     final http.Response response;
     try {
@@ -94,10 +95,20 @@ class ApiClient {
     if (response.statusCode < 200 || response.statusCode >= 300) {
       throw ApiException('Fehler ${response.statusCode} bei $path');
     }
-    final body = utf8.decode(response.bodyBytes);
-    final json = jsonDecode(body);
-    ApiCache.offlineSince.value = null;
-    await ApiCache.put(path, body);
+    final String body;
+    final dynamic json;
+    try {
+      body = utf8.decode(response.bodyBytes);
+      json = jsonDecode(body);
+    } on FormatException catch (e) {
+      return _fromCache(path, ApiException('Ungültige Antwort von $path: $e'));
+    }
+    ApiCache.markFresh(path);
+    try {
+      await ApiCache.put(path, body);
+    } catch (_) {
+      // Failing to save the copy must not hide the fresh data.
+    }
     return json;
   }
 
@@ -106,11 +117,7 @@ class ApiClient {
     if (cached == null) throw error;
     final json = jsonDecode(cached.body);
     refreshPastFlags(json, DateTime.now());
-    final shown = ApiCache.offlineSince.value;
-    // The banner shows the oldest data currently on screen.
-    if (shown == null || cached.savedAt.isBefore(shown)) {
-      ApiCache.offlineSince.value = cached.savedAt;
-    }
+    ApiCache.markServedFromCache(path, cached.savedAt);
     return json;
   }
 }

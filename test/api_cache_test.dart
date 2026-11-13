@@ -13,7 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 void main() {
   setUp(() {
     SharedPreferences.setMockInitialValues({});
-    ApiCache.offlineSince.value = null;
+    ApiCache.reset();
   });
 
   ApiClient online(String body, {int status = 200}) => ApiClient(client: MockClient((_) async => http.Response(body, status)));
@@ -61,6 +61,32 @@ void main() {
     await tester.runAsync(() => Future<void>.delayed(Duration.zero)); // let the cache read finish
     await tester.pump();
     expect(result, ['saved']);
+  });
+
+  test('a captive-portal login page (200, not JSON) falls back to the cache', () async {
+    await online('["saved"]').getList('/api/v1/news');
+    final portal = ApiClient(client: MockClient((_) async => http.Response('<html>Anmelden</html>', 200)));
+
+    expect(await portal.getList('/api/v1/news'), ['saved']);
+    expect(ApiCache.isServedFromCache('/api/v1/news'), isTrue);
+    expect(ApiCache.offlineSince.value, isNotNull);
+  });
+
+  test('a non-JSON 200 with nothing cached is an error, not a crash', () {
+    final portal = ApiClient(client: MockClient((_) async => http.Response('<html>Anmelden</html>', 200)));
+    expect(portal.getList('/api/v1/programm'), throwsA(isA<ApiException>()));
+  });
+
+  test('one fresh response does not hide that another path is still stale', () async {
+    SharedPreferences.setMockInitialValues({'api_cache:/api/v1/news': '{"t":"2027-09-01T10:00:00.000","b":"[]"}'});
+    await offline.getList('/api/v1/news');
+    await online('[]').getList('/api/v1/programm');
+
+    expect(ApiCache.isServedFromCache('/api/v1/news'), isTrue);
+    expect(ApiCache.offlineSince.value, DateTime(2027, 9, 1, 10), reason: 'news is still stale on screen');
+
+    await online('[]').getList('/api/v1/news');
+    expect(ApiCache.offlineSince.value, isNull);
   });
 
   test('the banner shows the oldest saved data on screen', () async {

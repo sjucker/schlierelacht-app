@@ -13,10 +13,40 @@ import 'package:shared_preferences/shared_preferences.dart';
 abstract final class ApiCache {
   static const _prefix = 'api_cache:';
 
-  /// When the data currently shown was saved — set while responses come from
-  /// the cache, null again as soon as a request reaches the backend. Drives
-  /// the app-wide offline banner.
+  /// When the oldest data currently on screen was saved, or null when every
+  /// response is fresh. Drives the app-wide offline banner.
   static final ValueNotifier<DateTime?> offlineSince = ValueNotifier(null);
+
+  /// Per path: when the copy served from the cache was saved. A path leaves
+  /// this map only when it reaches the backend again, so one fresh response
+  /// does not hide that another screen still shows stale data.
+  static final Map<String, DateTime> _servedFromCache = {};
+
+  /// Records that [path] was answered from the cache (saved at [savedAt]).
+  static void markServedFromCache(String path, DateTime savedAt) {
+    _servedFromCache[path] = savedAt;
+    _publish();
+  }
+
+  /// Records that [path] was answered by the backend just now.
+  static void markFresh(String path) {
+    if (_servedFromCache.remove(path) != null) _publish();
+  }
+
+  /// Whether the last answer for [path] came from the cache.
+  static bool isServedFromCache(String path) => _servedFromCache.containsKey(path);
+
+  static void _publish() {
+    final saved = _servedFromCache.values;
+    offlineSince.value = saved.isEmpty ? null : saved.reduce((a, b) => a.isBefore(b) ? a : b);
+  }
+
+  /// Forgets all state. For tests only.
+  @visibleForTesting
+  static void reset() {
+    _servedFromCache.clear();
+    offlineSince.value = null;
+  }
 
   static Future<void> put(String path, String body) async {
     final prefs = await SharedPreferences.getInstance();
