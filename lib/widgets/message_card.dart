@@ -69,7 +69,9 @@ class _MessageCardState extends State<MessageCard> {
     if (_messages.isEmpty) return const SizedBox.shrink();
     final count = _messages.length;
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+      // 20 = the 16 around the home screen's cards + the 4 default Card margin
+      // they keep (MessageTitleCard has none), so all edges line up.
+      padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
