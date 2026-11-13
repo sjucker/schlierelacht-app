@@ -1,6 +1,6 @@
 // An active favorite must stay visible: yellow on the blue app bar, blue on
 // light list rows.
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:schlierelacht_app/services/prefs.dart';
 import 'package:schlierelacht_app/theme.dart';

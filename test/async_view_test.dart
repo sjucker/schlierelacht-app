@@ -2,7 +2,7 @@
 // loads, and only shows the error state when there is nothing to show.
 import 'dart:async';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:schlierelacht_app/widgets/async_view.dart';
 

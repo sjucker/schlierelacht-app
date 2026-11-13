@@ -1,6 +1,6 @@
 // Smoke test: the landing page renders the festival banner and its section
 // navigation cards.
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:schlierelacht_app/screens/landing_screen.dart';

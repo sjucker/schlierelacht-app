@@ -1,6 +1,6 @@
 // Website paths → app screens (App Links / Universal Links). Paths the app does
 // not claim must map to null so they keep opening in the browser.
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:schlierelacht_app/screens/attraction_detail_screen.dart';
 import 'package:schlierelacht_app/screens/festplan_screen.dart';

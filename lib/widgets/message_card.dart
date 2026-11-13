@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 
 import '../api/message_api.dart';
@@ -9,6 +9,7 @@ import '../screens/message_detail_screen.dart';
 import '../screens/messages_screen.dart';
 import '../utils/external_links.dart';
 import '../utils/formatting.dart';
+import '../utils/markdown_style.dart';
 
 /// The most important active Meldung on the landing page, below the logo (the
 /// backend's first entry: highest priority, then most recently published). Shows only its
@@ -191,7 +192,7 @@ class MessageBox extends StatelessWidget {
                 // in the priority's text color: recolor the whole text theme
                 // rather than single elements, which left headings black.
                 styleSheet:
-                    MarkdownStyleSheet.fromTheme(
+                    markdownStyleSheet(
                       theme.copyWith(
                         textTheme: text.apply(bodyColor: style.foreground, displayColor: style.foreground),
                       ),

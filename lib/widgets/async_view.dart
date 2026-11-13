@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Renders the states of a [Future]: loading spinner, error with a retry
 /// button, and the built data. Keeps screens free of repeated boilerplate.

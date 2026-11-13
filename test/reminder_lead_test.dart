@@ -1,5 +1,5 @@
 // The reminder lead time: stored in Prefs, picked on the Mitteilungen screen.
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:schlierelacht_app/screens/notification_settings_screen.dart';
 import 'package:schlierelacht_app/services/prefs.dart';

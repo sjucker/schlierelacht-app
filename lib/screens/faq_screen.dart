@@ -1,8 +1,9 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 
 import '../api/faq_api.dart';
 import '../models/faq.dart';
+import '../utils/markdown_style.dart';
 import '../utils/external_links.dart';
 import '../widgets/async_view.dart';
 
@@ -150,7 +151,7 @@ class _Question extends StatelessWidget {
       expandedCrossAxisAlignment: CrossAxisAlignment.start,
       childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
       shape: const Border(),
-      children: [MarkdownBody(data: entry.content, onTapLink: (_, href, _) => openUrl(href))],
+      children: [MarkdownBody(data: entry.content, styleSheet: markdownStyleSheet(Theme.of(context)), onTapLink: (_, href, _) => openUrl(href))],
     );
   }
 }

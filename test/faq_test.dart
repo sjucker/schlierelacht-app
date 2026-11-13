@@ -1,6 +1,6 @@
 // FAQ: the model, the search filter and the screen (group headers, expanding
 // answers, search).
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:schlierelacht_app/api/faq_api.dart';
 import 'package:schlierelacht_app/models/faq.dart';

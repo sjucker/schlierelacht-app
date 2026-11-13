@@ -1,6 +1,6 @@
 // Cloudflare images are requested at the size they are shown, in WebP.
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:schlierelacht_app/config.dart';
 import 'package:schlierelacht_app/widgets/cloudflare_image.dart';

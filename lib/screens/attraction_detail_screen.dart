@@ -1,9 +1,10 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 
 import '../api/attraction_api.dart';
 import '../models/attraction.dart';
 import '../models/programm_entry.dart';
+import '../utils/markdown_style.dart';
 import '../utils/external_links.dart';
 import '../utils/formatting.dart';
 import '../widgets/async_view.dart';
@@ -99,7 +100,7 @@ class _AttractionDetailScreenState extends State<AttractionDetailScreen> {
                     _SocialLinks(attraction: attraction),
                     if (attraction.description.isNotEmpty) ...[
                       const Divider(height: 32),
-                      MarkdownBody(data: attraction.description, onTapLink: (_, href, _) => openUrl(href)),
+                      MarkdownBody(data: attraction.description, styleSheet: markdownStyleSheet(Theme.of(context)), onTapLink: (_, href, _) => openUrl(href)),
                     ],
                     if (attraction.files.isNotEmpty) ...[
                       const Divider(height: 32),

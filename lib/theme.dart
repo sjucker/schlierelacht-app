@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// The three colors of the Schliere lacht logo.
 abstract final class FestColors {
