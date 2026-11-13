@@ -50,8 +50,11 @@ flutterfire configure
 
 - Select the Firebase project from step 1.
 - Select the platforms: **android** and **ios**.
-- Confirm the bundle/application id **`ch.schlierelacht.schlierelacht_app`**
-  (must match `android/app/build.gradle.kts` `applicationId` and the iOS bundle id).
+- Confirm the ids — they differ per platform (iOS bundle ids can't contain `_`):
+  - Android application id **`ch.schlierelacht.schlierelacht_app`** (`applicationId` in
+    `android/app/build.gradle.kts`),
+  - iOS bundle id **`ch.schlierelacht.schlierelachtApp`** (`PRODUCT_BUNDLE_IDENTIFIER` in
+    `ios/Runner.xcodeproj/project.pbxproj`).
 
 This writes **`lib/firebase_options.dart`** (the options the app initializes with:
 `Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform)`),
